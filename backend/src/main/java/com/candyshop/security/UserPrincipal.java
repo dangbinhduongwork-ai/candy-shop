@@ -5,6 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.candyshop.entity.UserStatus;
 import java.util.Collection;
 import java.util.List;
 
@@ -17,18 +18,24 @@ public class UserPrincipal implements UserDetails {
     private final Long id;
     private final String email;
     private final String password;
+    private final UserStatus status;
     private final Collection<? extends GrantedAuthority> authorities;
 
     public UserPrincipal(User user) {
         this.id = user.getId();
         this.email = user.getEmail();
         this.password = user.getPassword();
+        this.status = user.getStatus();
         // Map our Role enum to Spring Security GrantedAuthority
         this.authorities = List.of(new SimpleGrantedAuthority(user.getRole().name()));
     }
 
     public Long getId() {
         return id;
+    }
+
+    public UserStatus getStatus() {
+        return status;
     }
 
     @Override
@@ -48,7 +55,7 @@ public class UserPrincipal implements UserDetails {
     }
 
     @Override public boolean isAccountNonExpired()     { return true; }
-    @Override public boolean isAccountNonLocked()      { return true; }
+    @Override public boolean isAccountNonLocked()      { return status == UserStatus.ACTIVE; }
     @Override public boolean isCredentialsNonExpired() { return true; }
-    @Override public boolean isEnabled()               { return true; }
+    @Override public boolean isEnabled()               { return status == UserStatus.ACTIVE; }
 }

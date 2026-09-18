@@ -85,6 +85,30 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers("/error").permitAll()
+                .requestMatchers("/uploads/**").permitAll()
+
+                // Public GET endpoints for catalog browsing and settings
+                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/products/**").permitAll()
+                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/categories/**").permitAll()
+                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/vouchers/**").permitAll()
+                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/settings/**").permitAll()
+                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/banners/**").permitAll()
+
+                // Product reviews endpoints
+                .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/products/*/reviews").authenticated()
+
+                // Admin-only management endpoints
+                .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/products/**").hasRole("ADMIN")
+                .requestMatchers(org.springframework.http.HttpMethod.PUT, "/api/products/**").hasRole("ADMIN")
+                .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/api/products/**").hasRole("ADMIN")
+
+                .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/categories/**").hasRole("ADMIN")
+                .requestMatchers(org.springframework.http.HttpMethod.PUT, "/api/categories/**").hasRole("ADMIN")
+                .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/api/categories/**").hasRole("ADMIN")
+
+                // Admin general APIs
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+
                 // All other endpoints require authentication
                 .anyRequest().authenticated()
             )

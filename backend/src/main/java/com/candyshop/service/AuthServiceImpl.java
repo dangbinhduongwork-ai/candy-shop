@@ -62,6 +62,14 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse login(LoginRequest request) {
+        // Fetch user first to check account lock status
+        User user = userRepository.findByEmail(request.getEmail())
+            .orElseThrow(() -> new org.springframework.security.authentication.BadCredentialsException("Invalid email or password"));
+
+        if (user.getStatus() == com.candyshop.entity.UserStatus.LOCKED) {
+            throw new org.springframework.security.authentication.LockedException("Tài khoản của bạn đã bị khóa bởi quản trị viên. Vui lòng liên hệ bộ phận hỗ trợ.");
+        }
+
         // Authenticate credentials — throws BadCredentialsException on failure
         Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
@@ -69,10 +77,6 @@ public class AuthServiceImpl implements AuthService {
 
         // Generate JWT token for the authenticated user
         String token = jwtTokenProvider.generateToken(authentication);
-
-        // Fetch full user details for the response
-        User user = userRepository.findByEmail(request.getEmail())
-            .orElseThrow();
 
         return new AuthResponse(token, mapToUserResponse(user));
     }
@@ -84,7 +88,10 @@ public class AuthServiceImpl implements AuthService {
             user.getFullName(),
             user.getEmail(),
             user.getPhone(),
-            user.getRole()
+            user.getAddress(),
+            user.getAvatarUrl(),
+            user.getRole(),
+            user.getCreatedAt()
         );
     }
 }

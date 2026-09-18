@@ -26,6 +26,8 @@ public class RegisterRequest {
     @Pattern(regexp = "^(\\+?\\d{9,15})$", message = "Phone number format is invalid")
     private String phone;
 
+    private String captchaToken;
+
     public RegisterRequest() {}
 
     public String getFullName() { return fullName; }
@@ -39,4 +41,7 @@ public class RegisterRequest {
 
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
+
+    public String getCaptchaToken() { return captchaToken; }
+    public void setCaptchaToken(String captchaToken) { this.captchaToken = captchaToken; }
 }

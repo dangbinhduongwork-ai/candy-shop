@@ -68,6 +68,25 @@ export const AuthProvider = ({ children }) => {
     setIsAuthenticated(false);
   }, []);
 
+  /** Update local user state immediately (e.g. after profile/avatar update) */
+  const updateUserState = useCallback((updatedData) => {
+    setUser((prev) => {
+      const next = { ...prev, ...updatedData };
+      return next;
+    });
+  }, []);
+
+  /** Fetch latest profile from server and sync state */
+  const refreshUser = useCallback(async () => {
+    try {
+      const userData = await getCurrentUser();
+      setUser(userData);
+      return userData;
+    } catch {
+      // Ignored
+    }
+  }, []);
+
   const value = {
     user,
     token,
@@ -76,6 +95,8 @@ export const AuthProvider = ({ children }) => {
     login,
     register,
     logout,
+    updateUserState,
+    refreshUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

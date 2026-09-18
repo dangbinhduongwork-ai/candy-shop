@@ -32,9 +32,18 @@ public class User {
 
     private String phone;
 
+    @Column(length = 500)
+    private String address;
+
+    private String avatarUrl;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role = Role.ROLE_USER;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserStatus status = UserStatus.ACTIVE;
 
     @CreationTimestamp
     @Column(updatable = false)
@@ -46,12 +55,15 @@ public class User {
     public User() {}
 
     public User(Long id, String fullName, String email, String password,
-                String phone, Role role, LocalDateTime createdAt, LocalDateTime updatedAt) {
+                String phone, String address, String avatarUrl, Role role,
+                LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.fullName = fullName;
         this.email = email;
         this.password = password;
         this.phone = phone;
+        this.address = address;
+        this.avatarUrl = avatarUrl;
         this.role = role;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -72,8 +84,17 @@ public class User {
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
 
+    public String getAddress() { return address; }
+    public void setAddress(String address) { this.address = address; }
+
+    public String getAvatarUrl() { return avatarUrl; }
+    public void setAvatarUrl(String avatarUrl) { this.avatarUrl = avatarUrl; }
+
     public Role getRole() { return role; }
     public void setRole(Role role) { this.role = role; }
+
+    public UserStatus getStatus() { return status; }
+    public void setStatus(UserStatus status) { this.status = status; }
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }

@@ -34,3 +34,36 @@ export const getCurrentUser = async () => {
   const response = await axiosClient.get('/api/users/me');
   return response.data;
 };
+
+/**
+ * Request password reset link via email.
+ * @param {Object} data - { email, captchaToken }
+ * @returns {Object} - { message }
+ */
+export const forgotPassword = async (data) => {
+  const response = await axiosClient.post('/api/auth/forgot-password', data);
+  return response.data;
+};
+
+/**
+ * Verify validity of a password reset token.
+ * @param {string} token
+ * @returns {Object} - { message }
+ */
+export const verifyResetToken = async (token) => {
+  const response = await axiosClient.get('/api/auth/verify-reset-token', {
+    params: { token },
+  });
+  return response.data;
+};
+
+/**
+ * Reset password with one-time token and new password.
+ * @param {Object} data - { token, newPassword }
+ * @returns {Object} - { message }
+ */
+export const resetPassword = async (data) => {
+  const response = await axiosClient.post('/api/auth/reset-password', data);
+  return response.data;
+};
+

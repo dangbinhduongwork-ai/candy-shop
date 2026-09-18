@@ -27,13 +27,19 @@ axiosClient.interceptors.request.use(
 );
 
 // === RESPONSE INTERCEPTOR ===
-// Handle 401 globally: clear token and redirect to login
+// Handle 401 Unauthorized or 403 Account Locked globally: clear token and redirect to login
 axiosClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    const status = error.response?.status;
+    const message = error.response?.data?.message || '';
+
+    if (status === 401 || (status === 403 && (message.includes('khóa') || message.includes('locked') || message.includes('LOCKED')))) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
+      if (status === 403 && (message.includes('khóa') || message.includes('locked'))) {
+        alert(message || 'Tài khoản của bạn đã bị khóa bởi quản trị viên.');
+      }
       window.location.href = '/login';
     }
     return Promise.reject(error);

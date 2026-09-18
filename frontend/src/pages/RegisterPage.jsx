@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import ReCaptchaWidget from '../components/ReCaptchaWidget';
 
 /**
- * RegisterPage — handles new user registration.
- * Validates input client-side, then calls AuthContext.register().
+ * RegisterPage — handles new user registration with Google reCAPTCHA v2.
+ * Validates input client-side, verifies captcha, then calls AuthContext.register().
  */
 const RegisterPage = () => {
   const { register } = useAuth();
   const navigate = useNavigate();
+  const recaptchaRef = useRef(null);
 
   const [formData, setFormData] = useState({
     fullName: '',
@@ -18,6 +20,7 @@ const RegisterPage = () => {
     confirmPassword: '',
   });
 
+  const [captchaToken, setCaptchaToken] = useState('');
   const [errors, setErrors] = useState({});
   const [serverError, setServerError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -47,8 +50,8 @@ const RegisterPage = () => {
 
     if (!formData.phone.trim()) {
       newErrors.phone = 'Vui lòng nhập số điện thoại';
-    } else if (!/^(\+?\d{9,15})$/.test(formData.phone.replace(/\s/g, ''))) {
-      newErrors.phone = 'Số điện thoại không hợp lệ';
+    } else if (!/^(0|\+84|84)[3|5|7|8|9][0-9]{8}$/.test(formData.phone.replace(/\s/g, ''))) {
+      newErrors.phone = 'Số điện thoại không đúng định dạng Việt Nam (VD: 0912345678)';
     }
 
     if (!formData.password) {
@@ -73,11 +76,16 @@ const RegisterPage = () => {
 
     if (!validate()) return;
 
+    if (!captchaToken) {
+      setServerError('Vui lòng hoàn thành xác thực mã CAPTCHA bên dưới.');
+      return;
+    }
+
     setLoading(true);
     try {
       // Send data without confirmPassword to the API
       const { confirmPassword, ...submitData } = formData;
-      await register(submitData);
+      await register({ ...submitData, captchaToken });
       navigate('/'); // Redirect to home on success
     } catch (err) {
       // Handle server-side errors
@@ -88,6 +96,12 @@ const RegisterPage = () => {
       } else {
         setServerError(errData?.message || 'Đăng ký thất bại. Vui lòng thử lại.');
       }
+
+      // Reset captcha widget since each token is one-time use
+      if (recaptchaRef.current) {
+        recaptchaRef.current.reset();
+      }
+      setCaptchaToken('');
     } finally {
       setLoading(false);
     }
@@ -104,7 +118,13 @@ const RegisterPage = () => {
 
         <form onSubmit={handleSubmit} noValidate>
           {serverError && (
-            <div className="alert alert-error">{serverError}</div>
+            <div className="alert alert-error">
+              <span className="alert-icon">⚠️</span>
+              <div className="alert-body">
+                <strong>Đăng Ký Thất Bại</strong>
+                <p>{serverError}</p>
+              </div>
+            </div>
           )}
 
           <div className="form-group">
@@ -141,7 +161,7 @@ const RegisterPage = () => {
               id="phone"
               name="phone"
               type="tel"
-              placeholder="0901234567"
+              placeholder="VD: 0912345678"
               value={formData.phone}
               onChange={handleChange}
               className={errors.phone ? 'input-error' : ''}
@@ -179,10 +199,27 @@ const RegisterPage = () => {
             )}
           </div>
 
+          {/* Google reCAPTCHA v2 Checkbox Widget */}
+          <div className="form-group recaptcha-form-group">
+            <ReCaptchaWidget
+              ref={recaptchaRef}
+              onChange={(token) => {
+                setCaptchaToken(token);
+                setServerError('');
+              }}
+              onExpired={() => setCaptchaToken('')}
+              onError={() => {
+                setCaptchaToken('');
+                setServerError('Không thể tải mã bảo vệ reCAPTCHA. Vui lòng kiểm tra kết nối mạng.');
+              }}
+            />
+          </div>
+
           <button
             type="submit"
             className="btn btn-primary btn-full"
-            disabled={loading}
+            disabled={loading || !captchaToken}
+            title={!captchaToken ? 'Vui lòng xác thực CAPTCHA để tiếp tục' : 'Bấm để tạo tài khoản'}
           >
             {loading ? 'Đang đăng ký...' : 'Đăng ký'}
           </button>

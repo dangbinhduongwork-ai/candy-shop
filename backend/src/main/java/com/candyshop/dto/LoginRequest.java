@@ -15,6 +15,8 @@ public class LoginRequest {
     @NotBlank(message = "Password is required")
     private String password;
 
+    private String captchaToken;
+
     public LoginRequest() {}
 
     public String getEmail() { return email; }
@@ -22,4 +24,7 @@ public class LoginRequest {
 
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
+
+    public String getCaptchaToken() { return captchaToken; }
+    public void setCaptchaToken(String captchaToken) { this.captchaToken = captchaToken; }
 }

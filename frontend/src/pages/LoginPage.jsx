@@ -1,15 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import ReCaptchaWidget from '../components/ReCaptchaWidget';
 
 /**
- * LoginPage — handles user login with email and password.
+ * LoginPage — handles user login with email, password, and Google reCAPTCHA v2.
  */
 const LoginPage = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
+  const recaptchaRef = useRef(null);
 
   const [formData, setFormData] = useState({ email: '', password: '' });
+  const [captchaToken, setCaptchaToken] = useState('');
   const [errors, setErrors] = useState({});
   const [serverError, setServerError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -42,17 +45,32 @@ const LoginPage = () => {
 
     if (!validate()) return;
 
+    if (!captchaToken) {
+      setServerError('Vui lòng hoàn thành xác thực mã CAPTCHA bên dưới.');
+      return;
+    }
+
     setLoading(true);
     try {
-      await login(formData);
+      await login({ ...formData, captchaToken });
       navigate('/'); // Redirect to home after successful login
     } catch (err) {
       const errData = err.response?.data;
-      setServerError(errData?.message || 'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.');
+      const errorMsg = errData?.message || 'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.';
+      setServerError(errorMsg);
+
+      // Reset captcha widget since each token is one-time use
+      if (recaptchaRef.current) {
+        recaptchaRef.current.reset();
+      }
+      setCaptchaToken('');
     } finally {
       setLoading(false);
     }
   };
+
+  // Check if error is related to IP lockout
+  const isLockoutError = serverError.toLowerCase().includes('tạm khóa') || serverError.toLowerCase().includes('khóa trong');
 
   return (
     <div className="auth-page">
@@ -60,12 +78,18 @@ const LoginPage = () => {
         <div className="auth-header">
           <span className="auth-icon">🍩</span>
           <h1>Đăng nhập</h1>
-          <p>Chào mừng bạn quay lại Tiệm Bánh Kẹo!</p>
+          <p>Chào mừng bạn quay lại Nguyen Huong Grocery Store!</p>
         </div>
 
         <form onSubmit={handleSubmit} noValidate>
           {serverError && (
-            <div className="alert alert-error">{serverError}</div>
+            <div className={`alert ${isLockoutError ? 'alert-lockout' : 'alert-error'}`}>
+              <span className="alert-icon">{isLockoutError ? '⏳' : '⚠️'}</span>
+              <div className="alert-body">
+                <strong>{isLockoutError ? 'Tài Khoản Tạm Thời Bị Giới Hạn' : 'Đăng Nhập Thất Bại'}</strong>
+                <p>{serverError}</p>
+              </div>
+            </div>
           )}
 
           <div className="form-group">
@@ -96,10 +120,27 @@ const LoginPage = () => {
             {errors.password && <span className="error-text">{errors.password}</span>}
           </div>
 
+          {/* Google reCAPTCHA v2 Checkbox Widget */}
+          <div className="form-group recaptcha-form-group">
+            <ReCaptchaWidget
+              ref={recaptchaRef}
+              onChange={(token) => {
+                setCaptchaToken(token);
+                setServerError('');
+              }}
+              onExpired={() => setCaptchaToken('')}
+              onError={() => {
+                setCaptchaToken('');
+                setServerError('Không thể tải mã bảo vệ reCAPTCHA. Vui lòng kiểm tra kết nối mạng.');
+              }}
+            />
+          </div>
+
           <button
             type="submit"
             className="btn btn-primary btn-full"
-            disabled={loading}
+            disabled={loading || !captchaToken}
+            title={!captchaToken ? 'Vui lòng xác thực CAPTCHA để tiếp tục' : 'Bấm để đăng nhập'}
           >
             {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
           </button>
