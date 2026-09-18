@@ -190,7 +190,7 @@ const AdminCustomersPage = () => {
           <div className="admin-header-actions">
             <button
               type="button"
-              className="btn btn-secondary btn-icon-gap"
+              className="btn btn-vip-shimmer btn-icon-gap"
               onClick={() => setShowTopSpendersModal(true)}
               title="Xem bảng xếp hạng khách hàng thân thiết"
             >
@@ -211,44 +211,121 @@ const AdminCustomersPage = () => {
           </div>
         </div>
 
-        {/* 4 Stat Cards */}
-        <div className="admin-stats-grid">
-          <div className="admin-stat-card card-blue">
-            <div className="stat-icon-wrapper">👥</div>
-            <div className="stat-content">
-              <span className="stat-label">Tổng Số Khách Hàng</span>
-              <span className="stat-value">{statsLoading ? '...' : (stats?.totalCustomers || 0)}</span>
-              <span className="stat-subtext">Tài khoản khách hàng thành viên</span>
-            </div>
-          </div>
+        {/* 4 Premium Stat Cards */}
+        {(() => {
+          const total = stats?.totalCustomers || 0;
+          const active = stats?.activeCustomers || 0;
+          const locked = stats?.lockedCustomers || 0;
+          const newThisMonth = stats?.newCustomersThisMonth || 0;
+          const activePercent = total > 0 ? Math.round((active / total) * 100) : 100;
+          const lockedPercent = total > 0 ? Math.round((locked / total) * 100) : 0;
 
-          <div className="admin-stat-card card-purple">
-            <div className="stat-icon-wrapper">✨</div>
-            <div className="stat-content">
-              <span className="stat-label">Khách Mới Trong Tháng</span>
-              <span className="stat-value">{statsLoading ? '...' : (stats?.newCustomersThisMonth || 0)}</span>
-              <span className="stat-subtext">Đăng ký từ đầu tháng này</span>
-            </div>
-          </div>
+          return (
+            <div className="admin-stats-modern-grid">
+              {/* Card 1: Total Customers */}
+              <div
+                className={`admin-stat-card-premium theme-blue clickable ${statusFilter === '' ? 'active-filter' : ''}`}
+                onClick={() => {
+                  setStatusFilter('');
+                  setPage(0);
+                }}
+                title="Bấm để xem tất cả khách hàng"
+              >
+                <div className="stat-card-top-row">
+                  <div className="stat-icon-3d icon-bg-blue">👥</div>
+                  <span className="stat-trend-pill pill-blue">
+                    {statusFilter === '' ? '✓ Đang xem' : 'Toàn bộ'}
+                  </span>
+                </div>
+                <div className="stat-main-details">
+                  <span className="stat-title-label">Tổng Khách Hàng</span>
+                  <div className="stat-numeric-value">{statsLoading ? '...' : total}</div>
+                  <span className="stat-helper-desc">Thành viên đăng ký hệ thống</span>
+                </div>
+                <div className="stat-mini-progress">
+                  <div className="stat-mini-progress-fill progress-fill-blue" style={{ width: '100%' }}></div>
+                </div>
+              </div>
 
-          <div className="admin-stat-card card-green">
-            <div className="stat-icon-wrapper">🟢</div>
-            <div className="stat-content">
-              <span className="stat-label">Đang Hoạt Động</span>
-              <span className="stat-value">{statsLoading ? '...' : (stats?.activeCustomers || 0)}</span>
-              <span className="stat-subtext">Có thể đăng nhập & mua hàng</span>
-            </div>
-          </div>
+              {/* Card 2: New This Month */}
+              <div className="admin-stat-card-premium theme-purple">
+                <div className="stat-card-top-row">
+                  <div className="stat-icon-3d icon-bg-purple">✨</div>
+                  <span className="stat-trend-pill pill-purple">
+                    +{newThisMonth} mới
+                  </span>
+                </div>
+                <div className="stat-main-details">
+                  <span className="stat-title-label">Mới Trong Tháng</span>
+                  <div className="stat-numeric-value">{statsLoading ? '...' : newThisMonth}</div>
+                  <span className="stat-helper-desc">Gia nhập từ đầu tháng</span>
+                </div>
+                <div className="stat-mini-progress">
+                  <div
+                    className="stat-mini-progress-fill progress-fill-purple"
+                    style={{ width: `${total > 0 ? Math.min(100, Math.round((newThisMonth / total) * 100)) : 0}%` }}
+                  ></div>
+                </div>
+              </div>
 
-          <div className="admin-stat-card card-red">
-            <div className="stat-icon-wrapper">🔒</div>
-            <div className="stat-content">
-              <span className="stat-label">Tài Khoản Đã Khóa</span>
-              <span className="stat-value">{statsLoading ? '...' : (stats?.lockedCustomers || 0)}</span>
-              <span className="stat-subtext">Bị vô hiệu hóa truy cập</span>
+              {/* Card 3: Active Customers */}
+              <div
+                className={`admin-stat-card-premium theme-emerald clickable ${statusFilter === 'ACTIVE' ? 'active-filter' : ''}`}
+                onClick={() => {
+                  setStatusFilter(statusFilter === 'ACTIVE' ? '' : 'ACTIVE');
+                  setPage(0);
+                }}
+                title="Bấm để lọc khách hàng đang hoạt động"
+              >
+                <div className="stat-card-top-row">
+                  <div className="stat-icon-3d icon-bg-emerald">🟢</div>
+                  <span className="stat-trend-pill pill-emerald">
+                    {activePercent}% kích hoạt
+                  </span>
+                </div>
+                <div className="stat-main-details">
+                  <span className="stat-title-label">Đang Hoạt Động</span>
+                  <div className="stat-numeric-value text-emerald">{statsLoading ? '...' : active}</div>
+                  <span className="stat-helper-desc">Có thể đăng nhập & mua hàng</span>
+                </div>
+                <div className="stat-mini-progress">
+                  <div
+                    className="stat-mini-progress-fill progress-fill-emerald"
+                    style={{ width: `${activePercent}%` }}
+                  ></div>
+                </div>
+              </div>
+
+              {/* Card 4: Locked Customers */}
+              <div
+                className={`admin-stat-card-premium theme-rose clickable ${statusFilter === 'LOCKED' ? 'active-filter' : ''}`}
+                onClick={() => {
+                  setStatusFilter(statusFilter === 'LOCKED' ? '' : 'LOCKED');
+                  setPage(0);
+                }}
+                title="Bấm để lọc tài khoản bị khóa"
+              >
+                <div className="stat-card-top-row">
+                  <div className="stat-icon-3d icon-bg-rose">🔒</div>
+                  <span className="stat-trend-pill pill-rose">
+                    {locked > 0 ? `⚠️ ${locked} tài khoản` : 'An toàn'}
+                  </span>
+                </div>
+                <div className="stat-main-details">
+                  <span className="stat-title-label">Tài Khoản Đã Khóa</span>
+                  <div className="stat-numeric-value text-rose">{statsLoading ? '...' : locked}</div>
+                  <span className="stat-helper-desc">Bị vô hiệu hóa truy cập</span>
+                </div>
+                <div className="stat-mini-progress">
+                  <div
+                    className="stat-mini-progress-fill progress-fill-rose"
+                    style={{ width: `${lockedPercent}%` }}
+                  ></div>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          );
+        })()}
 
         {/* Toolbar: Search & Filter */}
         <div className="admin-toolbar" style={{ marginTop: '1.5rem' }}>

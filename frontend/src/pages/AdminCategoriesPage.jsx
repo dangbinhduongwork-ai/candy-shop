@@ -19,6 +19,7 @@ const AdminCategoriesPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('ALL'); // 'ALL' | 'ACTIVE' | 'INACTIVE'
 
   // Modal states
   const [showModal, setShowModal] = useState(false);
@@ -60,8 +61,11 @@ const AdminCategoriesPage = () => {
     fetchCategories();
   }, []);
 
-  // Filter categories by search keyword
+  // Filter categories by search keyword and status
   const filteredCategories = categories.filter((cat) => {
+    if (statusFilter === 'ACTIVE' && !cat.active) return false;
+    if (statusFilter === 'INACTIVE' && cat.active) return false;
+
     if (!searchTerm.trim()) return true;
     const term = searchTerm.toLowerCase().trim();
     return (
@@ -338,42 +342,102 @@ const AdminCategoriesPage = () => {
           </button>
         </div>
 
-        {/* Statistics Banner */}
-        <div className="admin-stats-grid">
-          <div className="admin-stat-card stat-total-orders">
-            <div className="stat-card-icon">🏷️</div>
-            <div className="stat-card-info">
-              <span className="stat-card-label">Tổng Danh Mục</span>
-              <strong className="stat-card-val">{totalCategories}</strong>
-            </div>
-          </div>
+        {/* Premium Modern Statistics Banner */}
+        {(() => {
+          const activePercent = totalCategories > 0 ? Math.round((activeCategories / totalCategories) * 100) : 100;
+          const inactivePercent = totalCategories > 0 ? Math.round((inactiveCategories / totalCategories) * 100) : 0;
+          const avgProducts = totalCategories > 0 ? (totalProductsInCategories / totalCategories).toFixed(1) : 0;
 
-          <div className="admin-stat-card stat-completed-orders">
-            <div className="stat-card-icon">👁️</div>
-            <div className="stat-card-info">
-              <span className="stat-card-label">Đang Hiển Thị</span>
-              <strong className="stat-card-val text-success">{activeCategories}</strong>
-            </div>
-          </div>
+          return (
+            <div className="admin-stats-modern-grid">
+              {/* Card 1: Total Categories */}
+              <div
+                className={`admin-stat-card-premium theme-blue clickable ${statusFilter === 'ALL' ? 'active-filter' : ''}`}
+                onClick={() => setStatusFilter('ALL')}
+                title="Bấm để xem tất cả danh mục"
+              >
+                <div className="stat-card-top-row">
+                  <div className="stat-icon-3d icon-bg-blue">🏷️</div>
+                  <span className="stat-trend-pill pill-blue">
+                    {statusFilter === 'ALL' ? '✓ Đang xem' : `Toàn bộ ${totalCategories}`}
+                  </span>
+                </div>
+                <div className="stat-main-details">
+                  <span className="stat-title-label">Tổng Danh Mục</span>
+                  <div className="stat-numeric-value">{totalCategories}</div>
+                  <span className="stat-helper-desc">Nhóm phân loại sản phẩm</span>
+                </div>
+                <div className="stat-mini-progress">
+                  <div className="stat-mini-progress-fill progress-fill-blue" style={{ width: '100%' }}></div>
+                </div>
+              </div>
 
-          <div className="admin-stat-card stat-pending-orders">
-            <div className="stat-card-icon">🙈</div>
-            <div className="stat-card-info">
-              <span className="stat-card-label">Đang Tạm Ẩn</span>
-              <strong className="stat-card-val text-warning">{inactiveCategories}</strong>
-            </div>
-          </div>
+              {/* Card 2: Active Categories */}
+              <div
+                className={`admin-stat-card-premium theme-emerald clickable ${statusFilter === 'ACTIVE' ? 'active-filter' : ''}`}
+                onClick={() => setStatusFilter(statusFilter === 'ACTIVE' ? 'ALL' : 'ACTIVE')}
+                title="Bấm để lọc danh mục đang hiển thị"
+              >
+                <div className="stat-card-top-row">
+                  <div className="stat-icon-3d icon-bg-emerald">👁️</div>
+                  <span className="stat-trend-pill pill-emerald">
+                    {activePercent}% trang chủ
+                  </span>
+                </div>
+                <div className="stat-main-details">
+                  <span className="stat-title-label">Đang Hiển Thị</span>
+                  <div className="stat-numeric-value text-emerald">{activeCategories}</div>
+                  <span className="stat-helper-desc">Khách hàng thấy ngoài cửa hàng</span>
+                </div>
+                <div className="stat-mini-progress">
+                  <div className="stat-mini-progress-fill progress-fill-emerald" style={{ width: `${activePercent}%` }}></div>
+                </div>
+              </div>
 
-          <div className="admin-stat-card stat-total-revenue">
-            <div className="stat-card-icon">🍬</div>
-            <div className="stat-card-info">
-              <span className="stat-card-label">Tổng Sản Phẩm</span>
-              <strong className="stat-card-val">{totalProductsInCategories}</strong>
-            </div>
-          </div>
-        </div>
+              {/* Card 3: Inactive Categories */}
+              <div
+                className={`admin-stat-card-premium theme-amber clickable ${statusFilter === 'INACTIVE' ? 'active-filter' : ''}`}
+                onClick={() => setStatusFilter(statusFilter === 'INACTIVE' ? 'ALL' : 'INACTIVE')}
+                title="Bấm để lọc danh mục đang tạm ẩn"
+              >
+                <div className="stat-card-top-row">
+                  <div className="stat-icon-3d icon-bg-amber">🙈</div>
+                  <span className="stat-trend-pill pill-amber">
+                    {inactiveCategories > 0 ? `⚠️ ${inactiveCategories} danh mục ẩn` : 'Tất cả bật'}
+                  </span>
+                </div>
+                <div className="stat-main-details">
+                  <span className="stat-title-label">Đang Tạm Ẩn</span>
+                  <div className="stat-numeric-value text-amber">{inactiveCategories}</div>
+                  <span className="stat-helper-desc">Tạm thời giấu khỏi trang chủ</span>
+                </div>
+                <div className="stat-mini-progress">
+                  <div className="stat-mini-progress-fill progress-fill-amber" style={{ width: `${inactivePercent}%` }}></div>
+                </div>
+              </div>
 
-        {/* Toolbar: Search */}
+              {/* Card 4: Total Products Covered */}
+              <div className="admin-stat-card-premium theme-purple">
+                <div className="stat-card-top-row">
+                  <div className="stat-icon-3d icon-bg-purple">🍬</div>
+                  <span className="stat-trend-pill pill-purple">
+                    ~{avgProducts} SP/loại
+                  </span>
+                </div>
+                <div className="stat-main-details">
+                  <span className="stat-title-label">Tổng Sản Phẩm</span>
+                  <div className="stat-numeric-value text-purple">{totalProductsInCategories}</div>
+                  <span className="stat-helper-desc">Bánh kẹo đã xếp danh mục</span>
+                </div>
+                <div className="stat-mini-progress">
+                  <div className="stat-mini-progress-fill progress-fill-purple" style={{ width: '100%' }}></div>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
+
+        {/* Toolbar: Search & Quick Status Filters */}
         <div className="admin-toolbar">
           <div className="search-box">
             <span className="search-icon">🔍</span>
@@ -386,8 +450,32 @@ const AdminCategoriesPage = () => {
             />
           </div>
 
+          <div className="category-filter-pill-group">
+            <button
+              type="button"
+              className={`category-pill-btn ${statusFilter === 'ALL' ? 'active' : ''}`}
+              onClick={() => setStatusFilter('ALL')}
+            >
+              🌈 Tất cả ({totalCategories})
+            </button>
+            <button
+              type="button"
+              className={`category-pill-btn ${statusFilter === 'ACTIVE' ? 'active' : ''}`}
+              onClick={() => setStatusFilter('ACTIVE')}
+            >
+              🟢 Hiển thị ({activeCategories})
+            </button>
+            <button
+              type="button"
+              className={`category-pill-btn ${statusFilter === 'INACTIVE' ? 'active' : ''}`}
+              onClick={() => setStatusFilter('INACTIVE')}
+            >
+              🙈 Đang ẩn ({inactiveCategories})
+            </button>
+          </div>
+
           <div className="category-reorder-hint">
-            💡 <em>Mẹo: Bạn có thể kéo-thả hàng hoặc bấm nút ⬆️ ⬇️ để sắp xếp thứ tự hiển thị ngoài trang chủ.</em>
+            💡 <em>Mẹo: Bấm vào thẻ thống kê để lọc nhanh, hoặc kéo-thả hàng / bấm ⬆️ ⬇️ để đổi thứ tự ngoài trang chủ.</em>
           </div>
         </div>
 
