@@ -32,7 +32,11 @@ public class RecaptchaServiceImpl implements RecaptchaService {
     private final RestTemplate restTemplate;
 
     public RecaptchaServiceImpl() {
-        this.restTemplate = new RestTemplate();
+        org.springframework.http.client.SimpleClientHttpRequestFactory factory =
+                new org.springframework.http.client.SimpleClientHttpRequestFactory();
+        factory.setConnectTimeout(2000);
+        factory.setReadTimeout(2500);
+        this.restTemplate = new RestTemplate(factory);
     }
 
     @Override
@@ -59,11 +63,10 @@ public class RecaptchaServiceImpl implements RecaptchaService {
 
             HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
 
-            ResponseEntity<RecaptchaResponse> response = restTemplate.postForEntity(
-                verifyUrl,
-                request,
-                RecaptchaResponse.class
-            );
+            java.util.concurrent.CompletableFuture<ResponseEntity<RecaptchaResponse>> future =
+                java.util.concurrent.CompletableFuture.supplyAsync(() -> restTemplate.postForEntity(verifyUrl, request, RecaptchaResponse.class));
+
+            ResponseEntity<RecaptchaResponse> response = future.get(3, java.util.concurrent.TimeUnit.SECONDS);
 
             RecaptchaResponse body = response.getBody();
             if (body == null || !body.isSuccess()) {
@@ -73,7 +76,13 @@ public class RecaptchaServiceImpl implements RecaptchaService {
             }
 
             log.debug("reCAPTCHA validation passed successfully for challenge: {}", body.getChallengeTs());
-        } catch (RestClientException e) {
+        } catch (java.util.concurrent.TimeoutException e) {
+            log.warn("Google reCAPTCHA verification timed out after 3 seconds for IP: {}", clientIp);
+            throw new BadRequestException("Hệ thống xác thực CAPTCHA phản hồi chậm. Vui lòng thử lại.");
+        } catch (Exception e) {
+            if (e instanceof BadRequestException bre) {
+                throw bre;
+            }
             log.error("Error communicating with Google reCAPTCHA API: {}", e.getMessage(), e);
             throw new BadRequestException("Không thể kết nối đến máy chủ xác thực CAPTCHA. Vui lòng thử lại sau.");
         }

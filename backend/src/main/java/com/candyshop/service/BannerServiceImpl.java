@@ -6,6 +6,8 @@ import com.candyshop.entity.Banner;
 import com.candyshop.exception.BadRequestException;
 import com.candyshop.exception.ResourceNotFoundException;
 import com.candyshop.repository.BannerRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,6 +29,7 @@ public class BannerServiceImpl implements BannerService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "banners", key = "'active'")
     public List<BannerResponse> getActiveBanners() {
         LocalDateTime now = LocalDateTime.now();
         return bannerRepository.findActiveBanners(now).stream()
@@ -52,6 +55,7 @@ public class BannerServiceImpl implements BannerService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "banners", allEntries = true)
     public BannerResponse createBanner(BannerRequest request, MultipartFile image) {
         if (image == null || image.isEmpty()) {
             throw new BadRequestException("Vui lòng tải lên ảnh cho banner");
@@ -76,6 +80,7 @@ public class BannerServiceImpl implements BannerService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "banners", allEntries = true)
     public BannerResponse updateBanner(Long id, BannerRequest request, MultipartFile image) {
         Banner banner = bannerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy banner với id: " + id));
@@ -111,6 +116,7 @@ public class BannerServiceImpl implements BannerService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "banners", allEntries = true)
     public void deleteBanner(Long id) {
         Banner banner = bannerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy banner với id: " + id));
@@ -123,6 +129,7 @@ public class BannerServiceImpl implements BannerService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "banners", allEntries = true)
     public BannerResponse toggleBannerStatus(Long id, Boolean active) {
         Banner banner = bannerRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy banner với id: " + id));

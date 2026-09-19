@@ -11,7 +11,12 @@ import java.time.LocalDateTime;
  * Product entity representing candies and sweets in the shop.
  */
 @Entity
-@Table(name = "products")
+@Table(name = "products", indexes = {
+    @Index(name = "idx_products_category", columnList = "category_id"),
+    @Index(name = "idx_products_price", columnList = "price"),
+    @Index(name = "idx_products_created_at", columnList = "created_at"),
+    @Index(name = "idx_products_cat_price", columnList = "category_id, price")
+})
 public class Product {
 
     @Id
@@ -30,12 +35,16 @@ public class Product {
     @Column(nullable = false)
     private Integer stockQuantity = 0;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
     @Column(length = 500)
     private String imageUrl;
+
+    @Version
+    @Column(name = "version")
+    private Long version = 0L;
 
     @CreationTimestamp
     @Column(updatable = false)
@@ -129,5 +138,13 @@ public class Product {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 }

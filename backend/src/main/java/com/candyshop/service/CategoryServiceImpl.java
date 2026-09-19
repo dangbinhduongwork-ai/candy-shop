@@ -8,6 +8,8 @@ import com.candyshop.exception.BadRequestException;
 import com.candyshop.exception.ResourceNotFoundException;
 import com.candyshop.repository.CategoryRepository;
 import com.candyshop.repository.ProductRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +29,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "categories", key = "#includeInactive")
     public List<CategoryResponse> getAllCategories(boolean includeInactive) {
         List<Category> categories;
         if (includeInactive) {
@@ -66,6 +69,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "categories", allEntries = true)
     public CategoryResponse createCategory(CategoryRequest request) {
         String trimmedName = request.getName().trim();
         if (categoryRepository.existsByNameIgnoreCase(trimmedName)) {
@@ -95,6 +99,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "categories", allEntries = true)
     public CategoryResponse updateCategory(Long id, CategoryRequest request) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy loại bánh kẹo với ID: " + id));
@@ -122,6 +127,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "categories", allEntries = true)
     public CategoryResponse toggleStatus(Long id, Boolean active) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy loại bánh kẹo với ID: " + id));
@@ -138,6 +144,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "categories", allEntries = true)
     public void reorderCategories(List<CategoryReorderItem> items) {
         if (items == null || items.isEmpty()) return;
 
@@ -153,6 +160,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "categories", allEntries = true)
     public void deleteCategory(Long id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy loại bánh kẹo với ID: " + id));

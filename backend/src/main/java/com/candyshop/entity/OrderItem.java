@@ -9,7 +9,10 @@ import java.math.BigDecimal;
  * Crucially stores 'priceAtOrder' so past orders are not affected by future product price changes.
  */
 @Entity
-@Table(name = "order_items")
+@Table(name = "order_items", indexes = {
+    @Index(name = "idx_order_items_order", columnList = "order_id"),
+    @Index(name = "idx_order_items_product", columnList = "product_id")
+})
 public class OrderItem {
 
     @Id

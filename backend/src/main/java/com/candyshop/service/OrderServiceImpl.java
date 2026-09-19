@@ -48,15 +48,32 @@ public class OrderServiceImpl implements OrderService {
         this.shopSettingService = shopSettingService;
     }
 
+    @org.springframework.beans.factory.annotation.Autowired(required = false)
+    private org.springframework.data.redis.core.StringRedisTemplate stringRedisTemplate;
+
+    private final java.util.concurrent.atomic.AtomicLong fallbackSequence =
+            new java.util.concurrent.atomic.AtomicLong(System.currentTimeMillis() % 10000);
+
     private String generateOrderCode() {
         String datePart = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        Random random = new Random();
-        String code;
-        do {
-            int randomNum = 1000 + random.nextInt(9000);
-            code = "ORD-" + datePart + "-" + randomNum;
-        } while (orderRepository.existsByOrderCode(code));
-        return code;
+        long seq = 0;
+        if (stringRedisTemplate != null) {
+            try {
+                String key = "order:seq:" + datePart;
+                Long val = stringRedisTemplate.opsForValue().increment(key);
+                if (val != null && val == 1L) {
+                    stringRedisTemplate.expire(key, java.time.Duration.ofDays(2));
+                }
+                if (val != null) {
+                    seq = val;
+                }
+            } catch (Exception e) {
+                seq = fallbackSequence.incrementAndGet();
+            }
+        } else {
+            seq = fallbackSequence.incrementAndGet();
+        }
+        return String.format("ORD-%s-%04d", datePart, seq % 1000000);
     }
 
     @Override

@@ -17,15 +17,24 @@ import java.util.Optional;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
+    @org.springframework.data.jpa.repository.EntityGraph(attributePaths = {"user", "items", "items.product"})
     Page<Order> findByUserEmailOrderByCreatedAtDesc(String email, Pageable pageable);
 
+    @org.springframework.data.jpa.repository.EntityGraph(attributePaths = {"user", "items", "items.product"})
     Optional<Order> findByIdAndUserEmail(Long id, String email);
 
+    @org.springframework.data.jpa.repository.EntityGraph(attributePaths = {"user", "items", "items.product"})
     Optional<Order> findByOrderCode(String orderCode);
 
     boolean existsByOrderCode(String orderCode);
 
-    @Query("SELECT o FROM Order o WHERE " +
+    @org.springframework.data.jpa.repository.EntityGraph(attributePaths = {"user"})
+    @Query(value = "SELECT o FROM Order o LEFT JOIN FETCH o.user WHERE " +
+           "(:status IS NULL OR o.status = :status) AND " +
+           "(:startDate IS NULL OR o.createdAt >= :startDate) AND " +
+           "(:endDate IS NULL OR o.createdAt <= :endDate) AND " +
+           "(:search IS NULL OR LOWER(o.orderCode) LIKE LOWER(CONCAT('%', :search, '%')) OR o.receiverPhone LIKE CONCAT('%', :search, '%'))",
+           countQuery = "SELECT COUNT(o) FROM Order o WHERE " +
            "(:status IS NULL OR o.status = :status) AND " +
            "(:startDate IS NULL OR o.createdAt >= :startDate) AND " +
            "(:endDate IS NULL OR o.createdAt <= :endDate) AND " +

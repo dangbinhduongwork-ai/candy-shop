@@ -4,6 +4,8 @@ import com.candyshop.dto.ShippingSettingDTO;
 import com.candyshop.entity.ShopSetting;
 import com.candyshop.exception.ResourceNotFoundException;
 import com.candyshop.repository.ShopSettingRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +28,7 @@ public class ShopSettingServiceImpl implements ShopSettingService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "settings", key = "'shipping'")
     public ShippingSettingDTO getShippingSetting() {
         BigDecimal defaultFee = getDecimalValue(KEY_DEFAULT_SHIPPING_FEE, FALLBACK_SHIPPING_FEE);
         BigDecimal freeThreshold = getDecimalValue(KEY_FREE_SHIPPING_THRESHOLD, FALLBACK_FREE_THRESHOLD);
@@ -34,6 +37,7 @@ public class ShopSettingServiceImpl implements ShopSettingService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "settings", allEntries = true)
     public ShippingSettingDTO updateShippingSetting(ShippingSettingDTO dto) {
         if (dto.getDefaultShippingFee() == null || dto.getDefaultShippingFee().compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalArgumentException("Phí vận chuyển mặc định phải là số không âm");

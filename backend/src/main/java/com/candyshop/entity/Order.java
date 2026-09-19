@@ -15,7 +15,10 @@ import java.util.List;
 @Entity
 @Table(name = "orders", indexes = {
     @Index(name = "idx_orders_user", columnList = "user_id"),
-    @Index(name = "idx_orders_code", columnList = "order_code", unique = true)
+    @Index(name = "idx_orders_code", columnList = "order_code", unique = true),
+    @Index(name = "idx_orders_status", columnList = "status"),
+    @Index(name = "idx_orders_created_at", columnList = "created_at"),
+    @Index(name = "idx_orders_user_status", columnList = "user_id, status")
 })
 public class Order {
 

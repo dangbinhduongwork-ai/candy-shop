@@ -66,7 +66,9 @@ const BannerCarousel = () => {
   }
 
   const currentBanner = banners[currentIndex];
-  const imageUrl = currentBanner.imageUrl;
+  const imageUrl = currentBanner.imageUrl?.startsWith('http')
+    ? currentBanner.imageUrl
+    : `http://localhost:8080${currentBanner.imageUrl}`;
 
   return (
     <div

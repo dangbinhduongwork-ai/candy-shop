@@ -13,7 +13,13 @@ import java.math.BigDecimal;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    @Query("SELECT p FROM Product p WHERE " +
+    @org.springframework.data.jpa.repository.EntityGraph(attributePaths = {"category"})
+    @Query(value = "SELECT p FROM Product p LEFT JOIN FETCH p.category WHERE " +
+           "(:categoryId IS NULL OR p.category.id = :categoryId) AND " +
+           "(:keyword IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(p.description) LIKE LOWER(CONCAT('%', :keyword, '%'))) AND " +
+           "(:minPrice IS NULL OR p.price >= :minPrice) AND " +
+           "(:maxPrice IS NULL OR p.price <= :maxPrice)",
+           countQuery = "SELECT COUNT(p) FROM Product p WHERE " +
            "(:categoryId IS NULL OR p.category.id = :categoryId) AND " +
            "(:keyword IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(p.description) LIKE LOWER(CONCAT('%', :keyword, '%'))) AND " +
            "(:minPrice IS NULL OR p.price >= :minPrice) AND " +
@@ -24,6 +30,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             @Param("minPrice") BigDecimal minPrice,
             @Param("maxPrice") BigDecimal maxPrice,
             Pageable pageable);
+
+    @org.springframework.data.jpa.repository.EntityGraph(attributePaths = {"category"})
+    @Override
+    java.util.Optional<Product> findById(Long id);
 
     long countByCategoryId(Long categoryId);
 

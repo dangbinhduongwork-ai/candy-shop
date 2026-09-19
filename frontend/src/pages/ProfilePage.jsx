@@ -242,7 +242,7 @@ const ProfilePage = () => {
   };
 
   // Get current avatar url
-  const currentAvatar = avatarPreview || user?.avatarUrl || null;
+  const currentAvatar = avatarPreview || (user?.avatarUrl ? (user.avatarUrl.startsWith('http') ? user.avatarUrl : `http://localhost:8080${user.avatarUrl}`) : null);
 
   if (authLoading || loadingProfile) {
     return (
@@ -268,9 +268,9 @@ const ProfilePage = () => {
         <div className="profile-hero-card">
           <div className="profile-hero-content">
             <div className="profile-avatar-wrapper">
-              <div 
-                className="profile-avatar-circle" 
-                onClick={handleAvatarClick} 
+              <div
+                className="profile-avatar-circle"
+                onClick={handleAvatarClick}
                 title="Bấm vào để đổi ảnh đại diện"
               >
                 {currentAvatar ? (

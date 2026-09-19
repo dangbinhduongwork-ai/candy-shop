@@ -10,7 +10,8 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "vouchers", indexes = {
     @Index(name = "idx_vouchers_code", columnList = "code", unique = true),
-    @Index(name = "idx_vouchers_status", columnList = "status")
+    @Index(name = "idx_vouchers_status", columnList = "status"),
+    @Index(name = "idx_vouchers_date_status", columnList = "status, start_date, end_date")
 })
 public class Voucher {
 

@@ -1,0 +1,156 @@
+version: '3.8'
+
+services:
+  # ==========================================
+  # Nginx Web Server & Reverse Proxy
+  # ==========================================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: candy-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - candy-net
+
+  # ==========================================
+  # Spring Boot Backend (Java 21 Loom)
+  # ==========================================
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: candy-backend
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=mysql
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/candy_shop?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&characterEncoding=UTF-8
+      - SPRING_DATASOURCE_USERNAME=candy_user
+      - SPRING_DATASOURCE_PASSWORD=candy_secret
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_FLYWAY_ENABLED=true
+      - APP_STORAGE_PROVIDER=local
+      - APP_UPLOAD_DIR=/app/uploads
+      - JAVA_OPTS=-XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+ParallelRefProcEnabled -XX:+ExplicitGCInvokesConcurrent -Xms512m -Xmx1024m -XX:+UseStringDeduplication
+    volumes:
+      - backend-uploads:/app/uploads
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:8080/actuator/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+    networks:
+      - candy-net
+
+  # ==========================================
+  # MySQL 8.0 Enterprise Database Cluster
+  # ==========================================
+  mysql:
+    image: mysql:8.0
+    container_name: candy-mysql
+    restart: unless-stopped
+    command: >
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --innodb-buffer-pool-size=512M
+      --innodb-log-file-size=128M
+      --innodb-flush-log-at-trx-commit=2
+      --innodb-flush-method=O_DIRECT
+      --max-connections=1000
+      --thread-cache-size=64
+      --open-files-limit=65535
+    environment:
+      MYSQL_DATABASE: candy_shop
+      MYSQL_USER: candy_user
+      MYSQL_PASSWORD: candy_secret
+      MYSQL_ROOT_PASSWORD: root_secret
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "candy_user", "-pcandy_secret"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - candy-net
+
+  # ==========================================
+  # Redis 7.0 In-Memory Cache & Distributed Locks
+  # ==========================================
+  redis:
+    image: redis:7.0-alpine
+    container_name: candy-redis
+    restart: unless-stopped
+    command: >
+      redis-server
+      --maxmemory 256mb
+      --maxmemory-policy allkeys-lru
+      --save 900 1
+      --save 300 10
+      --tcp-backlog 511
+      --timeout 0
+      --tcp-keepalive 300
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks:
+      - candy-net
+
+  # ==========================================
+  # Prometheus Time-Series Observability
+  # ==========================================
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: candy-prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=15d'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    depends_on:
+      - backend
+    networks:
+      - candy-net
+
+volumes:
+  mysql-data:
+  redis-data:
+  prometheus-data:
+  backend-uploads:
+
+networks:
+  candy-net:
+    driver: bridge
