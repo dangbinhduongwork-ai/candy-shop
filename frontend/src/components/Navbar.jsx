@@ -117,6 +117,7 @@ const Navbar = () => {
                   aria-expanded={adminDropdownOpen}
                   title="Bảng điều khiển Quản Trị Viên"
                 >
+                  <span className="admin-badge-tag">Admin</span>
                   <span className="admin-dropdown-text">Quản Trị</span>
                   <span className={`admin-dropdown-chevron ${adminDropdownOpen ? 'open' : ''}`}>▾</span>
                 </button>
@@ -279,7 +280,7 @@ const Navbar = () => {
                   </div>
                   <div className="user-text-meta">
                     <span className="user-display-name">{user?.fullName || 'Tài khoản'}</span>
-                    <span className="user-role-tag">
+                    <span className={`user-role-tag ${user?.role === 'ROLE_ADMIN' ? 'role-admin' : 'role-customer'}`}>
                       {user?.role === 'ROLE_ADMIN' ? 'Admin' : 'Khách hàng'}
                     </span>
                   </div>

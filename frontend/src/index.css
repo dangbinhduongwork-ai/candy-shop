@@ -281,6 +281,34 @@ textarea {
   color: white;
 }
 
+.admin-badge-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.15rem 0.5rem;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  border-radius: 6px;
+  background: #e0f2fe;
+  color: #0284c7;
+  border: 1px solid #bae6fd;
+  line-height: 1;
+  transition: all 0.2s ease;
+}
+
+.admin-dropdown-btn:hover .admin-badge-tag {
+  background: #bae6fd;
+  color: #0369a1;
+}
+
+.admin-dropdown-btn.active .admin-badge-tag {
+  background: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
 .admin-dropdown-btn.active .admin-dropdown-chevron {
   color: rgba(255, 255, 255, 0.9);
 }
@@ -594,8 +622,26 @@ textarea {
 .user-role-tag {
   font-size: 0.7rem;
   font-weight: 600;
-  color: var(--primary);
+  display: inline-flex;
+  align-items: center;
+  padding: 0.12rem 0.5rem;
+  border-radius: 6px;
+  line-height: 1.2;
   white-space: nowrap;
+}
+
+.user-role-tag.role-admin {
+  background: #e0f2fe;
+  color: #0284c7;
+  border: 1px solid #bae6fd;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+}
+
+.user-role-tag.role-customer {
+  background: #f1f5f9;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
 }
 
 .btn-logout-icon {
@@ -8038,10 +8084,44 @@ body,
   color: #14b8a6 !important;
 }
 
+/* Announcement bar in Dark Mode */
+[data-theme="dark"] .top-announcement-bar {
+  background: linear-gradient(90deg, #042f2e 0%, #115e59 50%, #042f2e 100%) !important;
+  color: #5eead4 !important;
+  border-bottom: 1px solid rgba(20, 184, 166, 0.3) !important;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.4) !important;
+  text-shadow: 0 0 10px rgba(94, 234, 212, 0.3) !important;
+}
+
 [data-theme="dark"] .admin-dropdown-btn {
   background: #162036 !important;
   border-color: #1f293d !important;
   color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .admin-dropdown-btn:hover {
+  background: #1e293b !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .admin-dropdown-btn.active {
+  background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%) !important;
+  border-color: #14b8a6 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 14px rgba(20, 184, 166, 0.35) !important;
+}
+
+[data-theme="dark"] .admin-badge-tag {
+  background: rgba(20, 184, 166, 0.25) !important;
+  color: #5eead4 !important;
+  border: 1px solid rgba(94, 234, 212, 0.4) !important;
+  box-shadow: 0 0 8px rgba(20, 184, 166, 0.25) !important;
+}
+
+[data-theme="dark"] .admin-dropdown-btn:hover .admin-badge-tag {
+  background: rgba(20, 184, 166, 0.4) !important;
+  color: #ffffff !important;
 }
 
 [data-theme="dark"] .admin-dropdown-menu {
@@ -8054,8 +8134,30 @@ body,
   border-bottom-color: #1f293d !important;
 }
 
+[data-theme="dark"] .admin-header-badge {
+  color: #2dd4bf !important;
+}
+
+[data-theme="dark"] .admin-header-sub {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .admin-menu-item {
+  color: #cbd5e1 !important;
+}
+
 [data-theme="dark"] .admin-menu-item:hover {
-  background: rgba(20, 184, 166, 0.12) !important;
+  background: rgba(20, 184, 166, 0.15) !important;
+  color: #5eead4 !important;
+}
+
+[data-theme="dark"] .admin-menu-item.active {
+  background: rgba(20, 184, 166, 0.25) !important;
+  border-left-color: #14b8a6 !important;
+}
+
+[data-theme="dark"] .admin-menu-item.active .admin-menu-title {
+  color: #5eead4 !important;
 }
 
 [data-theme="dark"] .admin-menu-title {
@@ -8072,7 +8174,8 @@ body,
   color: #f8fafc !important;
 }
 
-[data-theme="dark"] .user-info-pill {
+[data-theme="dark"] .user-info-pill,
+[data-theme="dark"] .user-profile-pill {
   background: #162036 !important;
   border-color: #1f293d !important;
   color: #f8fafc !important;
@@ -8085,6 +8188,23 @@ body,
 [data-theme="dark"] .user-role-tag {
   background: rgba(20, 184, 166, 0.2) !important;
   color: #5eead4 !important;
+  border: 1px solid rgba(20, 184, 166, 0.35) !important;
+  border-radius: 6px !important;
+  padding: 0.1rem 0.45rem !important;
+}
+
+[data-theme="dark"] .user-role-tag.role-admin {
+  background: rgba(20, 184, 166, 0.28) !important;
+  color: #5eead4 !important;
+  border: 1px solid rgba(94, 234, 212, 0.45) !important;
+  box-shadow: 0 0 10px rgba(20, 184, 166, 0.25) !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="dark"] .user-role-tag.role-customer {
+  background: #1e293b !important;
+  color: #94a3b8 !important;
+  border: 1px solid #334155 !important;
 }
 
 /* Cards, Surfaces & Sections in Dark Mode */
@@ -8646,6 +8766,7 @@ body,
 }
 
 /* Item 1: Checkout Form & Shipping Address in Dark Mode */
+[data-theme="dark"] .checkout-card,
 [data-theme="dark"] .checkout-form-card,
 [data-theme="dark"] .checkout-summary-card {
   background: #111827 !important;
@@ -8654,11 +8775,22 @@ body,
   color: #f8fafc !important;
 }
 
+[data-theme="dark"] .checkout-section-title {
+  color: #f8fafc !important;
+  border-bottom-color: #1f293d !important;
+}
+
+[data-theme="dark"] .checkout-card .form-group label,
+[data-theme="dark"] .checkout-card label,
 [data-theme="dark"] .checkout-form-card .form-group label,
 [data-theme="dark"] .checkout-form-card label {
   color: #cbd5e1 !important;
 }
 
+[data-theme="dark"] .checkout-card .form-input,
+[data-theme="dark"] .checkout-card .form-textarea,
+[data-theme="dark"] .checkout-card input,
+[data-theme="dark"] .checkout-card textarea,
 [data-theme="dark"] .checkout-form-card .form-input,
 [data-theme="dark"] .checkout-form-card .form-textarea,
 [data-theme="dark"] .checkout-form-card input,
@@ -8668,6 +8800,10 @@ body,
   color: #f8fafc !important;
 }
 
+[data-theme="dark"] .checkout-card .form-input:focus,
+[data-theme="dark"] .checkout-card .form-textarea:focus,
+[data-theme="dark"] .checkout-card input:focus,
+[data-theme="dark"] .checkout-card textarea:focus,
 [data-theme="dark"] .checkout-form-card .form-input:focus,
 [data-theme="dark"] .checkout-form-card .form-textarea:focus,
 [data-theme="dark"] .checkout-form-card input:focus,
@@ -8678,14 +8814,34 @@ body,
   color: #f8fafc !important;
 }
 
+[data-theme="dark"] .checkout-card input::placeholder,
+[data-theme="dark"] .checkout-card textarea::placeholder,
 [data-theme="dark"] .checkout-form-card input::placeholder,
 [data-theme="dark"] .checkout-form-card textarea::placeholder {
   color: #64748b !important;
 }
 
+[data-theme="dark"] .breadcrumb-current {
+  color: #f8fafc !important;
+}
+
 [data-theme="dark"] .payment-option-card {
   background: #162036 !important;
   border-color: #243452 !important;
+}
+
+[data-theme="dark"] .payment-option-card.active {
+  background: rgba(20, 184, 166, 0.14) !important;
+  border-color: #14b8a6 !important;
+  box-shadow: 0 0 16px rgba(20, 184, 166, 0.25) !important;
+}
+
+[data-theme="dark"] .payment-details strong {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .payment-details p {
+  color: #cbd5e1 !important;
 }
 
 [data-theme="dark"] .payment-title {
@@ -8694,6 +8850,36 @@ body,
 
 [data-theme="dark"] .payment-desc {
   color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .summary-total-line {
+  border-top-color: #1f293d !important;
+}
+
+[data-theme="dark"] .total-label {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .total-amount-val {
+  color: #2dd4bf !important;
+  text-shadow: 0 0 12px rgba(45, 212, 191, 0.3) !important;
+}
+
+[data-theme="dark"] .total-vat-hint {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .btn-place-order {
+  background: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 6px 20px rgba(20, 184, 166, 0.4) !important;
+}
+
+[data-theme="dark"] .btn-place-order:hover {
+  background: linear-gradient(135deg, #115e59 0%, #0d9488 100%) !important;
+  box-shadow: 0 8px 25px rgba(20, 184, 166, 0.6) !important;
+  transform: translateY(-2px);
 }
 
 [data-theme="dark"] .checkout-voucher-section {
@@ -8764,7 +8950,208 @@ body,
 }
 
 [data-theme="dark"] .admin-subtitle {
+  color: #2dd4bf !important;
+  font-weight: 700 !important;
+}
+
+/* =============================================
+   ADMIN STATS CARDS IN DARK MODE (Customers, Categories, Orders)
+   ============================================= */
+/* 1. Premium Stat Cards (Customers & Categories) */
+[data-theme="dark"] .admin-stat-card-premium {
+  background: #111827 !important;
+  border: 1px solid #1f293d !important;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="dark"] .admin-stat-card-premium:hover {
+  box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.7) !important;
+  border-color: #334155 !important;
+}
+
+[data-theme="dark"] .stat-title-label {
   color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .stat-numeric-value {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .stat-helper-desc {
+  color: #64748b !important;
+}
+
+[data-theme="dark"] .stat-mini-progress {
+  background: #1e293b !important;
+}
+
+/* Premium Card Active Filter States */
+[data-theme="dark"] .admin-stat-card-premium.active-filter.theme-blue {
+  border-color: #3b82f6 !important;
+  background: linear-gradient(180deg, #111827 0%, #172554 100%) !important;
+  color: #60a5fa !important;
+  box-shadow: 0 0 16px rgba(59, 130, 246, 0.3) !important;
+}
+
+[data-theme="dark"] .admin-stat-card-premium.active-filter.theme-emerald {
+  border-color: #10b981 !important;
+  background: linear-gradient(180deg, #111827 0%, #064e3b 100%) !important;
+  color: #34d399 !important;
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.3) !important;
+}
+
+[data-theme="dark"] .admin-stat-card-premium.active-filter.theme-amber {
+  border-color: #f59e0b !important;
+  background: linear-gradient(180deg, #111827 0%, #451a03 100%) !important;
+  color: #fbbf24 !important;
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.3) !important;
+}
+
+[data-theme="dark"] .admin-stat-card-premium.active-filter.theme-rose {
+  border-color: #f43f5e !important;
+  background: linear-gradient(180deg, #111827 0%, #4c0519 100%) !important;
+  color: #fb7185 !important;
+  box-shadow: 0 0 16px rgba(244, 63, 94, 0.3) !important;
+}
+
+/* 3D Icon Backgrounds in Dark Mode */
+[data-theme="dark"] .icon-bg-blue {
+  background: rgba(59, 130, 246, 0.15) !important;
+  border-color: rgba(59, 130, 246, 0.35) !important;
+}
+
+[data-theme="dark"] .icon-bg-purple {
+  background: rgba(168, 85, 247, 0.15) !important;
+  border-color: rgba(168, 85, 247, 0.35) !important;
+}
+
+[data-theme="dark"] .icon-bg-emerald {
+  background: rgba(16, 185, 129, 0.15) !important;
+  border-color: rgba(16, 185, 129, 0.35) !important;
+}
+
+[data-theme="dark"] .icon-bg-amber {
+  background: rgba(245, 158, 11, 0.15) !important;
+  border-color: rgba(245, 158, 11, 0.35) !important;
+}
+
+[data-theme="dark"] .icon-bg-rose {
+  background: rgba(244, 63, 94, 0.15) !important;
+  border-color: rgba(244, 63, 94, 0.35) !important;
+}
+
+/* Pill Badges in Dark Mode */
+[data-theme="dark"] .pill-blue {
+  background: rgba(59, 130, 246, 0.2) !important;
+  color: #60a5fa !important;
+  border-color: rgba(59, 130, 246, 0.4) !important;
+}
+
+[data-theme="dark"] .pill-purple {
+  background: rgba(168, 85, 247, 0.2) !important;
+  color: #c084fc !important;
+  border-color: rgba(168, 85, 247, 0.4) !important;
+}
+
+[data-theme="dark"] .pill-emerald {
+  background: rgba(16, 185, 129, 0.2) !important;
+  color: #34d399 !important;
+  border-color: rgba(16, 185, 129, 0.4) !important;
+}
+
+[data-theme="dark"] .pill-amber {
+  background: rgba(245, 158, 11, 0.2) !important;
+  color: #fbbf24 !important;
+  border-color: rgba(245, 158, 11, 0.4) !important;
+}
+
+[data-theme="dark"] .pill-rose {
+  background: rgba(244, 63, 94, 0.2) !important;
+  color: #fb7185 !important;
+  border-color: rgba(244, 63, 94, 0.4) !important;
+}
+
+/* Category & Order Value Colors in Dark Mode */
+[data-theme="dark"] .text-emerald {
+  color: #34d399 !important;
+}
+
+[data-theme="dark"] .text-amber {
+  color: #fbbf24 !important;
+}
+
+[data-theme="dark"] .text-purple {
+  color: #c084fc !important;
+}
+
+[data-theme="dark"] .text-rose {
+  color: #fb7185 !important;
+}
+
+/* 2. Order Stats Cards (AdminOrdersPage) in Dark Mode */
+[data-theme="dark"] .stat-card {
+  background: #111827 !important;
+  border-color: #1f293d !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="dark"] .stat-card:hover {
+  background: #162036 !important;
+  border-color: #14b8a6 !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6) !important;
+}
+
+[data-theme="dark"] .stat-card.active-filter-card {
+  background: #16253b !important;
+  border-color: #14b8a6 !important;
+  box-shadow: 0 0 0 2px #14b8a6, 0 8px 25px rgba(20, 184, 166, 0.3) !important;
+}
+
+[data-theme="dark"] .stat-label {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .stat-value {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .stat-revenue-value {
+  color: #34d399 !important;
+}
+
+[data-theme="dark"] .stat-unit {
+  color: #94a3b8 !important;
+}
+
+/* Order Stat Icon Wrappers in Dark Mode */
+[data-theme="dark"] .bg-blue-glow {
+  background: rgba(59, 130, 246, 0.15) !important;
+  color: #60a5fa !important;
+  border: 1px solid rgba(59, 130, 246, 0.35) !important;
+}
+
+[data-theme="dark"] .bg-emerald-glow {
+  background: rgba(16, 185, 129, 0.15) !important;
+  color: #34d399 !important;
+  border: 1px solid rgba(16, 185, 129, 0.35) !important;
+}
+
+[data-theme="dark"] .bg-amber-glow {
+  background: rgba(245, 158, 11, 0.15) !important;
+  color: #fbbf24 !important;
+  border: 1px solid rgba(245, 158, 11, 0.35) !important;
+}
+
+[data-theme="dark"] .bg-purple-glow {
+  background: rgba(168, 85, 247, 0.15) !important;
+  color: #c084fc !important;
+  border: 1px solid rgba(168, 85, 247, 0.35) !important;
+}
+
+[data-theme="dark"] .bg-rose-glow {
+  background: rgba(244, 63, 94, 0.15) !important;
+  color: #fb7185 !important;
+  border: 1px solid rgba(244, 63, 94, 0.35) !important;
 }
 
 [data-theme="dark"] .admin-stats-bar {
@@ -8991,12 +9378,65 @@ body,
 }
 
 /* Modals & Dialogs in Dark Mode */
+[data-theme="dark"] .modal-container {
+  background: #111827 !important;
+  border: 1px solid #1f293d !important;
+  color: #f8fafc !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75) !important;
+}
+
 [data-theme="dark"] .modal-header {
   border-bottom-color: #1f293d !important;
 }
 
+[data-theme="dark"] .modal-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .modal-close-btn {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .modal-close-btn:hover {
+  color: #f43f5e !important;
+}
+
 [data-theme="dark"] .modal-footer {
   border-top-color: #1f293d !important;
+  background: #0f172a !important;
+}
+
+/* VIP Top Customers Leaderboard in Dark Mode */
+[data-theme="dark"] .vip-spender-card {
+  background: #162036 !important;
+  border: 1px solid #1f293d !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+[data-theme="dark"] .vip-spender-card:hover {
+  background: #1e293b !important;
+  border-color: #14b8a6 !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45) !important;
+}
+
+[data-theme="dark"] .vip-name {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .vip-email {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .vip-orders-count {
+  color: #34d399 !important;
+}
+
+[data-theme="dark"] .vip-spending-label {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .vip-spending-amount {
+  color: #2dd4bf !important;
 }
 
 [data-theme="dark"] .setting-card-header {

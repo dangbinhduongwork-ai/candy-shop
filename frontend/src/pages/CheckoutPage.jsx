@@ -566,7 +566,7 @@ const CheckoutPage = () => {
                 className="btn btn-primary btn-place-order"
                 disabled={submitting}
               >
-                {submitting ? '⏳ Đang xử lý đơn hàng...' : '🎉 Xác Nhận Đặt Hàng Ngay'}
+                {submitting ? '⏳ Đang xử lý đơn hàng...' : '🎉 Thanh Toán & Đặt Hàng Ngay'}
               </button>
 
               <div className="summary-guarantees">
