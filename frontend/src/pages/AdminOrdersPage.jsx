@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import AdminNavTabs from '../components/AdminNavTabs';
 import {
   getAdminOrders,
   getAdminOrderStats,
@@ -188,35 +189,25 @@ const AdminOrdersPage = () => {
       )}
 
       <div className="admin-container">
-        {/* Navigation Tabs for Admin */}
-        <div className="admin-nav-tabs">
-          <Link to="/admin/products" className="admin-tab-btn">
-            🍭 Quản Lý Sản Phẩm
-          </Link>
-          <Link to="/admin/categories" className="admin-tab-btn">
-            🏷️ Quản Lý Danh Mục
-          </Link>
-          <Link to="/admin/orders" className="admin-tab-btn active">
-            📦 Quản Lý Đơn Hàng
-          </Link>
-        </div>
+        {/* Unified Navigation Tabs */}
+        <AdminNavTabs />
 
         {/* Page Header */}
         <div className="admin-header">
           <div>
             <span className="admin-subtitle">Bảng điều khiển quản trị</span>
-            <h1 className="admin-title">📦 Quản Lý & Theo Dõi Đơn Hàng</h1>
+            <h1 className="admin-title">Quản Lý & Theo Dõi Đơn Hàng</h1>
           </div>
           <button
             className="btn btn-outline btn-refresh-stats"
             onClick={() => {
               fetchStats();
               fetchOrders();
-              showToast('Đã làm mới dữ liệu thống kê và đơn hàng! 🔄');
+              showToast('Đã làm mới dữ liệu thống kê và đơn hàng!');
             }}
             title="Làm mới dữ liệu"
           >
-            🔄 Làm mới
+            Làm mới
           </button>
         </div>
 

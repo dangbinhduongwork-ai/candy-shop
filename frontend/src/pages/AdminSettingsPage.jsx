@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import AdminNavTabs from '../components/AdminNavTabs';
 import { useCart } from '../context/CartContext';
 import settingService from '../api/settingService';
 
@@ -88,11 +89,14 @@ const AdminSettingsPage = () => {
   return (
     <div className="admin-page">
       <div className="admin-container">
+        {/* Unified Navigation Tabs */}
+        <AdminNavTabs />
+
         {/* Page Header */}
         <div className="admin-header">
           <div>
             <span className="admin-subtitle">Quản lý các thông số vận hành hệ thống, phí giao hàng và chính sách bán hàng</span>
-            <h1 className="admin-title">⚙️ Cài Đặt Cửa Hàng</h1>
+            <h1 className="admin-title">Cài Đặt Cửa Hàng</h1>
           </div>
         </div>
 

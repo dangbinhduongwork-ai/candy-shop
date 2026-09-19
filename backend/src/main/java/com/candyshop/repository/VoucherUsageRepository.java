@@ -20,6 +20,10 @@ public interface VoucherUsageRepository extends JpaRepository<VoucherUsage, Long
 
     List<VoucherUsage> findByUserIdOrderByUsedAtDesc(Long userId);
 
+    List<VoucherUsage> findByOrderId(Long orderId);
+
+    void deleteByOrderId(Long orderId);
+
     @Query("SELECT COALESCE(SUM(vu.discountAmount), 0) FROM VoucherUsage vu")
     BigDecimal sumTotalDiscountGiven();
 }

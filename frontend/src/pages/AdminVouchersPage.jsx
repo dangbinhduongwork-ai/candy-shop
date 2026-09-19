@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import AdminNavTabs from '../components/AdminNavTabs';
 import {
   getAdminVouchers,
   createAdminVoucher,
@@ -305,17 +306,20 @@ const AdminVouchersPage = () => {
         </div>
       )}
 
+      {/* Unified Navigation Tabs */}
+      <AdminNavTabs />
+
       {/* Header Banner */}
       <div className="admin-header">
         <div>
           <span className="admin-subtitle">Tạo và quản lý các chương trình ưu đãi, mã giảm giá % hoặc tiền mặt cho khách hàng mua sắm.</span>
-          <h1 className="admin-title">🎟️ Quản lý mã giảm giá (Vouchers)</h1>
+          <h1 className="admin-title">Quản lý mã giảm giá (Vouchers)</h1>
         </div>
         <button
           onClick={handleOpenCreate}
           className="btn btn-primary"
         >
-          ➕ Thêm Voucher Mới
+          Thêm Voucher Mới
         </button>
       </div>
 

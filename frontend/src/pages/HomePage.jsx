@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams, useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { getProducts } from '../api/productService';
@@ -18,16 +18,18 @@ const PRICE_PRESETS = [
 ];
 
 const SORT_OPTIONS = [
-  { label: '✨ Mới nhất', sortBy: 'createdAt', sortDir: 'desc' },
-  { label: '💰 Giá tăng dần (Thấp đến cao)', sortBy: 'price', sortDir: 'asc' },
-  { label: '💎 Giá giảm dần (Cao đến thấp)', sortBy: 'price', sortDir: 'desc' },
-  { label: '🔤 Tên sản phẩm (A - Z)', sortBy: 'name', sortDir: 'asc' },
+  { label: 'Mới nhất', sortBy: 'createdAt', sortDir: 'desc' },
+  { label: 'Giá tăng dần (Thấp đến cao)', sortBy: 'price', sortDir: 'asc' },
+  { label: 'Giá giảm dần (Cao đến thấp)', sortBy: 'price', sortDir: 'desc' },
+  { label: 'Tên sản phẩm (A - Z)', sortBy: 'name', sortDir: 'asc' },
 ];
 
 const HomePage = () => {
   const { user, isAuthenticated } = useAuth();
   const { addToCart } = useCart();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const { id: urlCategoryId } = useParams();
   const [addingId, setAddingId] = useState(null);
 
   // Data states
@@ -37,13 +39,27 @@ const HomePage = () => {
   const [error, setError] = useState('');
 
   // Filter states
-  const [searchTerm, setSearchTerm] = useState('');
-  const [debouncedKeyword, setDebouncedKeyword] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('');
+  const initialCategory = urlCategoryId || searchParams.get('category') || '';
+  const initialSearch = searchParams.get('search') || '';
+  const [searchTerm, setSearchTerm] = useState(initialSearch);
+  const [debouncedKeyword, setDebouncedKeyword] = useState(initialSearch);
+  const [selectedCategory, setSelectedCategory] = useState(initialCategory);
   const [selectedPricePreset, setSelectedPricePreset] = useState(0);
   const [customMinPrice, setCustomMinPrice] = useState('');
   const [customMaxPrice, setCustomMaxPrice] = useState('');
   const [sortIndex, setSortIndex] = useState(0);
+
+  // Sync category filter when URL parameter changes
+  useEffect(() => {
+    const cat = urlCategoryId || searchParams.get('category') || '';
+    setSelectedCategory(cat);
+    const search = searchParams.get('search') || '';
+    if (search) {
+      setSearchTerm(search);
+      setDebouncedKeyword(search);
+    }
+    setPage(0);
+  }, [urlCategoryId, searchParams]);
 
   // Pagination states
   const [page, setPage] = useState(0);
@@ -162,24 +178,24 @@ const HomePage = () => {
       {/* Hero Welcome Banner */}
       <section className="hero-sweet-banner">
         <div className="hero-banner-content">
-          <span className="hero-tag">🍬 Thiên Đường Bánh Kẹo Ngọt Ngào</span>
+          <span className="hero-tag">Cửa Hàng Tạp Hóa & Thực Phẩm Uy Tín</span>
           <h1 className="hero-title">
-            Hương Vị Hạnh Phúc Trong Từng Viên Kẹo
+            Thực Phẩm & Bánh Kẹo Chọn Lọc Chuẩn Vị
           </h1>
           <p className="hero-subtitle">
-            Khám phá hơn 100+ mặt hàng, kẹo, bánh quy bơ thượng hạng và đặc sản kẹo truyền thống chuẩn vị.
+            Cung cấp đa dạng thực phẩm thiết yếu, bánh kẹo hảo hạng và đặc sản chuẩn chất lượng cho gia đình bạn.
           </p>
 
           {user?.role === 'ROLE_ADMIN' && (
             <div className="admin-quick-badge-box">
               <Link to="/admin/products" className="btn btn-admin-banner">
-                🍭 Quản Lý Sản Phẩm
+                Quản Lý Sản Phẩm
               </Link>
               <Link to="/admin/categories" className="btn btn-admin-banner">
-                🏷️ Quản Lý Danh Mục
+                Quản Lý Danh Mục
               </Link>
               <Link to="/admin/orders" className="btn btn-admin-banner">
-                📦 Quản Lý Đơn Hàng
+                Quản Lý Đơn Hàng
               </Link>
             </div>
           )}
@@ -193,8 +209,8 @@ const HomePage = () => {
           <section className="category-showcase-section">
             <div className="category-showcase-header">
               <div>
-                <span className="section-sub-badge">🌟 Danh Mục Tuyển Chọn</span>
-                <h2 className="showcase-title">Khám Phá Theo Loại Bánh Kẹo</h2>
+                <span className="section-sub-badge">Danh Mục Tuyển Chọn</span>
+                <h2 className="showcase-title">Danh Mục Ngành Hàng</h2>
               </div>
               {selectedCategory && (
                 <button
@@ -205,7 +221,7 @@ const HomePage = () => {
                     setPage(0);
                   }}
                 >
-                  🌈 Xem tất cả các loại
+                  Xem tất cả các loại
                 </button>
               )}
             </div>
@@ -220,11 +236,18 @@ const HomePage = () => {
                 }}
               >
                 <div className="cat-card-thumb-box">
-                  <div className="cat-card-ph-emoji">🌈</div>
+                  <div className="cat-card-ph-emoji" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#0f766e' }}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="3" y="3" width="7" height="7"/>
+                      <rect x="14" y="3" width="7" height="7"/>
+                      <rect x="14" y="14" width="7" height="7"/>
+                      <rect x="3" y="14" width="7" height="7"/>
+                    </svg>
+                  </div>
                 </div>
                 <div className="cat-card-info-box">
                   <h3 className="cat-card-name">Tất Cả Danh Mục</h3>
-                  <span className="cat-card-count">{totalElements} món ngon</span>
+                  <span className="cat-card-count">{totalElements} sản phẩm</span>
                 </div>
               </div>
 
@@ -250,11 +273,17 @@ const HomePage = () => {
                         onError={(e) => {
                           e.target.onerror = null;
                           e.target.src =
-                            'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24"><text y="18" font-size="16">🍬</text></svg>';
+                            'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" stroke="%2394a3b8" fill="none" stroke-width="2"/></svg>';
                         }}
                       />
                     ) : (
-                      <div className="cat-card-ph-emoji">🍬</div>
+                      <div className="cat-card-ph-emoji" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b' }}>
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                          <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                          <line x1="12" y1="22.08" x2="12" y2="12"/>
+                        </svg>
+                      </div>
                     )}
                   </div>
                   <div className="cat-card-info-box">
@@ -272,11 +301,16 @@ const HomePage = () => {
           {/* Row 1: Search & Sort */}
           <div className="controls-row-main">
             <div className="search-input-wrapper">
-              <span className="search-icon-decor">🔍</span>
+              <span className="search-icon-decor" style={{ display: 'flex', alignItems: 'center', color: '#94a3b8' }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="11" cy="11" r="8"/>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+              </span>
               <input
                 type="text"
                 className="search-input-field"
-                placeholder="Tìm kiếm bánh kẹo theo tên, vị, mô tả..."
+                placeholder="Tìm kiếm sản phẩm theo tên, chủng loại, mô tả..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -314,7 +348,7 @@ const HomePage = () => {
 
           {/* Row 2: Category Filter Pills */}
           <div className="categories-filter-row">
-            <span className="filter-section-label">🏷️ Danh mục:</span>
+            <span className="filter-section-label">Danh mục:</span>
             <div className="category-pills-list">
               <button
                 type="button"
@@ -324,7 +358,7 @@ const HomePage = () => {
                   setPage(0);
                 }}
               >
-                🌈 Tất cả loại
+                Tất cả loại
               </button>
               {categories.map((cat) => (
                 <button
@@ -336,7 +370,7 @@ const HomePage = () => {
                     setPage(0);
                   }}
                 >
-                  🍬 {cat.name}
+                  {cat.name}
                 </button>
               ))}
             </div>
@@ -344,7 +378,7 @@ const HomePage = () => {
 
           {/* Row 3: Price Filter Chips */}
           <div className="price-filter-row">
-            <span className="filter-section-label">💵 Mức giá:</span>
+            <span className="filter-section-label">Mức giá:</span>
             <div className="price-presets-list">
               {PRICE_PRESETS.map((preset, idx) => (
                 <button
@@ -392,7 +426,7 @@ const HomePage = () => {
                 className="btn-reset-filters"
                 onClick={handleResetFilters}
               >
-                🔄 Xóa bộ lọc
+                Xóa bộ lọc
               </button>
             )}
           </div>
@@ -401,7 +435,7 @@ const HomePage = () => {
         {/* Results Info Bar */}
         <div className="catalog-status-bar">
           <div className="status-text">
-            Tìm thấy <strong>{totalElements}</strong> sản phẩm bánh kẹo phù hợp
+            Tìm thấy <strong>{totalElements}</strong> sản phẩm phù hợp
             {debouncedKeyword && (
               <span> cho từ khóa <em>"{debouncedKeyword}"</em></span>
             )}
@@ -418,11 +452,17 @@ const HomePage = () => {
         {loading ? (
           <div className="loading-grid-state">
             <div className="spinner"></div>
-            <p>Đang tìm kiếm bánh kẹo cho bạn...</p>
+            <p>Đang tải danh sách sản phẩm...</p>
           </div>
         ) : products.length === 0 ? (
           <div className="catalog-empty-card">
-            <div className="empty-candy-icon">🍭</div>
+            <div className="empty-candy-icon" style={{ display: 'flex', justifyContent: 'center', color: '#94a3b8' }}>
+              <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                <line x1="12" y1="22.08" x2="12" y2="12"/>
+              </svg>
+            </div>
             <h3>Không tìm thấy sản phẩm nào!</h3>
             <p>Hãy thử thay đổi từ khóa tìm kiếm hoặc điều chỉnh lại khoảng giá và danh mục.</p>
             {hasActiveFilters && (
@@ -431,7 +471,7 @@ const HomePage = () => {
                 className="btn btn-primary mt-2"
                 onClick={handleResetFilters}
               >
-                ✨ Xóa tất cả bộ lọc
+                Xóa tất cả bộ lọc
               </button>
             )}
           </div>
@@ -451,11 +491,17 @@ const HomePage = () => {
                       className="store-card-img"
                       onError={(e) => {
                         e.target.onerror = null;
-                        e.target.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 24 24"><text y="18" font-size="16">🍬</text></svg>';
+                        e.target.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" stroke="%2394a3b8" fill="none" stroke-width="2"/><line x1="3" y1="6" x2="21" y2="6" stroke="%2394a3b8" stroke-width="2"/><path d="M16 10a4 4 0 0 1-8 0" stroke="%2394a3b8" fill="none" stroke-width="2"/></svg>';
                       }}
                     />
                   ) : (
-                    <div className="store-placeholder-img">🍬</div>
+                    <div className="store-placeholder-img">
+                      <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                        <line x1="3" y1="6" x2="21" y2="6"/>
+                        <path d="M16 10a4 4 0 0 1-8 0"/>
+                      </svg>
+                    </div>
                   )}
                   <span className="store-cat-badge">{prod.category?.name}</span>
                 </div>
@@ -469,17 +515,17 @@ const HomePage = () => {
                   <div className="card-rating-badge">
                     {prod.reviewCount > 0 ? (
                       <>
-                        <span className="star-icon">⭐</span>
+                        <span className="star-icon" style={{ color: '#f59e0b' }}>★</span>
                         <span className="rating-score">{prod.averageRating?.toFixed(1)}</span>
                         <span className="rating-count">({prod.reviewCount})</span>
                       </>
                     ) : (
-                      <span className="rating-new">⭐ Chưa có đánh giá</span>
+                      <span className="rating-new" style={{ color: '#94a3b8' }}>Mới</span>
                     )}
                   </div>
 
                   <p className="store-prod-desc" title={prod.description}>
-                    {prod.description || 'Hương vị thơm ngon tuyệt hảo được tuyển chọn.'}
+                    {prod.description || 'Sản phẩm chọn lọc, đảm bảo nguồn gốc và chất lượng tốt nhất.'}
                   </p>
 
                   <div className="card-price-and-stock">
@@ -513,7 +559,7 @@ const HomePage = () => {
                       }}
                       title="Thêm nhanh 1 sản phẩm vào giỏ"
                     >
-                      {addingId === prod.id ? '⏳' : '🛒 +1 Giỏ'}
+                      {addingId === prod.id ? 'Đang thêm...' : '+ Thêm giỏ'}
                     </button>
                     <button
                       type="button"

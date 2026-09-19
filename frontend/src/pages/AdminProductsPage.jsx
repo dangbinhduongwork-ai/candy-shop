@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import AdminNavTabs from '../components/AdminNavTabs';
 import {
   getProducts,
   createProduct,
@@ -165,27 +166,17 @@ const AdminProductsPage = () => {
   return (
     <div className="admin-page">
       <div className="admin-container">
-        {/* Navigation Tabs */}
-        <div className="admin-nav-tabs">
-          <Link to="/admin/products" className="admin-tab-btn active">
-            🍭 Quản Lý Sản Phẩm
-          </Link>
-          <Link to="/admin/categories" className="admin-tab-btn">
-            🏷️ Quản Lý Danh Mục
-          </Link>
-          <Link to="/admin/orders" className="admin-tab-btn">
-            📦 Quản Lý Đơn Hàng
-          </Link>
-        </div>
+        {/* Unified Navigation Tabs */}
+        <AdminNavTabs />
 
         {/* Header Section */}
         <div className="admin-header">
           <div>
             <span className="admin-subtitle">Hệ thống quản trị</span>
-            <h1 className="admin-title">🍭 Quản Lý Sản Phẩm Bánh Kẹo</h1>
+            <h1 className="admin-title">Quản Lý Sản Phẩm Bánh Kẹo</h1>
           </div>
           <button className="btn btn-primary btn-add-prod" onClick={handleOpenCreateModal}>
-            ✨ Thêm sản phẩm mới
+            Thêm sản phẩm mới
           </button>
         </div>
 
@@ -206,7 +197,6 @@ const AdminProductsPage = () => {
         {/* Controls Toolbar: Search & Filter */}
         <div className="admin-toolbar">
           <form onSubmit={handleSearchSubmit} className="search-box">
-            <span className="search-icon">🔍</span>
             <input
               type="text"
               value={searchInput}
@@ -228,7 +218,7 @@ const AdminProductsPage = () => {
               }}
               className="form-select category-select"
             >
-              <option value="">🍬 Tất cả danh mục</option>
+              <option value="">Tất cả danh mục</option>
               {categories.map((cat) => (
                 <option key={cat.id} value={cat.id}>
                   {cat.name}
@@ -242,7 +232,7 @@ const AdminProductsPage = () => {
                 className="btn btn-outline btn-sm"
                 onClick={handleResetFilters}
               >
-                🔄 Xóa bộ lọc
+                Xóa bộ lọc
               </button>
             )}
           </div>

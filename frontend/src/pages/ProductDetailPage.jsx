@@ -332,9 +332,9 @@ const ProductDetailPage = () => {
 
       {/* Breadcrumb Navigation */}
       <nav className="breadcrumb-nav">
-        <Link to="/" className="breadcrumb-link">🏠 Trang chủ</Link>
+        <Link to="/" className="breadcrumb-link">Trang chủ</Link>
         <span className="breadcrumb-separator">/</span>
-        <span className="breadcrumb-cat">{product.category?.name || 'Bánh kẹo'}</span>
+        <span className="breadcrumb-cat">{product.category?.name || 'Sản phẩm'}</span>
         <span className="breadcrumb-separator">/</span>
         <span className="breadcrumb-current">{product.name}</span>
       </nav>
@@ -351,11 +351,17 @@ const ProductDetailPage = () => {
                 className="detail-main-image"
                 onError={(e) => {
                   e.target.onerror = null;
-                  e.target.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 24 24"><text y="18" font-size="16">🍬</text></svg>';
+                  e.target.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" stroke="%2394a3b8" fill="none" stroke-width="2"/><line x1="3" y1="6" x2="21" y2="6" stroke="%2394a3b8" stroke-width="2"/><path d="M16 10a4 4 0 0 1-8 0" stroke="%2394a3b8" fill="none" stroke-width="2"/></svg>';
                 }}
               />
             ) : (
-              <div className="detail-placeholder-image">🍬</div>
+              <div className="detail-placeholder-image" style={{ color: '#cbd5e1' }}>
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                  <line x1="3" y1="6" x2="21" y2="6"/>
+                  <path d="M16 10a4 4 0 0 1-8 0"/>
+                </svg>
+              </div>
             )}
             <span className="detail-cat-badge">{product.category?.name}</span>
           </div>
@@ -364,7 +370,7 @@ const ProductDetailPage = () => {
         {/* Right: Product Info & Actions */}
         <div className="product-detail-info">
           <div className="detail-header">
-            <span className="detail-sub-badge">🌟 Bánh Kẹo Tuyển Chọn</span>
+            <span className="detail-sub-badge">Sản Phẩm Chính Hãng</span>
             <h1 className="detail-title">{product.name}</h1>
 
             {/* Star Rating Overview near title */}
@@ -377,7 +383,7 @@ const ProductDetailPage = () => {
                 ({reviewTotal} đánh giá)
               </a>
               <span className="rating-divider">•</span>
-              <span className="verified-sold-tag">🍬 Đã bán & tin dùng</span>
+              <span className="verified-sold-tag">Đã bán & tin dùng</span>
             </div>
 
             <div className="detail-price-box">
@@ -390,11 +396,11 @@ const ProductDetailPage = () => {
           <div className="detail-stock-row">
             <span className="stock-label">Tình trạng:</span>
             {isOutOfStock ? (
-              <span className="stock-pill pill-out">❌ Hết hàng</span>
+              <span className="stock-pill pill-out">Hết hàng</span>
             ) : product.stockQuantity <= 10 ? (
-              <span className="stock-pill pill-low">⚠️ Chỉ còn {product.stockQuantity} sản phẩm</span>
+              <span className="stock-pill pill-low">Chỉ còn {product.stockQuantity} sản phẩm</span>
             ) : (
-              <span className="stock-pill pill-in">✅ Còn hàng ({product.stockQuantity} sản phẩm có sẵn)</span>
+              <span className="stock-pill pill-in">Còn hàng ({product.stockQuantity} sản phẩm có sẵn)</span>
             )}
           </div>
 
@@ -452,7 +458,7 @@ const ProductDetailPage = () => {
                   onClick={handleAddToCart}
                   disabled={addingToCart}
                 >
-                  {addingToCart ? '⏳ Đang thêm...' : '🛒 Thêm vào giỏ hàng'}
+                  {addingToCart ? 'Đang thêm...' : 'Thêm vào giỏ hàng'}
                 </button>
                 <button
                   type="button"
@@ -460,7 +466,7 @@ const ProductDetailPage = () => {
                   onClick={handleBuyNow}
                   disabled={addingToCart}
                 >
-                  ⚡ Mua ngay
+                  Mua ngay
                 </button>
               </div>
             </div>
@@ -469,24 +475,40 @@ const ProductDetailPage = () => {
           {/* Safe Shopping Commitments */}
           <div className="shop-benefits-grid">
             <div className="benefit-item">
-              <span className="benefit-icon">🚚</span>
+              <span className="benefit-icon" style={{ display: 'flex', color: '#0f766e' }}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="1" y="3" width="15" height="13"/>
+                  <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+                  <circle cx="5.5" cy="18.5" r="2.5"/>
+                  <circle cx="18.5" cy="18.5" r="2.5"/>
+                </svg>
+              </span>
               <div>
                 <strong>Giao hàng nhanh chóng</strong>
                 <p>Nội thành trong 2 giờ</p>
               </div>
             </div>
             <div className="benefit-item">
-              <span className="benefit-icon">🍬</span>
+              <span className="benefit-icon" style={{ display: 'flex', color: '#0f766e' }}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                  <polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+              </span>
               <div>
-                <strong>Bánh kẹo tươi ngon</strong>
+                <strong>Hàng chuẩn chất lượng</strong>
                 <p>Hạn sử dụng luôn mới nhất</p>
               </div>
             </div>
             <div className="benefit-item">
-              <span className="benefit-icon">🛡️</span>
+              <span className="benefit-icon" style={{ display: 'flex', color: '#0f766e' }}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+              </span>
               <div>
                 <strong>Đổi trả dễ dàng</strong>
-                <p>Hoàn tiền nếu không hài lòng</p>
+                <p>Hỗ trợ nhanh chóng và minh bạch</p>
               </div>
             </div>
           </div>
@@ -498,7 +520,7 @@ const ProductDetailPage = () => {
           ============================================= */}
       <section id="reviews-section" className="product-reviews-section">
         <div className="section-header">
-          <h2 className="related-title">⭐ Đánh Giá & Nhận Xét Từ Khách Hàng</h2>
+          <h2 className="related-title">Đánh Giá & Nhận Xét Từ Khách Hàng</h2>
           <span className="reviews-section-subtitle">
             Nhận xét thật từ khách hàng đã mua và thưởng thức sản phẩm
           </span>

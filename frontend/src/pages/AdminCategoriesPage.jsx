@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import AdminNavTabs from '../components/AdminNavTabs';
 import { useCart } from '../context/CartContext';
 import {
   getCategories,
@@ -122,7 +123,7 @@ const AdminCategoriesPage = () => {
     setUploadingImage(true);
     try {
       const res = await uploadCategoryImage(file);
-      setFormData((prev) => ({ ...prev, imageUrl: res.fileUrl }));
+      setFormData((prev) => ({ ...prev, imageUrl: res.imageUrl || res.fileUrl }));
       showToast('Tải ảnh đại diện danh mục thành công!', 'success');
     } catch (err) {
       console.error('Image upload failed:', err);
@@ -314,31 +315,21 @@ const AdminCategoriesPage = () => {
   return (
     <div className="admin-page">
       <div className="admin-container">
-        {/* Navigation Tabs */}
-        <div className="admin-nav-tabs">
-          <Link to="/admin/products" className="admin-tab-btn">
-            🍭 Quản Lý Sản Phẩm
-          </Link>
-          <Link to="/admin/categories" className="admin-tab-btn active">
-            🏷️ Quản Lý Danh Mục
-          </Link>
-          <Link to="/admin/orders" className="admin-tab-btn">
-            📦 Quản Lý Đơn Hàng
-          </Link>
-        </div>
+        {/* Unified Navigation Tabs */}
+        <AdminNavTabs />
 
         {/* Header Title and Actions */}
         <div className="admin-header">
           <div>
             <span className="admin-subtitle">Khu vực quản trị</span>
-            <h1 className="admin-title">🏷️ Quản Lý Danh Mục Bánh Kẹo</h1>
+            <h1 className="admin-title">Quản Lý Danh Mục Bánh Kẹo</h1>
           </div>
           <button
             type="button"
             className="btn btn-primary btn-add-prod"
             onClick={handleOpenCreateModal}
           >
-            ➕ Thêm Danh Mục Mới
+            Thêm Danh Mục Mới
           </button>
         </div>
 

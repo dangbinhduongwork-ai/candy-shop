@@ -81,6 +81,65 @@ public class AuthServiceImpl implements AuthService {
         return new AuthResponse(token, mapToUserResponse(user));
     }
 
+    @Override
+    @Transactional
+    public String forgotPassword(com.candyshop.dto.ForgotPasswordRequest request) {
+        java.util.Optional<User> userOpt = userRepository.findByEmail(request.getEmail().trim().toLowerCase());
+        if (userOpt.isEmpty()) {
+            // Return neutral message to avoid email enumeration
+            return "Nếu email của bạn tồn tại trong hệ thống, chúng tôi đã tạo liên kết đặt lại mật khẩu. Vui lòng kiểm tra email của bạn.";
+        }
+
+        User user = userOpt.get();
+        String resetToken = java.util.UUID.randomUUID().toString();
+        user.setResetPasswordToken(resetToken);
+        // Valid for 15 minutes
+        user.setResetPasswordExpiry(java.time.LocalDateTime.now().plusMinutes(15));
+        userRepository.save(user);
+
+        // In development/demo, log the link or return it
+        org.slf4j.LoggerFactory.getLogger(AuthServiceImpl.class)
+            .info("Reset password link generated for {}: /reset-password?token={}", user.getEmail(), resetToken);
+
+        return "Hướng dẫn đặt lại mật khẩu đã được gửi đến email " + user.getEmail() + ". Mã có hiệu lực trong 15 phút.";
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public void verifyResetToken(String token) {
+        if (token == null || token.isBlank()) {
+            throw new BadRequestException("Mã xác thực không hợp lệ.");
+        }
+
+        User user = userRepository.findByResetPasswordToken(token.trim())
+            .orElseThrow(() -> new BadRequestException("Mã đặt lại mật khẩu không hợp lệ hoặc không tồn tại."));
+
+        if (user.getResetPasswordExpiry() == null || user.getResetPasswordExpiry().isBefore(java.time.LocalDateTime.now())) {
+            throw new BadRequestException("Mã đặt lại mật khẩu đã hết hạn. Vui lòng gửi lại yêu cầu mới.");
+        }
+    }
+
+    @Override
+    @Transactional
+    public void resetPassword(com.candyshop.dto.ResetPasswordRequest request) {
+        if (request.getToken() == null || request.getToken().isBlank()) {
+            throw new BadRequestException("Mã xác thực không hợp lệ.");
+        }
+
+        User user = userRepository.findByResetPasswordToken(request.getToken().trim())
+            .orElseThrow(() -> new BadRequestException("Mã đặt lại mật khẩu không hợp lệ hoặc đã được sử dụng."));
+
+        if (user.getResetPasswordExpiry() == null || user.getResetPasswordExpiry().isBefore(java.time.LocalDateTime.now())) {
+            throw new BadRequestException("Mã đặt lại mật khẩu đã hết hạn. Vui lòng gửi lại yêu cầu mới.");
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        // Invalidate token once used
+        user.setResetPasswordToken(null);
+        user.setResetPasswordExpiry(null);
+        userRepository.save(user);
+    }
+
     /** Map User entity to safe UserResponse DTO (no password exposed) */
     private UserResponse mapToUserResponse(User user) {
         return new UserResponse(

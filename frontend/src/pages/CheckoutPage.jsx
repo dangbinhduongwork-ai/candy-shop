@@ -222,15 +222,15 @@ const CheckoutPage = () => {
       <div className="checkout-container">
         {/* Breadcrumb Navigation */}
         <nav className="breadcrumb-nav">
-          <Link to="/" className="breadcrumb-link">🏠 Trang chủ</Link>
+          <Link to="/" className="breadcrumb-link">Trang chủ</Link>
           <span className="breadcrumb-separator">/</span>
-          <Link to="/cart" className="breadcrumb-link">🛒 Giỏ hàng</Link>
+          <Link to="/cart" className="breadcrumb-link">Giỏ hàng</Link>
           <span className="breadcrumb-separator">/</span>
-          <span className="breadcrumb-current">💳 Thanh toán & Đặt hàng</span>
+          <span className="breadcrumb-current">Thanh toán & Đặt hàng</span>
         </nav>
 
         <div className="checkout-header">
-          <h1 className="checkout-main-title">📦 Thông Tin Giao Hàng & Đặt Mua</h1>
+          <h1 className="checkout-main-title">Thông Tin Giao Hàng & Đặt Mua</h1>
           <p className="checkout-header-sub">Vui lòng kiểm tra địa chỉ nhận hàng và xác nhận đơn hàng của bạn</p>
         </div>
 
@@ -241,7 +241,7 @@ const CheckoutPage = () => {
           <div className="checkout-form-section">
             <div className="checkout-card">
               <h2 className="checkout-section-title">
-                <span>📍</span> Địa Chỉ Nhận Bánh Kẹo
+                Địa Chỉ Nhận Hàng
               </h2>
 
               <div>
@@ -252,12 +252,15 @@ const CheckoutPage = () => {
                   <input
                     type="text"
                     id="receiverName"
-                    className={errors.receiverName ? 'input-error' : ''}
-                    placeholder="Ví dụ: Nguyễn Văn A"
+                    name="receiverName"
+                    className={`form-input ${errors.receiverName ? 'input-error' : ''}`}
+                    placeholder="Ví dụ: Nguyễn Văn An"
                     value={formData.receiverName}
                     onChange={(e) => setFormData({ ...formData, receiverName: e.target.value })}
                   />
-                  {errors.receiverName && <span className="error-text">{errors.receiverName}</span>}
+                  {errors.receiverName && (
+                    <span className="error-msg">{errors.receiverName}</span>
+                  )}
                 </div>
 
                 <div className="form-group">
@@ -267,38 +270,43 @@ const CheckoutPage = () => {
                   <input
                     type="tel"
                     id="receiverPhone"
-                    className={errors.receiverPhone ? 'input-error' : ''}
+                    name="receiverPhone"
+                    className={`form-input ${errors.receiverPhone ? 'input-error' : ''}`}
                     placeholder="Ví dụ: 0912345678"
                     value={formData.receiverPhone}
                     onChange={(e) => setFormData({ ...formData, receiverPhone: e.target.value })}
                   />
-                  {errors.receiverPhone && <span className="error-text">{errors.receiverPhone}</span>}
+                  {errors.receiverPhone && (
+                    <span className="error-msg">{errors.receiverPhone}</span>
+                  )}
                 </div>
 
                 <div className="form-group">
                   <label htmlFor="shippingAddress">
-                    Địa chỉ nhận hàng chi tiết <span className="req">*</span>
+                    Địa chỉ giao hàng chi tiết <span className="req">*</span>
                   </label>
-                  <textarea
+                  <input
+                    type="text"
                     id="shippingAddress"
-                    rows="3"
-                    className={`form-textarea ${errors.shippingAddress ? 'input-error' : ''}`}
-                    placeholder="Số nhà, tên đường, phường/xã, quận/huyện, tỉnh/thành phố..."
+                    name="shippingAddress"
+                    className={`form-input ${errors.shippingAddress ? 'input-error' : ''}`}
+                    placeholder="Số nhà, tên ngõ/đường, phường/xã, quận/huyện, tỉnh/thành phố"
                     value={formData.shippingAddress}
                     onChange={(e) => setFormData({ ...formData, shippingAddress: e.target.value })}
-                  ></textarea>
-                  {errors.shippingAddress && <span className="error-text">{errors.shippingAddress}</span>}
+                  />
+                  {errors.shippingAddress && (
+                    <span className="error-msg">{errors.shippingAddress}</span>
+                  )}
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="orderNote">
-                    Ghi chú đơn hàng (Tùy chọn)
-                  </label>
+                  <label htmlFor="orderNote">Ghi chú cho shipper / tiệm (tùy chọn)</label>
                   <textarea
                     id="orderNote"
-                    rows="2"
+                    name="orderNote"
+                    rows="3"
                     className="form-textarea"
-                    placeholder="Ví dụ: Giao vào giờ hành chính, gọi trước khi giao, đóng gói kèm nơ quà..."
+                    placeholder="Ví dụ: Giao vào giờ hành chính, gọi trước khi giao, đóng gói cẩn thận..."
                     value={formData.note}
                     onChange={(e) => setFormData({ ...formData, note: e.target.value })}
                   ></textarea>
@@ -306,14 +314,19 @@ const CheckoutPage = () => {
 
                 {/* Payment Method */}
                 <div className="payment-method-box">
-                  <h3 className="payment-title">💳 Phương thức thanh toán</h3>
+                  <h3 className="payment-title">Phương thức thanh toán</h3>
                   <div className="payment-option-card active">
                     <input type="radio" id="cod" name="paymentMethod" checked readOnly />
                     <label htmlFor="cod" className="payment-option-label">
-                      <div className="payment-icon">💵</div>
+                      <div className="payment-icon" style={{ display: 'flex', color: '#0f766e' }}>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <rect x="2" y="5" width="20" height="14" rx="2"/>
+                          <line x1="2" y1="10" x2="22" y2="10"/>
+                        </svg>
+                      </div>
                       <div className="payment-details">
                         <strong>Thanh toán khi nhận hàng (COD)</strong>
-                        <p>Bạn chỉ phải thanh toán tiền mặt trực tiếp cho shipper khi nhận được bánh kẹo tận tay.</p>
+                        <p>Bạn chỉ phải thanh toán tiền mặt trực tiếp cho nhân viên giao hàng khi nhận được kiện hàng tận tay.</p>
                       </div>
                     </label>
                   </div>
@@ -325,7 +338,7 @@ const CheckoutPage = () => {
           {/* Right: Order Summary */}
           <div className="checkout-summary-section">
             <div className="order-summary-card">
-              <h3 className="summary-title">📋 Đơn Hàng ({items.length} món)</h3>
+              <h3 className="summary-title">Đơn Hàng ({items.length} sản phẩm)</h3>
 
               {/* Items List Preview */}
               <div className="checkout-items-preview-list">
@@ -339,7 +352,13 @@ const CheckoutPage = () => {
                           className="checkout-thumb-img"
                         />
                       ) : (
-                        <div className="checkout-thumb-placeholder">🍬</div>
+                        <div className="checkout-thumb-placeholder" style={{ color: '#cbd5e1' }}>
+                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <path d="M16 10a4 4 0 0 1-8 0"/>
+                          </svg>
+                        </div>
                       )}
                       <span className="checkout-item-qty-badge">x{item.quantity}</span>
                     </div>
@@ -361,9 +380,9 @@ const CheckoutPage = () => {
                 style={{
                   margin: '1rem 0',
                   padding: '0.85rem',
-                  background: '#fdf2f8',
-                  borderRadius: '10px',
-                  border: '1px dashed #f472b6',
+                  background: 'var(--primary-light)',
+                  borderRadius: '8px',
+                  border: '1px dashed var(--primary)',
                 }}
               >
                 <div
@@ -374,8 +393,8 @@ const CheckoutPage = () => {
                     marginBottom: '0.5rem',
                   }}
                 >
-                  <span style={{ fontWeight: 700, fontSize: '0.85rem', color: '#831843' }}>
-                    🎟️ Mã Giảm Giá
+                  <span style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--primary-dark)' }}>
+                    Mã Giảm Giá
                   </span>
                   {availableVouchers.length > 0 && (
                     <button
@@ -384,14 +403,14 @@ const CheckoutPage = () => {
                       style={{
                         background: 'none',
                         border: 'none',
-                        color: '#db2777',
+                        color: 'var(--primary)',
                         fontSize: '0.8rem',
                         fontWeight: 700,
                         cursor: 'pointer',
                         textDecoration: 'underline',
                       }}
                     >
-                      Chọn mã ({availableVouchers.length}) 🎁
+                      Chọn mã ({availableVouchers.length})
                     </button>
                   )}
                 </div>
@@ -404,8 +423,8 @@ const CheckoutPage = () => {
                       alignItems: 'center',
                       background: '#fff',
                       padding: '0.6rem 0.75rem',
-                      borderRadius: '8px',
-                      border: '1px solid #fbcfe8',
+                      borderRadius: '6px',
+                      border: '1px solid var(--border)',
                     }}
                   >
                     <div>
@@ -413,7 +432,7 @@ const CheckoutPage = () => {
                         <span
                           style={{
                             fontWeight: 800,
-                            color: '#be185d',
+                            color: 'var(--primary)',
                             fontFamily: 'monospace',
                             fontSize: '0.9rem',
                           }}
@@ -423,8 +442,8 @@ const CheckoutPage = () => {
                         <span
                           style={{
                             fontSize: '0.78rem',
-                            background: '#fce7f3',
-                            color: '#be185d',
+                            background: 'var(--primary-light)',
+                            color: 'var(--primary-dark)',
                             padding: '0.1rem 0.4rem',
                             borderRadius: '4px',
                             fontWeight: 700,

@@ -15,56 +15,62 @@ const Footer = () => {
           {/* Col 1: Brand & Bio */}
           <div className="footer-col footer-brand-col">
             <Link to="/" className="footer-brand">
-              <span className="brand-icon-spin">🍬</span>
+              <span className="brand-icon-wrapper" style={{ width: '32px', height: '32px', background: 'rgba(255,255,255,0.1)', borderColor: 'rgba(255,255,255,0.2)', color: 'white' }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                  <line x1="3" y1="6" x2="21" y2="6"/>
+                  <path d="M16 10a4 4 0 0 1-8 0"/>
+                </svg>
+              </span>
               <span className="brand-logo-text">Nguyen Huong Grocery Store</span>
             </Link>
             <p className="footer-desc">
-              Mang trọn tình yêu và sự ngọt ngào vào từng viên kẹo thủ công, thanh sô cô la đậm đà và chiếc bánh quy bơ giòn rụm thượng hạng.
+              Hệ thống bán lẻ thực phẩm thiết yếu, bánh kẹo cao cấp và đặc sản tuyển chọn. Cam kết chất lượng, nguồn gốc rõ ràng và giá thành hợp lý.
             </p>
             <div className="footer-badges">
-              <span className="footer-pill">✨ 100% Nguyên liệu tươi</span>
-              <span className="footer-pill">🚚 Giao nhanh 2h</span>
+              <span className="footer-pill">Sản phẩm chính hãng</span>
+              <span className="footer-pill">Giao hàng tận nơi</span>
             </div>
           </div>
 
           {/* Col 2: Categories */}
           <div className="footer-col">
-            <h4 className="footer-title">🍭 Danh Mục Bánh Kẹo</h4>
+            <h4 className="footer-title">Danh Mục Ngành Hàng</h4>
             <ul className="footer-links">
-              <li><Link to="/">Kẹo Dẻo & Marshmallow</Link></li>
-              <li><Link to="/">Sô Cô La Thủ Công & Cacao</Link></li>
-              <li><Link to="/">Bánh Quy & Macaron Pháp</Link></li>
-              <li><Link to="/">Kẹo Mút Cầu Vồng & Kẹo Cứng</Link></li>
-              <li><Link to="/">Đặc Sản Bánh Kẹo Truyền Thống</Link></li>
+              <li><Link to="/">Bánh kẹo nhập khẩu & cao cấp</Link></li>
+              <li><Link to="/">Đặc sản bánh kẹo truyền thống</Link></li>
+              <li><Link to="/">Nhu yếu phẩm & Đồ uống</Link></li>
+              <li><Link to="/">Trà, Cà phê & Ngũ cốc dinh dưỡng</Link></li>
+              <li><Link to="/">Hạt dinh dưỡng & Trái cây sấy</Link></li>
             </ul>
           </div>
 
           {/* Col 3: Support */}
           <div className="footer-col">
-            <h4 className="footer-title">🛡️ Hỗ Trợ Khách Hàng</h4>
+            <h4 className="footer-title">Hỗ Trợ Khách Hàng</h4>
             <ul className="footer-links">
-              <li><a href="#!">Chính sách đổi trả 100%</a></li>
+              <li><a href="#!">Chính sách đổi trả minh bạch</a></li>
               <li><a href="#!">Hướng dẫn đặt hàng online</a></li>
               <li><a href="#!">Chính sách bảo mật thông tin</a></li>
-              <li><a href="#!">Kiểm tra đơn hàng</a></li>
-              <li><a href="#!">Ưu đãi thành viên VIP</a></li>
+              <li><a href="#!">Kiểm tra tiến độ đơn hàng</a></li>
+              <li><a href="#!">Ưu đãi thành viên & tích điểm</a></li>
             </ul>
           </div>
 
           {/* Col 4: Contact & Hours */}
           <div className="footer-col">
-            <h4 className="footer-title">📍 Liên Hệ Tiệm</h4>
+            <h4 className="footer-title">Thông Tin Liên Hệ</h4>
             <div className="footer-contact-info">
-              <p>🏠 <strong>Địa chỉ:</strong> <a href="https://maps.app.goo.gl/BiWJi5AJAdMfZvRb7" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>Số 509 thôn 9, Suối Hai, Hà Nội</a></p>
-              <p>📞 <strong>Hotline:</strong> <a href="https://zalo.me/0969315603" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>0969 315 603 (6:00 - 22:00)</a></p>
-              <p>✉️ <strong>Email:</strong> <a href="https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=taphoa.nguyenhuong@gmail.com" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>taphoa.nguyenhuong@gmail.com</a></p>
-              <p>⏰ <strong>Giờ mở cửa:</strong> <a href="https://maps.app.goo.gl/BiWJi5AJAdMfZvRb7" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>06:00 - 22:00 tất cả các ngày</a></p>
+              <p><strong>Địa chỉ:</strong> <a href="https://maps.app.goo.gl/BiWJi5AJAdMfZvRb7" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>Số 509 thôn 9, Suối Hai, Ba Vì, Hà Nội</a></p>
+              <p><strong>Hotline:</strong> <a href="https://zalo.me/0969315603" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>0969 315 603 (6:00 - 22:00)</a></p>
+              <p><strong>Email:</strong> <a href="https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=taphoa.nguyenhuong@gmail.com" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>taphoa.nguyenhuong@gmail.com</a></p>
+              <p><strong>Giờ phục vụ:</strong> <a href="https://maps.app.goo.gl/BiWJi5AJAdMfZvRb7" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>06:00 - 22:00 tất cả các ngày</a></p>
             </div>
           </div>
         </div>
 
         <div className="footer-bottom-bar">
-          <p>© 2026 Nguyen Huong Grocery Store. All rights reserved. Made with ❤️ and lots of sugar.</p>
+          <p>© 2026 Nguyen Huong Grocery Store. Tất cả các quyền được bảo lưu.</p>
         </div>
       </div>
     </footer>

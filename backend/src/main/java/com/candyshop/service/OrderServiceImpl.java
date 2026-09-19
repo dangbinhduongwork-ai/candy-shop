@@ -89,8 +89,8 @@ public class OrderServiceImpl implements OrderService {
         );
 
         for (CartItem cartItem : cart.getItems()) {
-            // Re-fetch product to get latest stock and price
-            Product product = productRepository.findById(cartItem.getProduct().getId())
+            // Re-fetch product with pessimistic write lock to prevent race conditions / overselling
+            Product product = productRepository.findByIdWithLock(cartItem.getProduct().getId())
                     .orElseThrow(() -> new ResourceNotFoundException("Sản phẩm không tồn tại: ID " + cartItem.getProduct().getId()));
 
             int requestedQty = cartItem.getQuantity();
@@ -255,6 +255,17 @@ public class OrderServiceImpl implements OrderService {
                     productRepository.save(product);
                 }
             }
+        }
+
+        // Revert voucher usage if applied
+        List<VoucherUsage> usages = voucherUsageRepository.findByOrderId(order.getId());
+        for (VoucherUsage usage : usages) {
+            Voucher voucher = usage.getVoucher();
+            if (voucher != null && voucher.getUsedCount() != null && voucher.getUsedCount() > 0) {
+                voucher.setUsedCount(voucher.getUsedCount() - 1);
+                voucherRepository.save(voucher);
+            }
+            voucherUsageRepository.delete(usage);
         }
 
         order.setStatus(OrderStatus.CANCELLED);

@@ -62,7 +62,7 @@ const Navbar = () => {
     <header className="navbar-sticky-wrapper">
       {/* Top micro announcement bar */}
       <div className="top-announcement-bar">
-        <span>🎉 Miễn phí giao hàng cho đơn từ 200.000đ | Tặng kèm kẹo dẻo cho mỗi đơn hàng! 🍬</span>
+        <span>Miễn phí giao hàng cho đơn từ 200.000đ • Hotline đặt hàng & CSKH: 0969 315 603</span>
       </div>
 
       <nav className="navbar-glass">
@@ -70,7 +70,11 @@ const Navbar = () => {
           {/* Brand Logo */}
           <Link to="/" className="navbar-brand">
             <span className="brand-icon-wrapper">
-              <span className="brand-candy-icon">🍬</span>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                <line x1="3" y1="6" x2="21" y2="6"/>
+                <path d="M16 10a4 4 0 0 1-8 0"/>
+              </svg>
             </span>
             <div className="brand-text-group">
               <span className="brand-title">Nguyen Huong</span>
@@ -81,12 +85,12 @@ const Navbar = () => {
           {/* Center Navigation Links */}
           <div className="navbar-nav-links">
             <Link to="/" className={`nav-link-item ${isActive('/') ? 'active' : ''}`}>
-              <span>🏠</span> Trang Chủ
+              Trang Chủ
             </Link>
 
             {isAuthenticated && user?.role !== 'ROLE_ADMIN' && (
               <Link to="/orders" className={`nav-link-item ${isActive('/orders') ? 'active' : ''}`}>
-                <span>📦</span> Đơn Hàng Của Tôi
+                Đơn Hàng Của Tôi
               </Link>
             )}
 
@@ -104,7 +108,6 @@ const Navbar = () => {
                   aria-expanded={adminDropdownOpen}
                   title="Bảng điều khiển Quản Trị Viên"
                 >
-                  <span className="admin-badge-icon">👑</span>
                   <span className="admin-dropdown-text">Quản Trị</span>
                   <span className={`admin-dropdown-chevron ${adminDropdownOpen ? 'open' : ''}`}>▾</span>
                 </button>
@@ -113,8 +116,8 @@ const Navbar = () => {
                   <div className="admin-dropdown-menu">
                     <div className="admin-dropdown-header">
                       <div className="admin-header-title-box">
-                        <span className="admin-header-badge">👑 Admin Panel</span>
-                        <span className="admin-header-sub">Hệ thống quản lý cửa hàng</span>
+                        <span className="admin-header-badge">Hệ Thống Quản Trị</span>
+                        <span className="admin-header-sub">Quản lý hoạt động cửa hàng</span>
                       </div>
                     </div>
 
@@ -124,7 +127,6 @@ const Navbar = () => {
                         className={`admin-menu-item ${isActive('/admin/products') ? 'active' : ''}`}
                         onClick={() => setAdminDropdownOpen(false)}
                       >
-                        <span className="admin-menu-icon">🍭</span>
                         <div className="admin-menu-info">
                           <span className="admin-menu-title">Sản Phẩm</span>
                           <span className="admin-menu-desc">Kho hàng & thêm sản phẩm mới</span>
@@ -136,7 +138,6 @@ const Navbar = () => {
                         className={`admin-menu-item ${isActive('/admin/categories') ? 'active' : ''}`}
                         onClick={() => setAdminDropdownOpen(false)}
                       >
-                        <span className="admin-menu-icon">🏷️</span>
                         <div className="admin-menu-info">
                           <span className="admin-menu-title">Danh Mục</span>
                           <span className="admin-menu-desc">Phân loại ngành hàng bánh kẹo</span>
@@ -148,7 +149,6 @@ const Navbar = () => {
                         className={`admin-menu-item ${isActive('/admin/orders') ? 'active' : ''}`}
                         onClick={() => setAdminDropdownOpen(false)}
                       >
-                        <span className="admin-menu-icon">📦</span>
                         <div className="admin-menu-info">
                           <span className="admin-menu-title">Đơn Hàng</span>
                           <span className="admin-menu-desc">Duyệt & theo dõi đơn khách đặt</span>
@@ -160,7 +160,6 @@ const Navbar = () => {
                         className={`admin-menu-item ${isActive('/admin/customers') ? 'active' : ''}`}
                         onClick={() => setAdminDropdownOpen(false)}
                       >
-                        <span className="admin-menu-icon">👥</span>
                         <div className="admin-menu-info">
                           <span className="admin-menu-title">Khách Hàng</span>
                           <span className="admin-menu-desc">Danh sách tài khoản người mua</span>
@@ -172,7 +171,6 @@ const Navbar = () => {
                         className={`admin-menu-item ${isActive('/admin/vouchers') ? 'active' : ''}`}
                         onClick={() => setAdminDropdownOpen(false)}
                       >
-                        <span className="admin-menu-icon">🎟️</span>
                         <div className="admin-menu-info">
                           <span className="admin-menu-title">Voucher</span>
                           <span className="admin-menu-desc">Mã ưu đãi & giảm giá khuyến mãi</span>
@@ -184,7 +182,6 @@ const Navbar = () => {
                         className={`admin-menu-item ${isActive('/admin/banners') ? 'active' : ''}`}
                         onClick={() => setAdminDropdownOpen(false)}
                       >
-                        <span className="admin-menu-icon">🖼️</span>
                         <div className="admin-menu-info">
                           <span className="admin-menu-title">Banner</span>
                           <span className="admin-menu-desc">Quản lý slider banner trang chủ</span>
@@ -196,7 +193,6 @@ const Navbar = () => {
                         className={`admin-menu-item ${isActive('/admin/settings') ? 'active' : ''}`}
                         onClick={() => setAdminDropdownOpen(false)}
                       >
-                        <span className="admin-menu-icon">⚙️</span>
                         <div className="admin-menu-info">
                           <span className="admin-menu-title">Cài Đặt Shop</span>
                           <span className="admin-menu-desc">Cấu hình cửa hàng & phí ship</span>
@@ -213,7 +209,13 @@ const Navbar = () => {
           <div className="navbar-actions">
             {/* Quick Cart Button on mobile / header */}
             <Link to="/cart" className={`navbar-cart-btn ${isActive('/cart') ? 'active' : ''}`} title="Xem giỏ hàng">
-              <span className="cart-btn-icon">🛒</span>
+              <span className="cart-btn-icon" style={{ display: 'flex', alignItems: 'center' }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="9" cy="21" r="1"/>
+                  <circle cx="20" cy="21" r="1"/>
+                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                </svg>
+              </span>
               <span className="cart-btn-text">Giỏ hàng</span>
               {cartCount > 0 && (
                 <span className="cart-badge-pill">{cartCount}</span>
@@ -241,7 +243,7 @@ const Navbar = () => {
                   <div className="user-text-meta">
                     <span className="user-display-name">{user?.fullName || 'Tài khoản'}</span>
                     <span className="user-role-tag">
-                      {user?.role === 'ROLE_ADMIN' ? '👑 Admin' : '🍬 Khách hàng'}
+                      {user?.role === 'ROLE_ADMIN' ? 'Admin' : 'Khách hàng'}
                     </span>
                   </div>
                 </Link>
@@ -252,7 +254,7 @@ const Navbar = () => {
                   onClick={handleLogout}
                   title="Đăng xuất"
                 >
-                  🚪 <span className="logout-btn-text">Đăng xuất</span>
+                  <span className="logout-btn-text">Đăng xuất</span>
                 </button>
               </div>
             ) : (
@@ -261,7 +263,7 @@ const Navbar = () => {
                   Đăng nhập
                 </Link>
                 <Link to="/register" className="btn btn-register-sweet">
-                  Đăng ký ngay ✨
+                  Đăng ký
                 </Link>
               </div>
             )}

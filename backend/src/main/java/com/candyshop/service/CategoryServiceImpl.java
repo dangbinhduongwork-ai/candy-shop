@@ -35,8 +35,24 @@ public class CategoryServiceImpl implements CategoryService {
             categories = categoryRepository.findAllByActiveTrueOrderByDisplayOrderAscIdAsc();
         }
 
+        // Fetch counts grouped by category ID to eliminate N+1 queries
+        java.util.Map<Long, Long> countsMap = new java.util.HashMap<>();
+        for (Object[] row : productRepository.countGroupedByCategoryId()) {
+            if (row != null && row.length >= 2 && row[0] != null) {
+                countsMap.put(((Number) row[0]).longValue(), ((Number) row[1]).longValue());
+            }
+        }
+
         return categories.stream()
-                .map(this::mapToResponse)
+                .map(cat -> new CategoryResponse(
+                        cat.getId(),
+                        cat.getName(),
+                        cat.getDescription(),
+                        cat.getImageUrl(),
+                        cat.getDisplayOrder(),
+                        cat.getActive(),
+                        countsMap.getOrDefault(cat.getId(), 0L)
+                ))
                 .collect(Collectors.toList());
     }
 

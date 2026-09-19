@@ -93,14 +93,19 @@ const CartPage = () => {
       <div className="cart-page-wrapper">
         <div className="cart-container">
           <div className="cart-auth-prompt-card">
-            <div className="prompt-icon">🔒</div>
+            <div className="prompt-icon" style={{ display: 'flex', justifyContent: 'center', color: '#0f766e' }}>
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+            </div>
             <h2 className="prompt-title">Vui lòng đăng nhập để xem giỏ hàng</h2>
             <p className="prompt-sub">
-              Đăng nhập tài khoản của bạn để quản lý các món bánh kẹo đã chọn và nhận nhiều ưu đãi ngọt ngào!
+              Đăng nhập tài khoản của bạn để quản lý các sản phẩm đã chọn và nhận các mã giảm giá ưu đãi!
             </p>
             <div className="prompt-btn-group">
               <Link to="/login" className="btn btn-primary">
-                Đăng nhập ngay ✨
+                Đăng nhập ngay
               </Link>
               <Link to="/register" className="btn btn-outline">
                 Tạo tài khoản mới
@@ -133,16 +138,16 @@ const CartPage = () => {
       <div className="cart-container">
         {/* Breadcrumb Navigation */}
         <nav className="breadcrumb-nav">
-          <Link to="/" className="breadcrumb-link">🏠 Trang chủ</Link>
+          <Link to="/" className="breadcrumb-link">Trang chủ</Link>
           <span className="breadcrumb-separator">/</span>
-          <span className="breadcrumb-current">🛒 Giỏ hàng ({cart?.totalItems || 0} sản phẩm)</span>
+          <span className="breadcrumb-current">Giỏ hàng ({cart?.totalItems || 0} sản phẩm)</span>
         </nav>
 
         {/* Main Title Header */}
         <div className="cart-page-header">
           <div>
-            <h1 className="cart-main-title">🍬 Giỏ Hàng Ngọt Ngào Của Bạn</h1>
-            <p className="cart-header-sub">Kiểm tra lại danh sách bánh kẹo và tiến hành đặt hàng</p>
+            <h1 className="cart-main-title">Giỏ Hàng Của Bạn</h1>
+            <p className="cart-header-sub">Kiểm tra lại danh sách sản phẩm và tiến hành đặt hàng</p>
           </div>
 
           {items.length > 0 && (
@@ -151,7 +156,7 @@ const CartPage = () => {
               className="btn btn-outline-danger btn-sm"
               onClick={() => setShowClearConfirm(true)}
             >
-              🗑️ Xóa toàn bộ giỏ
+              Xóa toàn bộ giỏ
             </button>
           )}
         </div>
@@ -164,13 +169,19 @@ const CartPage = () => {
         ) : items.length === 0 ? (
           /* Empty Cart View */
           <div className="empty-cart-card">
-            <div className="empty-cart-icon">🛒</div>
-            <h2 className="empty-cart-title">Giỏ hàng của bạn đang trống trơn!</h2>
+            <div className="empty-cart-icon" style={{ display: 'flex', justifyContent: 'center', color: '#94a3b8' }}>
+              <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="9" cy="21" r="1"/>
+                <circle cx="20" cy="21" r="1"/>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+              </svg>
+            </div>
+            <h2 className="empty-cart-title">Giỏ hàng của bạn đang trống</h2>
             <p className="empty-cart-desc">
-              Chưa có món bánh kẹo nào trong giỏ. Hãy dạo quanh một vòng và chọn những hương vị ngọt ngào yêu thích nhé!
+              Chưa có sản phẩm nào trong giỏ. Hãy dạo quanh một vòng và chọn những món yêu thích nhé!
             </p>
             <Link to="/" className="btn btn-primary btn-explore-sweets">
-              ✨ Khám phá bánh kẹo thơm ngon ngay
+              Tiếp tục mua sắm
             </Link>
           </div>
         ) : (

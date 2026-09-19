@@ -27,6 +27,13 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     long countByCategoryId(Long categoryId);
 
+    @Query("SELECT p.category.id, COUNT(p) FROM Product p WHERE p.category IS NOT NULL GROUP BY p.category.id")
+    java.util.List<Object[]> countGroupedByCategoryId();
+
     @Query("SELECT COUNT(p) FROM Product p WHERE p.stockQuantity IS NULL OR p.stockQuantity < 10")
     long countLowStockProducts();
+
+    @org.springframework.data.jpa.repository.Lock(jakarta.persistence.LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT p FROM Product p WHERE p.id = :id")
+    java.util.Optional<Product> findByIdWithLock(@Param("id") Long id);
 }

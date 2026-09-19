@@ -52,7 +52,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public CartResponse getCartByUserEmail(String email) {
         Cart cart = getOrCreateCart(email);
         return mapToCartResponse(cart);

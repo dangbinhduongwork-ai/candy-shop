@@ -18,6 +18,8 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
     /** Handle @Valid validation failures — returns field-level errors */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationErrors(
@@ -56,7 +58,21 @@ public class GlobalExceptionHandler {
                 "Invalid email or password"));
     }
 
-    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(GlobalExceptionHandler.class);
+    /** Handle illegal arguments / invalid business inputs */
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalArgument(IllegalArgumentException ex) {
+        return ResponseEntity.badRequest()
+            .body(new ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage()));
+    }
+
+    /** Handle database constraint violations (e.g. foreign key delete violations) */
+    @ExceptionHandler(org.springframework.dao.DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorResponse> handleDataIntegrityViolation(org.springframework.dao.DataIntegrityViolationException ex) {
+        log.warn("Database integrity violation: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+            .body(new ErrorResponse(HttpStatus.CONFLICT.value(), 
+                "Không thể thực hiện thao tác này do có dữ liệu liên quan (ví dụ: sản phẩm/danh mục đang nằm trong đơn hàng hoặc giỏ hàng)."));
+    }
 
     /** Catch-all for unexpected errors */
     @ExceptionHandler(Exception.class)

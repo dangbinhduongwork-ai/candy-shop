@@ -99,4 +99,41 @@ public class AuthController {
             }
         }
     }
+
+    /**
+     * POST /api/auth/forgot-password
+     * Generates a password reset token and returns a success message.
+     */
+    @PostMapping("/forgot-password")
+    public ResponseEntity<java.util.Map<String, String>> forgotPassword(
+            @Valid @RequestBody com.candyshop.dto.ForgotPasswordRequest request,
+            HttpServletRequest httpRequest) {
+        String clientIp = loginAttemptService.getClientIp(httpRequest);
+        recaptchaService.validateCaptcha(request.getCaptchaToken(), clientIp);
+
+        String message = authService.forgotPassword(request);
+        return ResponseEntity.ok(java.util.Map.of("message", message));
+    }
+
+    /**
+     * GET /api/auth/verify-reset-token
+     * Checks whether a reset token is valid and active.
+     */
+    @GetMapping("/verify-reset-token")
+    public ResponseEntity<java.util.Map<String, String>> verifyResetToken(
+            @RequestParam("token") String token) {
+        authService.verifyResetToken(token);
+        return ResponseEntity.ok(java.util.Map.of("message", "Mã xác thực hợp lệ"));
+    }
+
+    /**
+     * POST /api/auth/reset-password
+     * Sets a new password using a verified reset token.
+     */
+    @PostMapping("/reset-password")
+    public ResponseEntity<java.util.Map<String, String>> resetPassword(
+            @Valid @RequestBody com.candyshop.dto.ResetPasswordRequest request) {
+        authService.resetPassword(request);
+        return ResponseEntity.ok(java.util.Map.of("message", "Mật khẩu của bạn đã được thay đổi thành công!"));
+    }
 }

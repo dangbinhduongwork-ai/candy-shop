@@ -6,6 +6,7 @@ import com.candyshop.dto.ProductRequest;
 import com.candyshop.dto.ProductResponse;
 import com.candyshop.entity.Category;
 import com.candyshop.entity.Product;
+import com.candyshop.exception.BadRequestException;
 import com.candyshop.exception.ResourceNotFoundException;
 import com.candyshop.repository.CategoryRepository;
 import com.candyshop.repository.ProductRepository;
@@ -29,13 +30,16 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final ReviewRepository reviewRepository;
+    private final com.candyshop.repository.OrderItemRepository orderItemRepository;
 
     public ProductServiceImpl(ProductRepository productRepository,
                               CategoryRepository categoryRepository,
-                              ReviewRepository reviewRepository) {
+                              ReviewRepository reviewRepository,
+                              com.candyshop.repository.OrderItemRepository orderItemRepository) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
         this.reviewRepository = reviewRepository;
+        this.orderItemRepository = orderItemRepository;
     }
 
     @Override
@@ -150,6 +154,12 @@ public class ProductServiceImpl implements ProductService {
     public void deleteProduct(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy sản phẩm với ID: " + id));
+
+        if (orderItemRepository.existsByProductId(id)) {
+            throw new BadRequestException("Không thể xoá sản phẩm '" + product.getName() 
+                    + "' vì sản phẩm này đã từng được đặt mua trong các đơn hàng trước đây.");
+        }
+
         productRepository.delete(product);
     }
 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import AdminNavTabs from '../components/AdminNavTabs';
 import { getCustomers, getCustomerStats, getCustomerById, updateCustomerStatus } from '../api/customerService';
 
 /**
@@ -181,6 +182,9 @@ const AdminCustomersPage = () => {
       {toastMessage && <div className="toast-float">{toastMessage}</div>}
 
       <div className="admin-container">
+        {/* Unified Navigation Tabs */}
+        <AdminNavTabs />
+
         {/* Header Title */}
         <div className="admin-header">
           <div>
@@ -194,7 +198,7 @@ const AdminCustomersPage = () => {
               onClick={() => setShowTopSpendersModal(true)}
               title="Xem bảng xếp hạng khách hàng thân thiết"
             >
-              <span>👑</span> Top Khách Hàng VIP
+              Top Khách Hàng VIP
             </button>
             <button
               type="button"
@@ -206,7 +210,7 @@ const AdminCustomersPage = () => {
               }}
               title="Làm mới dữ liệu"
             >
-              <span>🔄</span> Làm Mới
+              Làm Mới
             </button>
           </div>
         </div>

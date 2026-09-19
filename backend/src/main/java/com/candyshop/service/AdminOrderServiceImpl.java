@@ -24,11 +24,17 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
+    private final com.candyshop.repository.VoucherRepository voucherRepository;
+    private final com.candyshop.repository.VoucherUsageRepository voucherUsageRepository;
 
     public AdminOrderServiceImpl(OrderRepository orderRepository,
-                                 ProductRepository productRepository) {
+                                 ProductRepository productRepository,
+                                 com.candyshop.repository.VoucherRepository voucherRepository,
+                                 com.candyshop.repository.VoucherUsageRepository voucherUsageRepository) {
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
+        this.voucherRepository = voucherRepository;
+        this.voucherUsageRepository = voucherUsageRepository;
     }
 
     @Override
@@ -115,7 +121,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                     + ". Luồng hợp lệ: PENDING -> CONFIRMED -> SHIPPING -> COMPLETED (hoặc CANCELLED từ PENDING/CONFIRMED).");
         }
 
-        // If cancelled, restore stock quantities
+        // If cancelled, restore stock quantities and revert voucher usage
         if (newStatus == OrderStatus.CANCELLED) {
             if (order.getItems() != null) {
                 for (OrderItem item : order.getItems()) {
@@ -126,6 +132,16 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                         productRepository.save(product);
                     }
                 }
+            }
+
+            List<VoucherUsage> usages = voucherUsageRepository.findByOrderId(order.getId());
+            for (VoucherUsage usage : usages) {
+                Voucher voucher = usage.getVoucher();
+                if (voucher != null && voucher.getUsedCount() != null && voucher.getUsedCount() > 0) {
+                    voucher.setUsedCount(voucher.getUsedCount() - 1);
+                    voucherRepository.save(voucher);
+                }
+                voucherUsageRepository.delete(usage);
             }
         }
 

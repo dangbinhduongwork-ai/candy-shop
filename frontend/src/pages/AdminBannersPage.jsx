@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import AdminNavTabs from '../components/AdminNavTabs';
 import { useCart } from '../context/CartContext';
 import bannerService from '../api/bannerService';
 import { getCategories } from '../api/categoryService';
@@ -31,11 +32,6 @@ const AdminBannersPage = () => {
   // Delete State
   const [deletingBanner, setDeletingBanner] = useState(null);
 
-  useEffect(() => {
-    fetchBanners();
-    fetchCategories();
-  }, []);
-
   const fetchBanners = async () => {
     try {
       setLoading(true);
@@ -57,6 +53,11 @@ const AdminBannersPage = () => {
       console.error('Lỗi khi tải danh mục:', err);
     }
   };
+
+  useEffect(() => {
+    fetchBanners();
+    fetchCategories();
+  }, []);
 
   const openCreateModal = () => {
     setEditingBanner(null);
@@ -224,14 +225,17 @@ const AdminBannersPage = () => {
   return (
     <div className="admin-page">
       <div className="admin-container">
+        {/* Unified Navigation Tabs */}
+        <AdminNavTabs />
+
         {/* Header */}
         <div className="admin-header">
           <div>
             <span className="admin-subtitle">Quản lý banner khuyến mãi, thứ tự hiển thị và đường link liên kết</span>
-            <h1 className="admin-title">🖼️ Quản Lý Banner Trang Chủ</h1>
+            <h1 className="admin-title">Quản Lý Banner Trang Chủ</h1>
           </div>
           <button className="btn btn-primary" onClick={openCreateModal}>
-            ➕ Thêm Banner Mới
+            Thêm Banner Mới
           </button>
         </div>
 

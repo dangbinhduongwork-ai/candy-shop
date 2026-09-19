@@ -22,6 +22,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     /** Find user by email (used for login and duplicate check) */
     Optional<User> findByEmail(String email);
 
+    /** Find user by reset password token */
+    Optional<User> findByResetPasswordToken(String resetPasswordToken);
+
     /** Check if an email is already taken */
     boolean existsByEmail(String email);
 

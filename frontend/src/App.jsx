@@ -5,6 +5,7 @@ import { CartProvider } from './context/CartContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import AdminRoute from './components/AdminRoute';
+import ProtectedRoute from './components/ProtectedRoute';
 import HomePage from './pages/HomePage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import CartPage from './pages/CartPage';
@@ -27,9 +28,9 @@ import AdminBannersPage from './pages/AdminBannersPage';
 
 /**
  * App routing configuration.
- * Public routes: /, /products/:id, /cart, /login, /register, /forgot-password, /reset-password
+ * Public routes: /, /products, /category/:id, /products/:id, /cart, /login, /register, /forgot-password, /reset-password
  * User routes: /checkout, /order-success/:id, /orders, /orders/:id, /profile
- * Admin routes (require ROLE_ADMIN): /admin/products, /admin/categories, /admin/orders, /admin/customers, /admin/vouchers
+ * Admin routes (require ROLE_ADMIN): /admin/products, /admin/categories, /admin/orders, /admin/customers, /admin/vouchers, /admin/banners, /admin/settings
  */
 const AppRoutes = () => {
   const { isAuthenticated } = useAuth();
@@ -38,19 +39,53 @@ const AppRoutes = () => {
     <Routes>
       {/* Public Catalog Routes — accessible to everyone */}
       <Route path="/" element={<HomePage />} />
+      <Route path="/products" element={<HomePage />} />
+      <Route path="/category/:id" element={<HomePage />} />
       <Route path="/products/:id" element={<ProductDetailPage />} />
       <Route path="/cart" element={<CartPage />} />
 
-      {/* Order & Checkout Routes */}
-      <Route path="/checkout" element={<CheckoutPage />} />
-      <Route path="/order-success/:id" element={<OrderSuccessPage />} />
-      <Route path="/orders" element={<OrderHistoryPage />} />
-      <Route path="/orders/:id" element={<OrderDetailPage />} />
+      {/* Order & Checkout Routes — protected for authenticated customers */}
+      <Route
+        path="/checkout"
+        element={
+          <ProtectedRoute>
+            <CheckoutPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/order-success/:id"
+        element={
+          <ProtectedRoute>
+            <OrderSuccessPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/orders"
+        element={
+          <ProtectedRoute>
+            <OrderHistoryPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/orders/:id"
+        element={
+          <ProtectedRoute>
+            <OrderDetailPage />
+          </ProtectedRoute>
+        }
+      />
 
       {/* User Account / Profile Route */}
       <Route
         path="/profile"
-        element={isAuthenticated ? <ProfilePage /> : <Navigate to="/login" replace />}
+        element={
+          <ProtectedRoute>
+            <ProfilePage />
+          </ProtectedRoute>
+        }
       />
 
       {/* Auth routes */}

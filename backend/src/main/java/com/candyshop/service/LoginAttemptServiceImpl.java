@@ -29,6 +29,21 @@ public class LoginAttemptServiceImpl implements LoginAttemptService {
 
     private final ConcurrentMap<String, AttemptRecord> attemptsCache = new ConcurrentHashMap<>();
 
+    /**
+     * Periodically cleans up expired attempts every 5 minutes to prevent memory leaks / OOM
+     */
+    @org.springframework.scheduling.annotation.Scheduled(fixedRate = 300000)
+    public void cleanupExpiredAttempts() {
+        long now = System.currentTimeMillis();
+        attemptsCache.entrySet().removeIf(entry -> {
+            AttemptRecord record = entry.getValue();
+            if (record == null) return true;
+            boolean blockExpired = record.blockedUntil > 0 && record.blockedUntil <= now;
+            boolean windowExpired = record.blockedUntil == 0 && (now - record.firstAttemptTime > ATTEMPT_WINDOW_MS);
+            return blockExpired || windowExpired;
+        });
+    }
+
     @Override
     public void loginSucceeded(String key) {
         if (key != null) {
