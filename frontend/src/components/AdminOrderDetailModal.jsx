@@ -68,6 +68,7 @@ export const getAllowedNextStatuses = (currentStatus) => {
     case 'SHIPPING':
       return [
         { value: 'COMPLETED', label: '✅ Hoàn thành giao hàng (COMPLETED)' },
+        { value: 'CANCELLED', label: '🚫 Giao thất bại / Huỷ đơn (CANCELLED) — Tự hoàn kho' },
       ];
     case 'COMPLETED':
     case 'CANCELLED':

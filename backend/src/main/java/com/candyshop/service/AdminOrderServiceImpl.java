@@ -92,33 +92,27 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 
         // Validate allowed state transitions
         boolean isValidTransition = false;
-        switch (currentStatus) {
-            case PENDING:
-                if (newStatus == OrderStatus.CONFIRMED || newStatus == OrderStatus.CANCELLED) {
-                    isValidTransition = true;
-                }
-                break;
-            case CONFIRMED:
-                if (newStatus == OrderStatus.SHIPPING || newStatus == OrderStatus.CANCELLED) {
-                    isValidTransition = true;
-                }
-                break;
-            case SHIPPING:
-                if (newStatus == OrderStatus.COMPLETED) {
-                    isValidTransition = true;
-                }
-                break;
-            case COMPLETED:
-                throw new BadRequestException("Đơn hàng đã hoàn thành, không thể thay đổi trạng thái nữa.");
-            case CANCELLED:
-                throw new BadRequestException("Đơn hàng đã bị huỷ, không thể thay đổi trạng thái nữa.");
-            default:
-                break;
+        if (currentStatus == OrderStatus.PENDING) {
+            if (newStatus == OrderStatus.CONFIRMED || newStatus == OrderStatus.CANCELLED) {
+                isValidTransition = true;
+            }
+        } else if (currentStatus == OrderStatus.CONFIRMED) {
+            if (newStatus == OrderStatus.SHIPPING || newStatus == OrderStatus.CANCELLED) {
+                isValidTransition = true;
+            }
+        } else if (currentStatus == OrderStatus.SHIPPING) {
+            if (newStatus == OrderStatus.COMPLETED || newStatus == OrderStatus.CANCELLED) {
+                isValidTransition = true;
+            }
+        } else if (currentStatus == OrderStatus.COMPLETED) {
+            throw new BadRequestException("Đơn hàng đã hoàn thành, không thể thay đổi trạng thái nữa.");
+        } else if (currentStatus == OrderStatus.CANCELLED) {
+            throw new BadRequestException("Đơn hàng đã bị huỷ, không thể thay đổi trạng thái nữa.");
         }
 
         if (!isValidTransition) {
             throw new BadRequestException("Không thể chuyển trạng thái từ " + currentStatus + " sang " + newStatus
-                    + ". Luồng hợp lệ: PENDING -> CONFIRMED -> SHIPPING -> COMPLETED (hoặc CANCELLED từ PENDING/CONFIRMED).");
+                    + ". Luồng hợp lệ: PENDING -> CONFIRMED -> SHIPPING -> COMPLETED (hoặc CANCELLED từ PENDING/CONFIRMED/SHIPPING).");
         }
 
         // If cancelled, restore stock quantities and revert voucher usage

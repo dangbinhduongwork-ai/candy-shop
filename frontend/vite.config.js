@@ -5,10 +5,8 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-    host: true, // Listen on all network addresses (0.0.0.0) so phone can access
-    allowedHosts: true, // Allow Cloudflare tunnel and other external hostnames
     port: 5173,
-    // Proxy API and uploads to Spring Boot backend
+    // Proxy API requests to Spring Boot backend during development
     proxy: {
       '/api': {
         target: 'http://localhost:8080',
@@ -21,4 +19,3 @@ export default defineConfig({
     },
   },
 })
-
