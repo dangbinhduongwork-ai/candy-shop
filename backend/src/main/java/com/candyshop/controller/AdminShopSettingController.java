@@ -1,6 +1,7 @@
 package com.candyshop.controller;
 
 import com.candyshop.dto.ShippingSettingDTO;
+import com.candyshop.dto.ShopGeneralSettingDTO;
 import com.candyshop.service.ShopSettingService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -28,4 +29,18 @@ public class AdminShopSettingController {
         ShippingSettingDTO updated = shopSettingService.updateShippingSetting(request);
         return ResponseEntity.ok(updated);
     }
+
+    @GetMapping("/general")
+    public ResponseEntity<ShopGeneralSettingDTO> getGeneralSetting() {
+        ShopGeneralSettingDTO setting = shopSettingService.getGeneralSetting();
+        return ResponseEntity.ok(setting);
+    }
+
+    @PutMapping("/general")
+    public ResponseEntity<ShopGeneralSettingDTO> updateGeneralSetting(
+            @RequestBody ShopGeneralSettingDTO request) {
+        ShopGeneralSettingDTO updated = shopSettingService.updateGeneralSetting(request);
+        return ResponseEntity.ok(updated);
+    }
 }
+

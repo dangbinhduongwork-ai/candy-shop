@@ -242,20 +242,31 @@ public class DataInitializer implements CommandLineRunner {
     }
 
     private void initShopSettings() {
-        if (shopSettingRepository.count() == 0) {
-            shopSettingRepository.save(new ShopSetting(
-                    "DEFAULT_SHIPPING_FEE",
-                    "25000",
-                    "Phí vận chuyển mặc định (VNĐ)"
-            ));
-            shopSettingRepository.save(new ShopSetting(
-                    "FREE_SHIPPING_THRESHOLD",
-                    "300000",
-                    "Ngưỡng giá trị đơn hàng được miễn phí vận chuyển (VNĐ)"
-            ));
-            log.info("Initialized default shop settings: Shipping fee = 25,000đ, Free threshold = 300,000đ");
+        saveSettingIfAbsent("DEFAULT_SHIPPING_FEE", "25000", "Phí vận chuyển mặc định (VNĐ)");
+        saveSettingIfAbsent("FREE_SHIPPING_THRESHOLD", "300000", "Ngưỡng giá trị đơn hàng được miễn phí vận chuyển (VNĐ)");
+        saveSettingIfAbsent("SHOP_NAME", "Nguyen Huong Grocery Store", "Tên hiển thị thương hiệu shop");
+        saveSettingIfAbsent("SHOP_TITLE", "Nguyen Huong Grocery Store - Bánh kẹo & Tạp hóa chính hãng", "Tiêu đề trình duyệt & SEO của shop");
+        saveSettingIfAbsent("SHOP_SLOGAN", "Grocery Store • Since 2026", "Slogan / Phụ đề thương hiệu");
+        saveSettingIfAbsent("HEADER_ANNOUNCEMENT", "Miễn phí giao hàng cho đơn từ 200.000đ • Hotline đặt hàng & CSKH: 0969 315 603", "Thanh thông báo chạy trên đầu trang header");
+        saveSettingIfAbsent("HEADER_HOTLINE", "0969 315 603", "Hotline hỗ trợ hiển thị trên header");
+        saveSettingIfAbsent("FOOTER_DESCRIPTION", "Hệ thống bán lẻ thực phẩm thiết yếu, bánh kẹo cao cấp và đặc sản tuyển chọn. Cam kết chất lượng, nguồn gốc rõ ràng và giá thành hợp lý.", "Đoạn giới thiệu ngắn về shop ở chân trang footer");
+        saveSettingIfAbsent("FOOTER_ADDRESS", "Số 509 thôn 9, Suối Hai, Ba Vì, Hà Nội", "Địa chỉ cửa hàng ở footer");
+        saveSettingIfAbsent("FOOTER_MAPS_URL", "https://maps.app.goo.gl/BiWJi5AJAdMfZvRb7", "Đường dẫn Google Maps");
+        saveSettingIfAbsent("FOOTER_HOTLINE", "0969 315 603", "Số điện thoại hotline ở footer");
+        saveSettingIfAbsent("FOOTER_WORKING_HOURS", "06:00 - 22:00 tất cả các ngày", "Thời gian mở cửa phục vụ");
+        saveSettingIfAbsent("FOOTER_EMAIL", "taphoa.nguyenhuong@gmail.com", "Email liên hệ của cửa hàng");
+        saveSettingIfAbsent("FOOTER_COPYRIGHT", "© 2026 Nguyen Huong Grocery Store. Tất cả các quyền được bảo lưu.", "Dòng chữ bản quyền ở đáy trang footer");
+        saveSettingIfAbsent("FOOTER_BADGE_1", "Sản phẩm chính hãng", "Huy hiệu cam kết 1 ở footer");
+        saveSettingIfAbsent("FOOTER_BADGE_2", "Giao hàng tận nơi", "Huy hiệu cam kết 2 ở footer");
+        log.info("Initialized default shop settings (Shipping, Branding, Header & Footer)");
+    }
+
+    private void saveSettingIfAbsent(String key, String value, String description) {
+        if (!shopSettingRepository.existsBySettingKey(key)) {
+            shopSettingRepository.save(new ShopSetting(key, value, description));
         }
     }
+
 
     private void initBanners() {
         if (bannerRepository.count() == 0) {

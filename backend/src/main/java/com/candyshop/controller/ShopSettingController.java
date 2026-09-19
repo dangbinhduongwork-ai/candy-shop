@@ -1,6 +1,7 @@
 package com.candyshop.controller;
 
 import com.candyshop.dto.ShippingSettingDTO;
+import com.candyshop.dto.ShopGeneralSettingDTO;
 import com.candyshop.service.ShopSettingService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,4 +23,11 @@ public class ShopSettingController {
         ShippingSettingDTO setting = shopSettingService.getShippingSetting();
         return ResponseEntity.ok(setting);
     }
+
+    @GetMapping("/general")
+    public ResponseEntity<ShopGeneralSettingDTO> getGeneralSetting() {
+        ShopGeneralSettingDTO setting = shopSettingService.getGeneralSetting();
+        return ResponseEntity.ok(setting);
+    }
 }
+

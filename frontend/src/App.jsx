@@ -2,6 +2,8 @@ import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
+import { ShopSettingsProvider } from './context/ShopSettingsContext';
+
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import AdminRoute from './components/AdminRoute';
@@ -173,26 +175,30 @@ const AppRoutes = () => {
 };
 
 function App() {
+
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <CartProvider>
-          <Navbar />
-          <main>
-            <Suspense fallback={
-              <div className="route-loading-fallback" style={{ minHeight: '60vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '16px' }}>
-                <div className="spinner"></div>
-                <p style={{ color: '#64748b', fontWeight: 600 }}>Đang tải trang...</p>
-              </div>
-            }>
-              <AppRoutes />
-            </Suspense>
-          </main>
-          <Footer />
-        </CartProvider>
-      </AuthProvider>
+      <ShopSettingsProvider>
+        <AuthProvider>
+          <CartProvider>
+            <Navbar />
+            <main>
+              <Suspense fallback={
+                <div className="route-loading-fallback" style={{ minHeight: '60vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '16px' }}>
+                  <div className="spinner"></div>
+                  <p style={{ color: '#64748b', fontWeight: 600 }}>Đang tải trang...</p>
+                </div>
+              }>
+                <AppRoutes />
+              </Suspense>
+            </main>
+            <Footer />
+          </CartProvider>
+        </AuthProvider>
+      </ShopSettingsProvider>
     </BrowserRouter>
   );
 }
+
 
 export default App;

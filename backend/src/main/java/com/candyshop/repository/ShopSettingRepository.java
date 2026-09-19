@@ -10,4 +10,7 @@ import java.util.Optional;
 public interface ShopSettingRepository extends JpaRepository<ShopSetting, Long> {
 
     Optional<ShopSetting> findBySettingKey(String settingKey);
+
+    boolean existsBySettingKey(String settingKey);
+
 }

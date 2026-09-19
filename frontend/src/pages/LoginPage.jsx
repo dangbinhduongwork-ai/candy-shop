@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useShopSettings } from '../context/ShopSettingsContext';
 import ReCaptchaWidget from '../components/ReCaptchaWidget';
 
 /**
@@ -8,6 +9,7 @@ import ReCaptchaWidget from '../components/ReCaptchaWidget';
  */
 const LoginPage = () => {
   const { login } = useAuth();
+  const { settings } = useShopSettings();
   const navigate = useNavigate();
   const recaptchaRef = useRef(null);
 
@@ -78,8 +80,9 @@ const LoginPage = () => {
         <div className="auth-header">
           <span className="auth-icon">🍩</span>
           <h1>Đăng nhập</h1>
-          <p>Chào mừng bạn quay lại Nguyen Huong Grocery Store!</p>
+          <p>Chào mừng bạn quay lại {settings.shopName || 'Nguyen Huong Grocery Store'}!</p>
         </div>
+
 
         <form onSubmit={handleSubmit} noValidate>
           {serverError && (

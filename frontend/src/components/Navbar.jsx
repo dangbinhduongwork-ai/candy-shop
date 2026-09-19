@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
+import { useShopSettings } from '../context/ShopSettingsContext';
 
 /**
  * Navbar component with frosted glass aesthetic, navigation links,
@@ -10,7 +11,9 @@ import { useCart } from '../context/CartContext';
 const Navbar = () => {
   const { isAuthenticated, user, logout } = useAuth();
   const { cartCount } = useCart();
+  const { settings } = useShopSettings();
   const navigate = useNavigate();
+
   const location = useLocation();
 
   const [adminDropdownOpen, setAdminDropdownOpen] = useState(false);
@@ -61,9 +64,11 @@ const Navbar = () => {
   return (
     <header className="navbar-sticky-wrapper">
       {/* Top micro announcement bar */}
-      <div className="top-announcement-bar">
-        <span>Miễn phí giao hàng cho đơn từ 200.000đ • Hotline đặt hàng & CSKH: 0969 315 603</span>
-      </div>
+      {settings.headerAnnouncement && (
+        <div className="top-announcement-bar">
+          <span>{settings.headerAnnouncement}</span>
+        </div>
+      )}
 
       <nav className="navbar-glass">
         <div className="navbar-container">
@@ -77,10 +82,11 @@ const Navbar = () => {
               </svg>
             </span>
             <div className="brand-text-group">
-              <span className="brand-title">Nguyen Huong</span>
-              <span className="brand-slogan">Grocery Store • Since 2026</span>
+              <span className="brand-title">{settings.shopName || 'Nguyen Huong'}</span>
+              <span className="brand-slogan">{settings.shopSlogan || 'Grocery Store • Since 2026'}</span>
             </div>
           </Link>
+
 
           {/* Center Navigation Links */}
           <div className="navbar-nav-links">

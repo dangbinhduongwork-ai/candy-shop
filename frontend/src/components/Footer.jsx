@@ -1,7 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useShopSettings } from '../context/ShopSettingsContext';
 
 const Footer = () => {
+  const { settings } = useShopSettings();
+
+  const hotline = settings.footerHotline || '0969 315 603';
+  const hotlineClean = hotline.replace(/\s+/g, '');
+  const email = settings.footerEmail || 'taphoa.nguyenhuong@gmail.com';
+  const mapsUrl = settings.footerMapsUrl || 'https://maps.app.goo.gl/BiWJi5AJAdMfZvRb7';
+
   return (
     <footer className="footer-sweet">
       <div className="footer-top-wave">
@@ -22,14 +30,14 @@ const Footer = () => {
                   <path d="M16 10a4 4 0 0 1-8 0"/>
                 </svg>
               </span>
-              <span className="brand-logo-text">Nguyen Huong Grocery Store</span>
+              <span className="brand-logo-text">{settings.shopName || 'Nguyen Huong Grocery Store'}</span>
             </Link>
             <p className="footer-desc">
-              Hệ thống bán lẻ thực phẩm thiết yếu, bánh kẹo cao cấp và đặc sản tuyển chọn. Cam kết chất lượng, nguồn gốc rõ ràng và giá thành hợp lý.
+              {settings.footerDescription || 'Hệ thống bán lẻ thực phẩm thiết yếu, bánh kẹo cao cấp và đặc sản tuyển chọn. Cam kết chất lượng, nguồn gốc rõ ràng và giá thành hợp lý.'}
             </p>
             <div className="footer-badges">
-              <span className="footer-pill">Sản phẩm chính hãng</span>
-              <span className="footer-pill">Giao hàng tận nơi</span>
+              {settings.footerBadge1 && <span className="footer-pill">{settings.footerBadge1}</span>}
+              {settings.footerBadge2 && <span className="footer-pill">{settings.footerBadge2}</span>}
             </div>
           </div>
 
@@ -61,16 +69,34 @@ const Footer = () => {
           <div className="footer-col">
             <h4 className="footer-title">Thông Tin Liên Hệ</h4>
             <div className="footer-contact-info">
-              <p><strong>Địa chỉ:</strong> <a href="https://maps.app.goo.gl/BiWJi5AJAdMfZvRb7" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>Số 509 thôn 9, Suối Hai, Ba Vì, Hà Nội</a></p>
-              <p><strong>Hotline:</strong> <a href="https://zalo.me/0969315603" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>0969 315 603 (6:00 - 22:00)</a></p>
-              <p><strong>Email:</strong> <a href="https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=taphoa.nguyenhuong@gmail.com" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>taphoa.nguyenhuong@gmail.com</a></p>
-              <p><strong>Giờ phục vụ:</strong> <a href="https://maps.app.goo.gl/BiWJi5AJAdMfZvRb7" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>06:00 - 22:00 tất cả các ngày</a></p>
+              <p>
+                <strong>Địa chỉ:</strong>{' '}
+                <a href={mapsUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>
+                  {settings.footerAddress || 'Số 509 thôn 9, Suối Hai, Ba Vì, Hà Nội'}
+                </a>
+              </p>
+              <p>
+                <strong>Hotline:</strong>{' '}
+                <a href={`https://zalo.me/${hotlineClean}`} target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>
+                  {hotline}
+                </a>
+              </p>
+              <p>
+                <strong>Email:</strong>{' '}
+                <a href={`https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=${email}`} target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>
+                  {email}
+                </a>
+              </p>
+              <p>
+                <strong>Giờ phục vụ:</strong>{' '}
+                <span>{settings.footerWorkingHours || '06:00 - 22:00 tất cả các ngày'}</span>
+              </p>
             </div>
           </div>
         </div>
 
         <div className="footer-bottom-bar">
-          <p>© 2026 Nguyen Huong Grocery Store. Tất cả các quyền được bảo lưu.</p>
+          <p>{settings.footerCopyright || `© ${new Date().getFullYear()} ${settings.shopName || 'Nguyen Huong Grocery Store'}. Tất cả các quyền được bảo lưu.`}</p>
         </div>
       </div>
     </footer>
@@ -78,3 +104,4 @@ const Footer = () => {
 };
 
 export default Footer;
+

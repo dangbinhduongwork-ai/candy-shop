@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams, useLocation } from 'react-router-dom';
+import { useShopSettings } from '../context/ShopSettingsContext';
 import { getOrderById } from '../api/orderService';
 
 const OrderSuccessPage = () => {
   const { id } = useParams();
   const location = useLocation();
+  const { settings } = useShopSettings();
   const [order, setOrder] = useState(location.state?.order || null);
+
   const [loading, setLoading] = useState(!order);
   const [error, setError] = useState('');
 
@@ -47,8 +50,9 @@ const OrderSuccessPage = () => {
       <div className="order-success-card">
         <div className="success-confetti-icon">🎉</div>
         <span className="success-tag">Đặt Hàng Thành Công!</span>
-        <h1 className="success-title">Cảm Ơn Bạn Đã Mua Sắm Tại Nguyen Huong Grocery Store</h1>
+        <h1 className="success-title">Cảm Ơn Bạn Đã Mua Sắm Tại {settings.shopName || 'Nguyen Huong Grocery Store'}</h1>
         <p className="success-subtitle">
+
           Đơn hàng của bạn đã được ghi nhận vào hệ thống và đang được chuẩn bị để đóng gói những viên kẹo thơm ngon nhất.
         </p>
 
