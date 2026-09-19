@@ -324,19 +324,7 @@ const AdminVouchersPage = () => {
       </div>
 
       {/* Filter and Search Bar */}
-      <div
-        style={{
-          display: 'flex',
-          gap: '1rem',
-          marginBottom: '1.75rem',
-          flexWrap: 'wrap',
-          backgroundColor: '#fff',
-          padding: '1.25rem 1.5rem',
-          borderRadius: '12px',
-          boxShadow: '0 2px 10px rgba(0,0,0,0.03)',
-          border: '1px solid #e2e8f0',
-        }}
-      >
+      <div className="admin-toolbar" style={{ marginBottom: '1.75rem' }}>
         <div style={{ flex: '1 1 280px', position: 'relative' }}>
           <input
             type="text"
@@ -346,7 +334,7 @@ const AdminVouchersPage = () => {
               setSearch(e.target.value);
               setPage(0);
             }}
-            className="form-control"
+            className="search-input"
             style={{ width: '100%', padding: '0.65rem 1rem', borderRadius: '8px' }}
           />
         </div>
@@ -358,7 +346,7 @@ const AdminVouchersPage = () => {
               setStatusFilter(e.target.value);
               setPage(0);
             }}
-            className="form-control"
+            className="form-select filter-select"
             style={{ width: '100%', padding: '0.65rem 1rem', borderRadius: '8px' }}
           >
             <option value="">Tất cả trạng thái</option>
@@ -400,91 +388,75 @@ const AdminVouchersPage = () => {
       )}
 
       {/* Vouchers Table */}
-      <div
-        style={{
-          backgroundColor: '#fff',
-          borderRadius: '14px',
-          boxShadow: '0 4px 15px rgba(0,0,0,0.03)',
-          border: '1px solid #e2e8f0',
-          overflow: 'hidden',
-        }}
-      >
+      <div className="table-responsive admin-table-wrapper" style={{ borderRadius: '14px', overflow: 'hidden' }}>
         <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.92rem' }}>
-            <thead>
-              <tr style={{ backgroundColor: '#f8fafc', borderBottom: '2px solid #e2e8f0', color: '#475569' }}>
-                <th style={{ padding: '1rem 1.2rem', fontWeight: '700' }}>MÃ CODE</th>
-                <th style={{ padding: '1rem 1.2rem', fontWeight: '700' }}>TÊN & MÔ TẢ</th>
-                <th style={{ padding: '1rem 1.2rem', fontWeight: '700' }}>MỨC GIẢM</th>
-                <th style={{ padding: '1rem 1.2rem', fontWeight: '700' }}>ĐƠN TỐI THIỂU</th>
-                <th style={{ padding: '1rem 1.2rem', fontWeight: '700' }}>THỜI HẠN & HIỆU LỰC</th>
-                <th style={{ padding: '1rem 1.2rem', fontWeight: '700', textAlign: 'center' }}>LƯỢT DÙNG</th>
-                <th style={{ padding: '1rem 1.2rem', fontWeight: '700', textAlign: 'center' }}>TRẠNG THÁI</th>
-                <th style={{ padding: '1rem 1.2rem', fontWeight: '700', textAlign: 'right' }}>THAO TÁC</th>
+          <table className="admin-table admin-voucher-table" style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.92rem' }}>
+          <thead>
+            <tr>
+              <th style={{ padding: '1rem 1.2rem', fontWeight: '700' }}>MÃ CODE</th>
+              <th style={{ padding: '1rem 1.2rem', fontWeight: '700' }}>TÊN & MÔ TẢ</th>
+              <th style={{ padding: '1rem 1.2rem', fontWeight: '700' }}>MỨC GIẢM</th>
+              <th style={{ padding: '1rem 1.2rem', fontWeight: '700' }}>ĐƠN TỐI THIỂU</th>
+              <th style={{ padding: '1rem 1.2rem', fontWeight: '700' }}>THỜI HẠN & HIỆU LỰC</th>
+              <th style={{ padding: '1rem 1.2rem', fontWeight: '700', textAlign: 'center' }}>LƯỢT DÙNG</th>
+              <th style={{ padding: '1rem 1.2rem', fontWeight: '700', textAlign: 'center' }}>TRẠNG THÁI</th>
+              <th style={{ padding: '1rem 1.2rem', fontWeight: '700', textAlign: 'right' }}>THAO TÁC</th>
+            </tr>
+          </thead>
+          <tbody>
+            {loading ? (
+              <tr>
+                <td colSpan="8" style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-light, #64748b)' }}>
+                  <div style={{ display: 'inline-block', fontSize: '1.5rem', marginBottom: '0.5rem' }}>⏳</div>
+                  <div>Đang tải dữ liệu voucher...</div>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {loading ? (
-                <tr>
-                  <td colSpan="8" style={{ padding: '3rem', textAlign: 'center', color: '#64748b' }}>
-                    <div style={{ display: 'inline-block', fontSize: '1.5rem', marginBottom: '0.5rem' }}>⏳</div>
-                    <div>Đang tải dữ liệu voucher...</div>
+            ) : vouchers.length === 0 ? (
+              <tr>
+                <td colSpan="8" style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-light, #64748b)' }}>
+                  <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🎟️</div>
+                  <div style={{ fontWeight: '600' }}>Không tìm thấy mã giảm giá nào.</div>
+                  <p style={{ margin: '0.25rem 0 0', fontSize: '0.88rem' }}>
+                    Hãy thử tìm kiếm với từ khóa khác hoặc tạo voucher mới!
+                  </p>
+                </td>
+              </tr>
+            ) : (
+              vouchers.map((v) => (
+                <tr key={v.id}>
+                  {/* Voucher Code */}
+                  <td style={{ padding: '1rem 1.2rem' }}>
+                    <div
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.4rem',
+                        backgroundColor: '#fce7f3',
+                        color: '#be185d',
+                        padding: '0.35rem 0.75rem',
+                        borderRadius: '6px',
+                        fontWeight: '800',
+                        letterSpacing: '0.5px',
+                        border: '1px dashed #f472b6',
+                        fontFamily: 'monospace',
+                        fontSize: '0.95rem',
+                      }}
+                    >
+                      {v.code}
+                    </div>
                   </td>
-                </tr>
-              ) : vouchers.length === 0 ? (
-                <tr>
-                  <td colSpan="8" style={{ padding: '3rem', textAlign: 'center', color: '#64748b' }}>
-                    <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🎟️</div>
-                    <div style={{ fontWeight: '600' }}>Không tìm thấy mã giảm giá nào.</div>
-                    <p style={{ margin: '0.25rem 0 0', fontSize: '0.88rem' }}>
-                      Hãy thử tìm kiếm với từ khóa khác hoặc tạo voucher mới!
-                    </p>
-                  </td>
-                </tr>
-              ) : (
-                vouchers.map((v) => (
-                  <tr
-                    key={v.id}
-                    style={{
-                      borderBottom: '1px solid #f1f5f9',
-                      transition: 'background-color 0.15s ease',
-                    }}
-                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#fdf2f8')}
-                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
-                  >
-                    {/* Voucher Code */}
-                    <td style={{ padding: '1rem 1.2rem' }}>
-                      <div
-                        style={{
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: '0.4rem',
-                          backgroundColor: '#fce7f3',
-                          color: '#be185d',
-                          padding: '0.35rem 0.75rem',
-                          borderRadius: '6px',
-                          fontWeight: '800',
-                          letterSpacing: '0.5px',
-                          border: '1px dashed #f472b6',
-                          fontFamily: 'monospace',
-                          fontSize: '0.95rem',
-                        }}
-                      >
-                        {v.code}
-                      </div>
-                    </td>
 
-                    {/* Name & Description */}
-                    <td style={{ padding: '1rem 1.2rem', maxWidth: '260px' }}>
-                      <div style={{ fontWeight: '700', color: '#0f172a', marginBottom: '0.2rem' }}>
-                        {v.name}
+                  {/* Name & Description */}
+                  <td style={{ padding: '1rem 1.2rem', maxWidth: '260px' }}>
+                    <div style={{ fontWeight: '700', color: 'var(--text-dark, #0f172a)', marginBottom: '0.2rem' }}>
+                      {v.name}
+                    </div>
+                    {v.description && (
+                      <div style={{ color: 'var(--text-light, #64748b)', fontSize: '0.82rem', lineHeight: '1.3' }}>
+                        {v.description}
                       </div>
-                      {v.description && (
-                        <div style={{ color: '#64748b', fontSize: '0.82rem', lineHeight: '1.3' }}>
-                          {v.description}
-                        </div>
-                      )}
-                    </td>
+                    )}
+                  </td>
 
                     {/* Discount Value */}
                     <td style={{ padding: '1rem 1.2rem' }}>
@@ -507,18 +479,18 @@ const AdminVouchersPage = () => {
                     </td>
 
                     {/* Min Order Amount */}
-                    <td style={{ padding: '1rem 1.2rem', color: '#334155', fontWeight: '600' }}>
+                    <td style={{ padding: '1rem 1.2rem', color: 'var(--text-medium, #334155)', fontWeight: '600' }}>
                       {v.minOrderAmount && Number(v.minOrderAmount) > 0 ? (
                         formatPrice(v.minOrderAmount)
                       ) : (
-                        <span style={{ color: '#94a3b8', fontSize: '0.85rem' }}>Không yêu cầu</span>
+                        <span style={{ color: 'var(--text-muted, #94a3b8)', fontSize: '0.85rem' }}>Không yêu cầu</span>
                       )}
                     </td>
 
                     {/* Dates & Validity Status */}
                     <td style={{ padding: '1rem 1.2rem' }}>
                       <div style={{ marginBottom: '0.3rem' }}>{getTimingBadge(v)}</div>
-                      <div style={{ fontSize: '0.78rem', color: '#64748b' }}>
+                      <div style={{ fontSize: '0.78rem', color: 'var(--text-light, #64748b)' }}>
                         <div>Từ: {formatDate(v.startDate)}</div>
                         <div>Đến: {formatDate(v.endDate)}</div>
                       </div>
@@ -526,10 +498,10 @@ const AdminVouchersPage = () => {
 
                     {/* Usage Count */}
                     <td style={{ padding: '1rem 1.2rem', textAlign: 'center' }}>
-                      <div style={{ fontWeight: '700', color: '#0f172a' }}>
+                      <div style={{ fontWeight: '700', color: 'var(--text-dark, #0f172a)' }}>
                         {v.usedCount || 0} / {v.maxUsageCount || '∞'}
                       </div>
-                      <div style={{ fontSize: '0.75rem', color: '#64748b' }}>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-light, #64748b)' }}>
                         Tối đa {v.maxUsagePerUser || 1} lần/user
                       </div>
                     </td>

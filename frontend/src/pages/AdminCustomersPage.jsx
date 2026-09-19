@@ -353,6 +353,7 @@ const AdminCustomersPage = () => {
             </label>
             <select
               id="statusFilter"
+              className="form-select filter-select"
               value={statusFilter}
               onChange={(e) => {
                 setStatusFilter(e.target.value);
@@ -361,8 +362,6 @@ const AdminCustomersPage = () => {
               style={{
                 padding: '0.6rem 1rem',
                 borderRadius: '8px',
-                border: '1.5px solid var(--border)',
-                background: 'white',
                 fontWeight: '600',
                 fontSize: '0.88rem',
               }}
