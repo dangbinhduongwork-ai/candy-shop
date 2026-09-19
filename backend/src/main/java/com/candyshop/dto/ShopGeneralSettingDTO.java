@@ -25,6 +25,9 @@ public class ShopGeneralSettingDTO implements Serializable {
     private String footerBadge1;
     private String footerBadge2;
 
+    // --- Seasonal Visual Effect ---
+    private String activeEffect; // NONE, WINTER_SNOW, SPRING_BLOSSOM, AUTUMN_LEAVES, SUMMER_BUBBLES, CONFETTI_PARTY
+
     public ShopGeneralSettingDTO() {
     }
 
@@ -32,7 +35,8 @@ public class ShopGeneralSettingDTO implements Serializable {
                                  String headerAnnouncement, String headerHotline,
                                  String footerDescription, String footerAddress, String footerMapsUrl,
                                  String footerHotline, String footerWorkingHours, String footerEmail,
-                                 String footerCopyright, String footerBadge1, String footerBadge2) {
+                                 String footerCopyright, String footerBadge1, String footerBadge2,
+                                 String activeEffect) {
         this.shopName = shopName;
         this.shopTitle = shopTitle;
         this.shopSlogan = shopSlogan;
@@ -47,7 +51,9 @@ public class ShopGeneralSettingDTO implements Serializable {
         this.footerCopyright = footerCopyright;
         this.footerBadge1 = footerBadge1;
         this.footerBadge2 = footerBadge2;
+        this.activeEffect = activeEffect;
     }
+
 
     public String getShopName() {
         return shopName;
@@ -160,4 +166,13 @@ public class ShopGeneralSettingDTO implements Serializable {
     public void setFooterBadge2(String footerBadge2) {
         this.footerBadge2 = footerBadge2;
     }
+
+    public String getActiveEffect() {
+        return activeEffect;
+    }
+
+    public void setActiveEffect(String activeEffect) {
+        this.activeEffect = activeEffect;
+    }
 }
+

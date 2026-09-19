@@ -35,6 +35,7 @@ public class ShopSettingServiceImpl implements ShopSettingService {
     public static final String KEY_FOOTER_COPYRIGHT = "FOOTER_COPYRIGHT";
     public static final String KEY_FOOTER_BADGE_1 = "FOOTER_BADGE_1";
     public static final String KEY_FOOTER_BADGE_2 = "FOOTER_BADGE_2";
+    public static final String KEY_ACTIVE_SEASONAL_EFFECT = "ACTIVE_SEASONAL_EFFECT";
 
     public static final String FALLBACK_SHOP_NAME = "Nguyen Huong Grocery Store";
     public static final String FALLBACK_SHOP_TITLE = "Nguyen Huong Grocery Store - Bánh kẹo & Tạp hóa chính hãng";
@@ -50,6 +51,8 @@ public class ShopSettingServiceImpl implements ShopSettingService {
     public static final String FALLBACK_FOOTER_COPYRIGHT = "© 2026 Nguyen Huong Grocery Store. Tất cả các quyền được bảo lưu.";
     public static final String FALLBACK_FOOTER_BADGE_1 = "Sản phẩm chính hãng";
     public static final String FALLBACK_FOOTER_BADGE_2 = "Giao hàng tận nơi";
+    public static final String FALLBACK_ACTIVE_SEASONAL_EFFECT = "NONE";
+
 
     private final ShopSettingRepository settingRepository;
 
@@ -114,7 +117,8 @@ public class ShopSettingServiceImpl implements ShopSettingService {
                 getStringValue(KEY_FOOTER_EMAIL, FALLBACK_FOOTER_EMAIL),
                 getStringValue(KEY_FOOTER_COPYRIGHT, FALLBACK_FOOTER_COPYRIGHT),
                 getStringValue(KEY_FOOTER_BADGE_1, FALLBACK_FOOTER_BADGE_1),
-                getStringValue(KEY_FOOTER_BADGE_2, FALLBACK_FOOTER_BADGE_2)
+                getStringValue(KEY_FOOTER_BADGE_2, FALLBACK_FOOTER_BADGE_2),
+                getStringValue(KEY_ACTIVE_SEASONAL_EFFECT, FALLBACK_ACTIVE_SEASONAL_EFFECT)
         );
     }
 
@@ -164,9 +168,13 @@ public class ShopSettingServiceImpl implements ShopSettingService {
         if (dto.getFooterBadge2() != null) {
             saveOrUpdateSetting(KEY_FOOTER_BADGE_2, dto.getFooterBadge2().trim(), "Huy hiệu cam kết 2 ở footer");
         }
+        if (dto.getActiveEffect() != null) {
+            saveOrUpdateSetting(KEY_ACTIVE_SEASONAL_EFFECT, dto.getActiveEffect().trim(), "Hiệu ứng giao diện theo mùa (Canvas Seasonal Effect)");
+        }
 
         return getGeneralSetting();
     }
+
 
     private BigDecimal getDecimalValue(String key, BigDecimal fallback) {
         return settingRepository.findBySettingKey(key)

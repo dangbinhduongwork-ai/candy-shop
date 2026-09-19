@@ -3,11 +3,14 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import { ShopSettingsProvider } from './context/ShopSettingsContext';
-
+import { ThemeProvider } from './context/ThemeContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import SeasonalEffect from './components/SeasonalEffect';
+import FloatingContactButton from './components/FloatingContactButton';
 import AdminRoute from './components/AdminRoute';
 import ProtectedRoute from './components/ProtectedRoute';
+
 
 // Route-Based Code Splitting for Enterprise Performance
 const HomePage = lazy(() => import('./pages/HomePage'));
@@ -175,30 +178,34 @@ const AppRoutes = () => {
 };
 
 function App() {
-
   return (
     <BrowserRouter>
-      <ShopSettingsProvider>
-        <AuthProvider>
-          <CartProvider>
-            <Navbar />
-            <main>
-              <Suspense fallback={
-                <div className="route-loading-fallback" style={{ minHeight: '60vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '16px' }}>
-                  <div className="spinner"></div>
-                  <p style={{ color: '#64748b', fontWeight: 600 }}>Đang tải trang...</p>
-                </div>
-              }>
-                <AppRoutes />
-              </Suspense>
-            </main>
-            <Footer />
-          </CartProvider>
-        </AuthProvider>
-      </ShopSettingsProvider>
+      <ThemeProvider>
+        <ShopSettingsProvider>
+          <AuthProvider>
+            <CartProvider>
+              <SeasonalEffect />
+              <Navbar />
+              <main>
+                <Suspense fallback={
+                  <div className="route-loading-fallback" style={{ minHeight: '60vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '16px' }}>
+                    <div className="spinner"></div>
+                    <p style={{ color: '#64748b', fontWeight: 600 }}>Đang tải trang...</p>
+                  </div>
+                }>
+                  <AppRoutes />
+                </Suspense>
+              </main>
+              <Footer />
+              <FloatingContactButton />
+            </CartProvider>
+          </AuthProvider>
+        </ShopSettingsProvider>
+      </ThemeProvider>
     </BrowserRouter>
   );
 }
+
 
 
 export default App;

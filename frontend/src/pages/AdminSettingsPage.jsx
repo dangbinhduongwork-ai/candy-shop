@@ -4,11 +4,56 @@ import { useCart } from '../context/CartContext';
 import { useShopSettings } from '../context/ShopSettingsContext';
 import settingService from '../api/settingService';
 
+const SEASONAL_EFFECTS = [
+  {
+    id: 'NONE',
+    name: 'Không sử dụng',
+    icon: '🚫',
+    desc: 'Giao diện tiêu chuẩn, không có hiệu ứng rơi nền',
+    badge: 'Mặc định',
+  },
+  {
+    id: 'WINTER_SNOW',
+    name: 'Mùa Đông - Bông Tuyết Rơi',
+    icon: '❄️',
+    desc: 'Bông tuyết trắng nhẹ nhàng rơi và lắc lư, phù hợp Noel & Giáng Sinh',
+    badge: 'Giáng Sinh / Năm Mới',
+  },
+  {
+    id: 'SPRING_BLOSSOM',
+    name: 'Mùa Xuân - Hoa Đào / Mai',
+    icon: '🌸',
+    desc: 'Cánh hoa đào hồng mềm mại xoay lượn trong gió, lý tưởng dịp Tết Nguyên Đán',
+    badge: 'Tết Âm Lịch',
+  },
+  {
+    id: 'AUTUMN_LEAVES',
+    name: 'Mùa Thu - Lá Vàng Rơi',
+    icon: '🍁',
+    desc: 'Những chiếc lá vàng, phong đỏ dập dờn bay đón thu & tựu trường',
+    badge: 'Trung Thu / Khai Giảng',
+  },
+  {
+    id: 'SUMMER_BUBBLES',
+    name: 'Mùa Hè - Bong Bóng Tươi Mát',
+    icon: '🫧',
+    desc: 'Bong bóng trong suốt lung linh bốc lên nhẹ nhàng, mang lại cảm giác tươi mát',
+    badge: 'Mùa Hè Sôi Động',
+  },
+  {
+    id: 'CONFETTI_PARTY',
+    name: 'Lễ Hội - Pháo Giấy Confetti',
+    icon: '🎉',
+    desc: 'Pháo giấy rực rỡ sắc màu rơi bùng nổ, phù hợp các dịp Sinh Nhật & Đại Sale',
+    badge: 'Mega Sale / Sinh Nhật Shop',
+  },
+];
+
 const AdminSettingsPage = () => {
   const { showToast } = useCart();
-  const { updateSettingsLocally, refreshSettings } = useShopSettings();
+  const { updateSettingsLocally, refreshSettings, setPreviewEffect, previewEffect } = useShopSettings();
 
-  const [activeTab, setActiveTab] = useState('header'); // 'header' | 'footer' | 'shipping'
+  const [activeTab, setActiveTab] = useState('header'); // 'header' | 'footer' | 'shipping' | 'effects'
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
@@ -20,7 +65,7 @@ const AdminSettingsPage = () => {
     freeShippingThreshold: 300000,
   });
 
-  // General settings (Header, Footer, Branding) form state
+  // General settings (Header, Footer, Branding, Effects) form state
   const [generalForm, setGeneralForm] = useState({
     shopName: '',
     shopTitle: '',
@@ -36,10 +81,14 @@ const AdminSettingsPage = () => {
     footerCopyright: '',
     footerBadge1: '',
     footerBadge2: '',
+    activeEffect: 'NONE',
   });
 
   useEffect(() => {
     fetchAllSettings();
+    return () => {
+      if (setPreviewEffect) setPreviewEffect(null);
+    };
   }, []);
 
   const fetchAllSettings = async () => {
@@ -73,6 +122,7 @@ const AdminSettingsPage = () => {
           footerCopyright: generalData.footerCopyright || '© 2026 Nguyen Huong Grocery Store. Tất cả các quyền được bảo lưu.',
           footerBadge1: generalData.footerBadge1 || 'Sản phẩm chính hãng',
           footerBadge2: generalData.footerBadge2 || 'Giao hàng tận nơi',
+          activeEffect: generalData.activeEffect || 'NONE',
         });
       }
     } catch (err) {
@@ -273,6 +323,28 @@ const AdminSettingsPage = () => {
                 }}
               >
                 🚚 Cấu Hình Vận Chuyển
+              </button>
+
+              <button
+                type="button"
+                className={`subtab-btn ${activeTab === 'effects' ? 'active' : ''}`}
+                onClick={() => { setActiveTab('effects'); setSuccessMsg(''); setErrorMsg(''); }}
+                style={{
+                  padding: '0.65rem 1.25rem',
+                  borderRadius: '10px',
+                  border: 'none',
+                  background: activeTab === 'effects' ? '#0f766e' : '#f1f5f9',
+                  color: activeTab === 'effects' ? '#ffffff' : '#475569',
+                  fontWeight: 700,
+                  fontSize: '0.95rem',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px'
+                }}
+              >
+                🎨 Hiệu Ứng Theo Mùa
               </button>
             </div>
 
@@ -782,6 +854,158 @@ const AdminSettingsPage = () => {
                       </p>
                     </div>
                   </div>
+                </div>
+              </div>
+            )}
+
+            {/* TAB 4: HIỆU ỨNG THEO MÙA */}
+            {activeTab === 'effects' && (
+              <div className="settings-grid" style={{ gridTemplateColumns: '1fr' }}>
+                <div className="setting-card">
+                  <div className="setting-card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
+                    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                      <div className="setting-icon-box" style={{ background: '#fdf2f8', color: '#db2777' }}>
+                        🎨
+                      </div>
+                      <div>
+                        <h3 className="setting-card-title">Cấu Hình Hiệu Ứng Rơi Theo Mùa</h3>
+                        <p className="setting-card-desc">
+                          Tạo không khí lễ hội cuốn hút khách hàng với hoạt họa HTML5 Canvas 60fps siêu mượt, tự động tối ưu hóa tài nguyên.
+                        </p>
+                      </div>
+                    </div>
+
+                    {previewEffect && (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#ecfdf5', padding: '0.5rem 1rem', borderRadius: '10px', border: '1px solid #a7f3d0' }}>
+                        <span style={{ fontSize: '0.85rem', color: '#065f46', fontWeight: 600 }}>
+                          Đang xem trước: <strong>{SEASONAL_EFFECTS.find(e => e.id === previewEffect)?.name || previewEffect}</strong>
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => setPreviewEffect(null)}
+                          style={{
+                            background: '#dc2626',
+                            color: '#fff',
+                            border: 'none',
+                            padding: '4px 10px',
+                            borderRadius: '6px',
+                            fontSize: '0.8rem',
+                            cursor: 'pointer',
+                            fontWeight: 600
+                          }}
+                        >
+                          ✕ Tắt xem trước
+                        </button>
+                      </div>
+                    )}
+                  </div>
+
+                  <form onSubmit={(e) => {
+                    setPreviewEffect(null);
+                    handleSaveGeneral(e, 'Hiệu Ứng Theo Mùa');
+                  }} className="setting-form">
+                    <div className="seasonal-effects-grid" style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                      gap: '1.25rem',
+                      margin: '1.5rem 0'
+                    }}>
+                      {SEASONAL_EFFECTS.map((effect) => {
+                        const isSelected = generalForm.activeEffect === effect.id;
+                        const isPreviewing = previewEffect === effect.id;
+
+                        return (
+                          <div
+                            key={effect.id}
+                            onClick={() => setGeneralForm((prev) => ({ ...prev, activeEffect: effect.id }))}
+                            style={{
+                              border: isSelected ? '2px solid #0f766e' : '1.5px solid var(--border-color, #e2e8f0)',
+                              borderRadius: '16px',
+                              padding: '1.25rem',
+                              background: isSelected ? 'var(--bg-secondary, #f0fdfa)' : 'var(--card-bg, #ffffff)',
+                              cursor: 'pointer',
+                              position: 'relative',
+                              transition: 'all 0.2s ease',
+                              boxShadow: isSelected ? '0 4px 14px rgba(15, 118, 110, 0.15)' : 'none',
+                            }}
+                          >
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+                              <div style={{ fontSize: '2rem' }}>{effect.icon}</div>
+                              <span style={{
+                                fontSize: '0.75rem',
+                                fontWeight: 700,
+                                padding: '3px 8px',
+                                borderRadius: '6px',
+                                background: isSelected ? '#0f766e' : '#f1f5f9',
+                                color: isSelected ? '#ffffff' : '#64748b'
+                              }}>
+                                {effect.badge}
+                              </span>
+                            </div>
+
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '0.5rem' }}>
+                              <input
+                                type="radio"
+                                name="activeEffect"
+                                value={effect.id}
+                                checked={isSelected}
+                                onChange={() => setGeneralForm((prev) => ({ ...prev, activeEffect: effect.id }))}
+                                style={{ accentColor: '#0f766e', cursor: 'pointer' }}
+                              />
+                              <h4 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-primary, #0f172a)' }}>
+                                {effect.name}
+                              </h4>
+                            </div>
+
+                            <p style={{ fontSize: '0.86rem', color: 'var(--text-secondary, #64748b)', margin: '0 0 1rem 0', lineHeight: 1.5, minHeight: '40px' }}>
+                              {effect.desc}
+                            </p>
+
+                            <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end', borderTop: '1px solid var(--border-color, #f1f5f9)', paddingTop: '0.75rem' }}>
+                              {effect.id !== 'NONE' && (
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (isPreviewing) {
+                                      setPreviewEffect(null);
+                                    } else {
+                                      setPreviewEffect(effect.id);
+                                    }
+                                  }}
+                                  style={{
+                                    padding: '5px 12px',
+                                    borderRadius: '8px',
+                                    border: '1px solid #cbd5e1',
+                                    background: isPreviewing ? '#fef3c7' : '#ffffff',
+                                    color: isPreviewing ? '#b45309' : '#334155',
+                                    fontSize: '0.82rem',
+                                    fontWeight: 600,
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '4px',
+                                  }}
+                                >
+                                  {isPreviewing ? '⏹️ Dừng xem' : '👁️ Xem trước'}
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    <div className="setting-actions" style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1.5rem' }}>
+                      <button
+                        type="submit"
+                        className="btn btn-primary btn-save-settings"
+                        disabled={saving}
+                      >
+                        {saving ? '⏳ Đang lưu...' : '💾 Lưu Cài Đặt Hiệu Ứng'}
+                      </button>
+                    </div>
+                  </form>
                 </div>
               </div>
             )}

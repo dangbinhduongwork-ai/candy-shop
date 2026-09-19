@@ -258,8 +258,10 @@ public class DataInitializer implements CommandLineRunner {
         saveSettingIfAbsent("FOOTER_COPYRIGHT", "© 2026 Nguyen Huong Grocery Store. Tất cả các quyền được bảo lưu.", "Dòng chữ bản quyền ở đáy trang footer");
         saveSettingIfAbsent("FOOTER_BADGE_1", "Sản phẩm chính hãng", "Huy hiệu cam kết 1 ở footer");
         saveSettingIfAbsent("FOOTER_BADGE_2", "Giao hàng tận nơi", "Huy hiệu cam kết 2 ở footer");
-        log.info("Initialized default shop settings (Shipping, Branding, Header & Footer)");
+        saveSettingIfAbsent("ACTIVE_SEASONAL_EFFECT", "NONE", "Hiệu ứng giao diện theo mùa");
+        log.info("Initialized default shop settings (Shipping, Branding, Header, Footer & Visual Effects)");
     }
+
 
     private void saveSettingIfAbsent(String key, String value, String description) {
         if (!shopSettingRepository.existsBySettingKey(key)) {

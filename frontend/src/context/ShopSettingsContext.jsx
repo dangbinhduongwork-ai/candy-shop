@@ -16,11 +16,14 @@ const DEFAULT_SETTINGS = {
   footerCopyright: '© 2026 Nguyen Huong Grocery Store. Tất cả các quyền được bảo lưu.',
   footerBadge1: 'Sản phẩm chính hãng',
   footerBadge2: 'Giao hàng tận nơi',
+  activeEffect: 'NONE',
 };
 
 const ShopSettingsContext = createContext({
   settings: DEFAULT_SETTINGS,
   loading: false,
+  previewEffect: null,
+  setPreviewEffect: () => {},
   refreshSettings: async () => {},
   updateSettingsLocally: () => {},
 });
@@ -28,6 +31,7 @@ const ShopSettingsContext = createContext({
 export const ShopSettingsProvider = ({ children }) => {
   const [settings, setSettings] = useState(DEFAULT_SETTINGS);
   const [loading, setLoading] = useState(true);
+  const [previewEffect, setPreviewEffect] = useState(null);
 
   const fetchSettings = useCallback(async () => {
     try {
@@ -69,6 +73,8 @@ export const ShopSettingsProvider = ({ children }) => {
       value={{
         settings,
         loading,
+        previewEffect,
+        setPreviewEffect,
         refreshSettings: fetchSettings,
         updateSettingsLocally,
       }}
@@ -77,6 +83,7 @@ export const ShopSettingsProvider = ({ children }) => {
     </ShopSettingsContext.Provider>
   );
 };
+
 
 export const useShopSettings = () => {
   const context = useContext(ShopSettingsContext);
