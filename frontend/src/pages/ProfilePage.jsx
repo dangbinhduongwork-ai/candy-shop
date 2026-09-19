@@ -242,7 +242,7 @@ const ProfilePage = () => {
   };
 
   // Get current avatar url
-  const currentAvatar = avatarPreview || (user?.avatarUrl ? (user.avatarUrl.startsWith('http') ? user.avatarUrl : `http://localhost:8080${user.avatarUrl}`) : null);
+  const currentAvatar = avatarPreview || user?.avatarUrl || null;
 
   if (authLoading || loadingProfile) {
     return (

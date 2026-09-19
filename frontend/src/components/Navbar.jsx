@@ -232,7 +232,7 @@ const Navbar = () => {
                   <div className="user-avatar-circle">
                     {user?.avatarUrl ? (
                       <img
-                        src={user.avatarUrl.startsWith('http') ? user.avatarUrl : `http://localhost:8080${user.avatarUrl}`}
+                        src={user.avatarUrl}
                         alt="Avatar"
                         className="navbar-avatar-img"
                       />
