@@ -7,6 +7,7 @@ import { ThemeProvider } from './context/ThemeContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import SeasonalEffect from './components/SeasonalEffect';
+import ShopBackground from './components/ShopBackground';
 import FloatingContactButton from './components/FloatingContactButton';
 import AdminRoute from './components/AdminRoute';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -185,6 +186,7 @@ function App() {
           <AuthProvider>
             <CartProvider>
               <SeasonalEffect />
+              <ShopBackground />
               <Navbar />
               <main>
                 <Suspense fallback={

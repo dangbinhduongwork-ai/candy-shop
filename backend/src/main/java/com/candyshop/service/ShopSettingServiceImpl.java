@@ -37,6 +37,12 @@ public class ShopSettingServiceImpl implements ShopSettingService {
     public static final String KEY_FOOTER_BADGE_2 = "FOOTER_BADGE_2";
     public static final String KEY_ACTIVE_SEASONAL_EFFECT = "ACTIVE_SEASONAL_EFFECT";
 
+    // --- Appearance & Background Setting Keys ---
+    public static final String KEY_PRIMARY_COLOR = "PRIMARY_COLOR";
+    public static final String KEY_SHOP_BACKGROUND_PATTERN = "SHOP_BACKGROUND_PATTERN";
+    public static final String KEY_SHOP_BACKGROUND_IMAGE_URL = "SHOP_BACKGROUND_IMAGE_URL";
+    public static final String KEY_SHOP_BACKGROUND_OPACITY = "SHOP_BACKGROUND_OPACITY";
+
     public static final String FALLBACK_SHOP_NAME = "Nguyen Huong Grocery Store";
     public static final String FALLBACK_SHOP_TITLE = "Nguyen Huong Grocery Store - Bánh kẹo & Tạp hóa chính hãng";
     public static final String FALLBACK_SHOP_SLOGAN = "Grocery Store • Since 2026";
@@ -52,6 +58,11 @@ public class ShopSettingServiceImpl implements ShopSettingService {
     public static final String FALLBACK_FOOTER_BADGE_1 = "Sản phẩm chính hãng";
     public static final String FALLBACK_FOOTER_BADGE_2 = "Giao hàng tận nơi";
     public static final String FALLBACK_ACTIVE_SEASONAL_EFFECT = "NONE";
+
+    public static final String FALLBACK_PRIMARY_COLOR = "#0f766e";
+    public static final String FALLBACK_SHOP_BACKGROUND_PATTERN = "DEFAULT";
+    public static final String FALLBACK_SHOP_BACKGROUND_IMAGE_URL = "";
+    public static final Integer FALLBACK_SHOP_BACKGROUND_OPACITY = 15;
 
 
     private final ShopSettingRepository settingRepository;
@@ -118,7 +129,11 @@ public class ShopSettingServiceImpl implements ShopSettingService {
                 getStringValue(KEY_FOOTER_COPYRIGHT, FALLBACK_FOOTER_COPYRIGHT),
                 getStringValue(KEY_FOOTER_BADGE_1, FALLBACK_FOOTER_BADGE_1),
                 getStringValue(KEY_FOOTER_BADGE_2, FALLBACK_FOOTER_BADGE_2),
-                getStringValue(KEY_ACTIVE_SEASONAL_EFFECT, FALLBACK_ACTIVE_SEASONAL_EFFECT)
+                getStringValue(KEY_ACTIVE_SEASONAL_EFFECT, FALLBACK_ACTIVE_SEASONAL_EFFECT),
+                getStringValue(KEY_PRIMARY_COLOR, FALLBACK_PRIMARY_COLOR),
+                getStringValue(KEY_SHOP_BACKGROUND_PATTERN, FALLBACK_SHOP_BACKGROUND_PATTERN),
+                getStringValue(KEY_SHOP_BACKGROUND_IMAGE_URL, FALLBACK_SHOP_BACKGROUND_IMAGE_URL),
+                getIntValue(KEY_SHOP_BACKGROUND_OPACITY, FALLBACK_SHOP_BACKGROUND_OPACITY)
         );
     }
 
@@ -171,6 +186,19 @@ public class ShopSettingServiceImpl implements ShopSettingService {
         if (dto.getActiveEffect() != null) {
             saveOrUpdateSetting(KEY_ACTIVE_SEASONAL_EFFECT, dto.getActiveEffect().trim(), "Hiệu ứng giao diện theo mùa (Canvas Seasonal Effect)");
         }
+        if (dto.getPrimaryColor() != null && !dto.getPrimaryColor().trim().isEmpty()) {
+            saveOrUpdateSetting(KEY_PRIMARY_COLOR, dto.getPrimaryColor().trim(), "Màu sắc chủ đạo của toàn bộ hệ thống shop");
+        }
+        if (dto.getShopBackgroundPattern() != null) {
+            saveOrUpdateSetting(KEY_SHOP_BACKGROUND_PATTERN, dto.getShopBackgroundPattern().trim(), "Họa tiết nền của shop (DEFAULT, CANDY_DOODLE, STARRY_CELESTIAL, WARM_GEOMETRIC, CHEVRON_WAVE, NONE, CUSTOM_IMAGE)");
+        }
+        if (dto.getShopBackgroundImageUrl() != null) {
+            saveOrUpdateSetting(KEY_SHOP_BACKGROUND_IMAGE_URL, dto.getShopBackgroundImageUrl().trim(), "Đường dẫn hình nền tùy chỉnh của shop");
+        }
+        if (dto.getShopBackgroundOpacity() != null) {
+            int opacity = Math.max(5, Math.min(50, dto.getShopBackgroundOpacity()));
+            saveOrUpdateSetting(KEY_SHOP_BACKGROUND_OPACITY, String.valueOf(opacity), "Độ mờ / trong suốt của hình nền shop (5 - 50)");
+        }
 
         return getGeneralSetting();
     }
@@ -181,6 +209,18 @@ public class ShopSettingServiceImpl implements ShopSettingService {
                 .map(setting -> {
                     try {
                         return new BigDecimal(setting.getSettingValue());
+                    } catch (Exception e) {
+                        return fallback;
+                    }
+                })
+                .orElse(fallback);
+    }
+
+    private Integer getIntValue(String key, Integer fallback) {
+        return settingRepository.findBySettingKey(key)
+                .map(setting -> {
+                    try {
+                        return Integer.parseInt(setting.getSettingValue());
                     } catch (Exception e) {
                         return fallback;
                     }

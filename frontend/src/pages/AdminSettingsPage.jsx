@@ -1,8 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import AdminNavTabs from '../components/AdminNavTabs';
 import { useCart } from '../context/CartContext';
-import { useShopSettings } from '../context/ShopSettingsContext';
+import { useShopSettings, hexToRgb, adjustBrightness } from '../context/ShopSettingsContext';
+import { SHOP_PATTERNS } from '../components/ShopBackground';
 import settingService from '../api/settingService';
+
+const THEME_PALETTES = [
+  { id: 'forest-teal', name: 'Xanh Rừng (Forest Teal)', hex: '#0f766e', desc: 'Tươi mới, sạch sẽ & tin cậy', badge: 'Mặc định' },
+  { id: 'candy-pink', name: 'Hồng Kẹo Ngọt (Candy Berry)', hex: '#ec4899', desc: 'Ngọt ngào, đáng yêu & nổi bật', badge: 'Ngọt ngào' },
+  { id: 'royal-purple', name: 'Tím Hoàng Gia (Royal Purple)', hex: '#8b5cf6', desc: 'Sang trọng, quý phái & cao cấp', badge: 'Quý phái' },
+  { id: 'ocean-blue', name: 'Đại Dương Xanh (Ocean Blue)', hex: '#0284c7', desc: 'Hiện đại, chuyên nghiệp & uy tín', badge: 'Hiện đại' },
+  { id: 'fresh-emerald', name: 'Ngọc Lục Bảo (Fresh Emerald)', hex: '#059669', desc: 'Thiên nhiên tươi mát, an toàn', badge: 'Organic' },
+  { id: 'warm-amber', name: 'Hổ Phách Ấm (Warm Amber)', hex: '#d97706', desc: 'Năng động, rực rỡ & ấm áp', badge: 'Năng động' },
+  { id: 'caramel-brown', name: 'Caramel & Cacao (Caramel)', hex: '#b45309', desc: 'Đậm đà hương vị truyền thống', badge: 'Cổ điển' },
+  { id: 'ruby-red', name: 'Đỏ Ruby (Ruby Red)', hex: '#e11d48', desc: 'Nổi bật, rực rỡ & thu hút', badge: 'Nổi bật' },
+  { id: 'midnight-slate', name: 'Đá Phiến Đêm (Midnight)', hex: '#334155', desc: 'Tối giản, trang nhã & thanh lịch', badge: 'Minimal' },
+];
 
 const SEASONAL_EFFECTS = [
   {
@@ -51,13 +64,25 @@ const SEASONAL_EFFECTS = [
 
 const AdminSettingsPage = () => {
   const { showToast } = useCart();
-  const { updateSettingsLocally, refreshSettings, setPreviewEffect, previewEffect } = useShopSettings();
+  const {
+    updateSettingsLocally,
+    refreshSettings,
+    setPreviewEffect,
+    previewEffect,
+    setPreviewColor,
+    setPreviewBackground,
+  } = useShopSettings();
 
-  const [activeTab, setActiveTab] = useState('header'); // 'header' | 'footer' | 'shipping' | 'effects'
+  const [activeTab, setActiveTab] = useState('appearance'); // 'appearance' | 'header' | 'footer' | 'shipping' | 'effects'
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
+
+  // Appearance specific states
+  const [uploadingBg, setUploadingBg] = useState(false);
+  const [liveStorePreview, setLiveStorePreview] = useState(false);
+  const bgFileInputRef = useRef(null);
 
   // Shipping form state
   const [shippingForm, setShippingForm] = useState({
@@ -65,7 +90,7 @@ const AdminSettingsPage = () => {
     freeShippingThreshold: 300000,
   });
 
-  // General settings (Header, Footer, Branding, Effects) form state
+  // General settings (Header, Footer, Branding, Effects, Appearance) form state
   const [generalForm, setGeneralForm] = useState({
     shopName: '',
     shopTitle: '',
@@ -82,12 +107,18 @@ const AdminSettingsPage = () => {
     footerBadge1: '',
     footerBadge2: '',
     activeEffect: 'NONE',
+    primaryColor: '#0f766e',
+    shopBackgroundPattern: 'DEFAULT',
+    shopBackgroundImageUrl: '',
+    shopBackgroundOpacity: 15,
   });
 
   useEffect(() => {
     fetchAllSettings();
     return () => {
       if (setPreviewEffect) setPreviewEffect(null);
+      if (setPreviewColor) setPreviewColor(null);
+      if (setPreviewBackground) setPreviewBackground(null);
     };
   }, []);
 
@@ -123,6 +154,10 @@ const AdminSettingsPage = () => {
           footerBadge1: generalData.footerBadge1 || 'Sản phẩm chính hãng',
           footerBadge2: generalData.footerBadge2 || 'Giao hàng tận nơi',
           activeEffect: generalData.activeEffect || 'NONE',
+          primaryColor: generalData.primaryColor || '#0f766e',
+          shopBackgroundPattern: generalData.shopBackgroundPattern || 'DEFAULT',
+          shopBackgroundImageUrl: generalData.shopBackgroundImageUrl || '',
+          shopBackgroundOpacity: generalData.shopBackgroundOpacity !== undefined ? Number(generalData.shopBackgroundOpacity) : 15,
         });
       }
     } catch (err) {
@@ -261,6 +296,14 @@ const AdminSettingsPage = () => {
             <div className="settings-subtabs">
               <button
                 type="button"
+                className={`subtab-btn ${activeTab === 'appearance' ? 'active' : ''}`}
+                onClick={() => { setActiveTab('appearance'); setSuccessMsg(''); setErrorMsg(''); }}
+              >
+                🎨 Màu Sắc & Hình Nền Shop
+              </button>
+
+              <button
+                type="button"
                 className={`subtab-btn ${activeTab === 'header' ? 'active' : ''}`}
                 onClick={() => { setActiveTab('header'); setSuccessMsg(''); setErrorMsg(''); }}
               >
@@ -288,7 +331,7 @@ const AdminSettingsPage = () => {
                 className={`subtab-btn ${activeTab === 'effects' ? 'active' : ''}`}
                 onClick={() => { setActiveTab('effects'); setSuccessMsg(''); setErrorMsg(''); }}
               >
-                🎨 Hiệu Ứng Theo Mùa
+                ❄️ Hiệu Ứng Theo Mùa
               </button>
             </div>
 
@@ -949,6 +992,517 @@ const AdminSettingsPage = () => {
                         {saving ? '⏳ Đang lưu...' : '💾 Lưu Cài Đặt Hiệu Ứng'}
                       </button>
                     </div>
+                  </form>
+                </div>
+              </div>
+            )}
+
+            {/* TAB 5: MÀU SẮC CHỦ ĐẠO & HÌNH NỀN SHOP */}
+            {activeTab === 'appearance' && (
+              <div className="settings-grid">
+                <div className="setting-card">
+                  <div className="setting-card-header">
+                    <div className="setting-icon-box" style={{ background: '#fdf2f8', color: '#ec4899' }}>
+                      🎨
+                    </div>
+                    <div>
+                      <h3 className="setting-card-title">Màu Sắc Chủ Đạo & Hình Nền Cửa Hàng</h3>
+                      <p className="setting-card-desc">
+                        Tùy biến phong cách thương hiệu độc bản: chọn màu chủ đạo và họa tiết nền hiển thị đồng bộ trên toàn trang
+                      </p>
+                    </div>
+                  </div>
+
+                  <form onSubmit={(e) => handleSaveGeneral(e, 'Màu Sắc & Hình Nền')} className="setting-form">
+                    
+                    {/* SECTION 1: PRIMARY THEME COLOR */}
+                    <div className="appearance-section-box">
+                      <div className="appearance-section-header">
+                        <div className="section-step-badge">1</div>
+                        <div>
+                          <h4 className="appearance-section-title">Màu Sắc Chủ Đạo (Primary Theme Color)</h4>
+                          <p className="appearance-section-desc">
+                            Màu sắc này sẽ áp dụng cho tất cả các nút bấm chính (Button), tab đang chọn, liên kết nổi bật, nhãn thông báo và hiệu ứng focus toàn shop.
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Palettes Grid */}
+                      <div className="theme-palette-grid">
+                        {THEME_PALETTES.map((pal) => {
+                          const isSelected = (generalForm.primaryColor || '').toLowerCase() === pal.hex.toLowerCase();
+                          return (
+                            <div
+                              key={pal.id}
+                              className={`theme-palette-card ${isSelected ? 'selected' : ''}`}
+                              onClick={() => {
+                                setGeneralForm((prev) => ({ ...prev, primaryColor: pal.hex }));
+                                if (liveStorePreview && setPreviewColor) setPreviewColor(pal.hex);
+                              }}
+                            >
+                              <div className="palette-color-preview" style={{ background: pal.hex }}>
+                                {isSelected && <span className="palette-check-mark">✓</span>}
+                              </div>
+                              <div className="palette-info">
+                                <div className="palette-header-line">
+                                  <span className="palette-name">{pal.name}</span>
+                                  <span className="palette-badge">{pal.badge}</span>
+                                </div>
+                                <span className="palette-hex-code">{pal.hex.toUpperCase()}</span>
+                                <span className="palette-desc">{pal.desc}</span>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      {/* Custom Color Picker & Hex Input */}
+                      <div className="custom-color-row">
+                        <div className="custom-picker-group">
+                          <label className="form-label" htmlFor="customColorPicker">
+                            Hoặc chọn màu tùy chỉnh tự do:
+                          </label>
+                          <div className="custom-picker-inputs">
+                            <input
+                              id="customColorPicker"
+                              type="color"
+                              className="custom-color-circle"
+                              value={generalForm.primaryColor || '#0f766e'}
+                              onChange={(e) => {
+                                const newHex = e.target.value;
+                                setGeneralForm((prev) => ({ ...prev, primaryColor: newHex }));
+                                if (liveStorePreview && setPreviewColor) setPreviewColor(newHex);
+                              }}
+                            />
+                            <div className="hex-input-wrapper">
+                              <span className="hex-prefix">HEX</span>
+                              <input
+                                type="text"
+                                className="form-input hex-text-input"
+                                value={generalForm.primaryColor || '#0f766e'}
+                                placeholder="#0f766e"
+                                maxLength={7}
+                                onChange={(e) => {
+                                  const val = e.target.value;
+                                  setGeneralForm((prev) => ({ ...prev, primaryColor: val }));
+                                  if (/^#([0-9A-Fa-f]{3}){1,2}$/.test(val) && liveStorePreview && setPreviewColor) {
+                                    setPreviewColor(val);
+                                  }
+                                }}
+                              />
+                            </div>
+                            <button
+                              type="button"
+                              className="btn-reset-color"
+                              onClick={() => {
+                                setGeneralForm((prev) => ({ ...prev, primaryColor: '#0f766e' }));
+                                if (liveStorePreview && setPreviewColor) setPreviewColor('#0f766e');
+                              }}
+                            >
+                              Khôi phục màu mặc định (#0f766e)
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* SECTION 2: SHOP BACKGROUND PATTERN & IMAGE */}
+                    <div className="appearance-section-box">
+                      <div className="appearance-section-header">
+                        <div className="section-step-badge">2</div>
+                        <div>
+                          <h4 className="appearance-section-title">Hình Nền & Họa Tiết Shop (Shop Background)</h4>
+                          <p className="appearance-section-desc">
+                            Lớp nền vector tinh tế hoặc hình ảnh do bạn tải lên sẽ phủ nhẹ nhàng phía sau nội dung trang web.
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Pattern Preset Cards */}
+                      <div className="pattern-cards-grid">
+                        {Object.values(SHOP_PATTERNS).map((pat) => {
+                          const isSelected = (generalForm.shopBackgroundPattern || 'DEFAULT') === pat.id;
+                          return (
+                            <div
+                              key={pat.id}
+                              className={`pattern-card ${isSelected ? 'selected' : ''}`}
+                              onClick={() => {
+                                setGeneralForm((prev) => ({ ...prev, shopBackgroundPattern: pat.id }));
+                                if (liveStorePreview && setPreviewBackground) {
+                                  setPreviewBackground({
+                                    pattern: pat.id,
+                                    imageUrl: generalForm.shopBackgroundImageUrl,
+                                    opacity: generalForm.shopBackgroundOpacity,
+                                  });
+                                }
+                              }}
+                            >
+                              <div className="pattern-icon-box">{pat.icon}</div>
+                              <div className="pattern-body">
+                                <div className="pattern-title-row">
+                                  <h5 className="pattern-title">{pat.name}</h5>
+                                  <span className="pattern-badge">{pat.badge}</span>
+                                </div>
+                                <p className="pattern-desc">{pat.desc}</p>
+                              </div>
+                              {isSelected && <span className="pattern-check-badge">✓ Đang chọn</span>}
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      {/* Custom Image Upload & URL input (when CUSTOM_IMAGE selected) */}
+                      {generalForm.shopBackgroundPattern === 'CUSTOM_IMAGE' && (
+                        <div className="custom-bg-upload-box">
+                          <h5 className="custom-bg-title">Cung Cấp Hình Ảnh Nền Tùy Chỉnh</h5>
+                          <div className="upload-options-grid">
+                            {/* Option 1: File Upload */}
+                            <div className="upload-dropzone">
+                              <input
+                                ref={bgFileInputRef}
+                                type="file"
+                                accept="image/jpeg,image/png,image/webp"
+                                style={{ display: 'none' }}
+                                onChange={async (e) => {
+                                  const file = e.target.files?.[0];
+                                  if (!file) return;
+                                  if (file.size > 5 * 1024 * 1024) {
+                                    if (showToast) showToast('Dung lượng ảnh tối đa 5MB!', 'error');
+                                    return;
+                                  }
+                                  try {
+                                    setUploadingBg(true);
+                                    const res = await settingService.uploadBackgroundImage(file);
+                                    if (res && res.url) {
+                                      setGeneralForm((prev) => ({ ...prev, shopBackgroundImageUrl: res.url }));
+                                      if (liveStorePreview && setPreviewBackground) {
+                                        setPreviewBackground({
+                                          pattern: 'CUSTOM_IMAGE',
+                                          imageUrl: res.url,
+                                          opacity: generalForm.shopBackgroundOpacity,
+                                        });
+                                      }
+                                      if (showToast) showToast('Tải ảnh nền lên thành công! 🎉', 'success');
+                                    }
+                                  } catch (err) {
+                                    console.error('Lỗi tải ảnh:', err);
+                                    if (showToast) showToast('Không thể tải ảnh lên', 'error');
+                                  } finally {
+                                    setUploadingBg(false);
+                                  }
+                                }}
+                              />
+                              <button
+                                type="button"
+                                className="btn-upload-trigger"
+                                disabled={uploadingBg}
+                                onClick={() => bgFileInputRef.current?.click()}
+                              >
+                                {uploadingBg ? '⏳ Đang tải ảnh lên...' : '📁 Tải ảnh từ máy tính (JPG, PNG, WEBP)'}
+                              </button>
+                              <span className="upload-hint">Dung lượng tối đa 5MB. Khuyên dùng ảnh phong cảnh hoặc họa tiết liền mạch.</span>
+                            </div>
+
+                            {/* Option 2: Image URL input */}
+                            <div className="url-input-group">
+                              <label className="form-label" htmlFor="bgImageUrlInput">
+                                Hoặc dán đường dẫn ảnh (URL):
+                              </label>
+                              <input
+                                id="bgImageUrlInput"
+                                type="url"
+                                className="form-input"
+                                placeholder="https://example.com/background.jpg"
+                                value={generalForm.shopBackgroundImageUrl || ''}
+                                onChange={(e) => {
+                                  const url = e.target.value;
+                                  setGeneralForm((prev) => ({ ...prev, shopBackgroundImageUrl: url }));
+                                  if (liveStorePreview && setPreviewBackground) {
+                                    setPreviewBackground({
+                                      pattern: 'CUSTOM_IMAGE',
+                                      imageUrl: url,
+                                      opacity: generalForm.shopBackgroundOpacity,
+                                    });
+                                  }
+                                }}
+                              />
+                            </div>
+                          </div>
+
+                          {/* Image preview thumbnail */}
+                          {generalForm.shopBackgroundImageUrl && (
+                            <div className="custom-bg-preview-row">
+                              <span className="form-label">Ảnh nền hiện tại:</span>
+                              <div className="custom-bg-thumb-wrap">
+                                <img
+                                  src={generalForm.shopBackgroundImageUrl}
+                                  alt="Custom background preview"
+                                  className="custom-bg-thumb"
+                                />
+                                <button
+                                  type="button"
+                                  className="btn-remove-custom-bg"
+                                  onClick={() => {
+                                    setGeneralForm((prev) => ({
+                                      ...prev,
+                                      shopBackgroundImageUrl: '',
+                                      shopBackgroundPattern: 'DEFAULT',
+                                    }));
+                                    if (liveStorePreview && setPreviewBackground) {
+                                      setPreviewBackground({
+                                        pattern: 'DEFAULT',
+                                        imageUrl: '',
+                                        opacity: generalForm.shopBackgroundOpacity,
+                                      });
+                                    }
+                                  }}
+                                >
+                                  ✕ Xóa ảnh này
+                                </button>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Opacity Slider */}
+                      {generalForm.shopBackgroundPattern !== 'NONE' && (
+                        <div className="opacity-slider-box">
+                          <div className="opacity-slider-header">
+                            <div>
+                              <label className="form-label mb-0" htmlFor="bgOpacitySlider">
+                                Độ Mờ / Trong Suốt Của Nền (Background Opacity):
+                              </label>
+                              <span className="slider-hint">
+                                Khuyên dùng: <strong>10% - 25%</strong> để họa tiết hiển thị dịu nhẹ, đảm bảo chữ và thẻ sản phẩm rõ nét 100%.
+                              </span>
+                            </div>
+                            <span className="opacity-value-badge">{generalForm.shopBackgroundOpacity || 15}%</span>
+                          </div>
+
+                          <div className="slider-control-row">
+                            <span className="slider-end-label">5% (Rất mờ)</span>
+                            <input
+                              id="bgOpacitySlider"
+                              type="range"
+                              min={5}
+                              max={50}
+                              step={1}
+                              className="opacity-range-slider"
+                              value={generalForm.shopBackgroundOpacity || 15}
+                              onChange={(e) => {
+                                const val = Number(e.target.value);
+                                setGeneralForm((prev) => ({ ...prev, shopBackgroundOpacity: val }));
+                                if (liveStorePreview && setPreviewBackground) {
+                                  setPreviewBackground({
+                                    pattern: generalForm.shopBackgroundPattern,
+                                    imageUrl: generalForm.shopBackgroundImageUrl,
+                                    opacity: val,
+                                  });
+                                }
+                              }}
+                            />
+                            <span className="slider-end-label">50% (Đậm nét)</span>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* SECTION 3: INTERACTIVE LIVE PREVIEW MOCKUP */}
+                    <div className="appearance-section-box">
+                      <div className="appearance-section-header">
+                        <div className="section-step-badge">3</div>
+                        <div style={{ flex: 1 }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
+                            <h4 className="appearance-section-title">Mô Phỏng Thực Tế (Interactive Preview)</h4>
+                            
+                            {/* Live Store Toggle */}
+                            <label className="live-preview-toggle-label">
+                              <input
+                                type="checkbox"
+                                checked={liveStorePreview}
+                                onChange={(e) => {
+                                  const checked = e.target.checked;
+                                  setLiveStorePreview(checked);
+                                  if (checked) {
+                                    if (setPreviewColor) setPreviewColor(generalForm.primaryColor);
+                                    if (setPreviewBackground) {
+                                      setPreviewBackground({
+                                        pattern: generalForm.shopBackgroundPattern,
+                                        imageUrl: generalForm.shopBackgroundImageUrl,
+                                        opacity: generalForm.shopBackgroundOpacity,
+                                      });
+                                    }
+                                    if (showToast) showToast('Đang bật chế độ xem thử trực tiếp trên toàn website! 👀', 'info');
+                                  } else {
+                                    if (setPreviewColor) setPreviewColor(null);
+                                    if (setPreviewBackground) setPreviewBackground(null);
+                                  }
+                                }}
+                              />
+                              <span>👁️ Áp dụng xem trước trực tiếp trên toàn màn hình</span>
+                            </label>
+                          </div>
+                          <p className="appearance-section-desc">
+                            Xem trước hiệu ứng tương tác của màu chủ đạo và họa tiết nền trên các thành phần cốt lõi của website:
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Mockup Preview Card */}
+                      <div
+                        className="mockup-preview-container"
+                        style={{
+                          '--preview-primary': generalForm.primaryColor || '#0f766e',
+                          '--preview-primary-hover': adjustBrightness(generalForm.primaryColor || '#0f766e', -12),
+                          '--preview-primary-light': `rgba(${hexToRgb(generalForm.primaryColor || '#0f766e').r}, ${hexToRgb(generalForm.primaryColor || '#0f766e').g}, ${hexToRgb(generalForm.primaryColor || '#0f766e').b}, 0.1)`,
+                        }}
+                      >
+                        {/* Simulated Mockup Header */}
+                        <div className="mockup-header-bar">
+                          <div className="mockup-brand-title" style={{ color: 'var(--preview-primary)' }}>
+                            🍬 {generalForm.shopName || 'Nguyen Huong Grocery Store'}
+                          </div>
+                          <div className="mockup-nav-links">
+                            <span className="mockup-link active" style={{ color: 'var(--preview-primary)', borderBottomColor: 'var(--preview-primary)' }}>
+                              Trang Chủ
+                            </span>
+                            <span className="mockup-link">Sản Phẩm</span>
+                            <span className="mockup-link">Khuyến Mãi</span>
+                          </div>
+                        </div>
+
+                        {/* Simulated Mockup Content */}
+                        <div className="mockup-content-grid">
+                          {/* Left Column: Sample Product Card */}
+                          <div className="mockup-product-card">
+                            <div className="mockup-product-badge" style={{ background: 'var(--preview-primary)', color: '#ffffff' }}>
+                              🔥 Bán Chạy Nhất
+                            </div>
+                            <div className="mockup-product-img">🍭</div>
+                            <div className="mockup-product-info">
+                              <span className="mockup-prod-cat" style={{ color: 'var(--preview-primary)', background: 'var(--preview-primary-light)' }}>
+                                Bánh Kẹo Nhập Khẩu
+                              </span>
+                              <h6 className="mockup-prod-name">Kẹo Dẻo Trái Cây Marshmallow</h6>
+                              <div className="mockup-prod-price-row">
+                                <span className="mockup-prod-price" style={{ color: 'var(--preview-primary)' }}>
+                                  45.000 ₫
+                                </span>
+                                <span className="mockup-prod-old-price">65.000 ₫</span>
+                              </div>
+                              <button
+                                type="button"
+                                className="mockup-btn-primary"
+                                style={{ background: 'var(--preview-primary)', color: '#ffffff' }}
+                              >
+                                🛒 Thêm Vào Giỏ
+                              </button>
+                            </div>
+                          </div>
+
+                          {/* Right Column: Sample Controls & Badges */}
+                          <div className="mockup-controls-col">
+                            <div className="mockup-box-group">
+                              <span className="mockup-label">Nút Bấm & Liên Kết:</span>
+                              <div className="mockup-buttons-row">
+                                <button
+                                  type="button"
+                                  className="mockup-btn-primary"
+                                  style={{ background: 'var(--preview-primary)', color: '#ffffff' }}
+                                >
+                                  Nút Chính
+                                </button>
+                                <button
+                                  type="button"
+                                  className="mockup-btn-outline"
+                                  style={{
+                                    border: '1.5px solid var(--preview-primary)',
+                                    color: 'var(--preview-primary)',
+                                    background: 'var(--preview-primary-light)',
+                                  }}
+                                >
+                                  Nút Phụ Viền
+                                </button>
+                              </div>
+                            </div>
+
+                            <div className="mockup-box-group">
+                              <span className="mockup-label">Huy Hiệu Giảm Giá & Thông Báo:</span>
+                              <div className="mockup-badges-row">
+                                <span className="mockup-pill" style={{ background: 'var(--preview-primary-light)', color: 'var(--preview-primary)', border: '1px solid var(--preview-primary)' }}>
+                                  🏷️ FREESHIP 0Đ
+                                </span>
+                                <span className="mockup-pill" style={{ background: 'var(--preview-primary)', color: '#ffffff' }}>
+                                  ⚡ VOUCHER 30K
+                                </span>
+                              </div>
+                            </div>
+
+                            <div className="mockup-box-group">
+                              <span className="mockup-label">Ô Tìm Kiếm Có Focus Highlight:</span>
+                              <div className="mockup-input-wrap">
+                                <input
+                                  type="text"
+                                  className="mockup-search-input"
+                                  placeholder="Tìm kiếm kẹo dẻo, sô cô la..."
+                                  readOnly
+                                  style={{ borderColor: 'var(--preview-primary)', boxShadow: `0 0 0 3px var(--preview-primary-light)` }}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* ACTION BUTTONS */}
+                    <div className="setting-actions" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginTop: '2rem' }}>
+                      <button
+                        type="button"
+                        className="btn btn-secondary"
+                        onClick={() => {
+                          const defaultApp = {
+                            primaryColor: '#0f766e',
+                            shopBackgroundPattern: 'DEFAULT',
+                            shopBackgroundImageUrl: '',
+                            shopBackgroundOpacity: 15,
+                          };
+                          setGeneralForm((prev) => ({ ...prev, ...defaultApp }));
+                          if (liveStorePreview) {
+                            if (setPreviewColor) setPreviewColor(defaultApp.primaryColor);
+                            if (setPreviewBackground) {
+                              setPreviewBackground({
+                                pattern: defaultApp.shopBackgroundPattern,
+                                imageUrl: defaultApp.shopBackgroundImageUrl,
+                                opacity: defaultApp.shopBackgroundOpacity,
+                              });
+                            }
+                          }
+                          if (showToast) showToast('Đã đặt lại giao diện mặc định!', 'info');
+                        }}
+                      >
+                        🔄 Khôi Phục Mặc Định
+                      </button>
+
+                      <div style={{ display: 'flex', gap: '0.75rem' }}>
+                        <button
+                          type="submit"
+                          className="btn btn-primary btn-save-settings"
+                          disabled={saving}
+                          style={{
+                            background: generalForm.primaryColor || '#0f766e',
+                            borderColor: generalForm.primaryColor || '#0f766e',
+                            padding: '0.75rem 1.75rem',
+                            fontWeight: 700,
+                            boxShadow: `0 4px 12px rgba(${hexToRgb(generalForm.primaryColor || '#0f766e').r}, ${hexToRgb(generalForm.primaryColor || '#0f766e').g}, ${hexToRgb(generalForm.primaryColor || '#0f766e').b}, 0.25)`,
+                          }}
+                        >
+                          {saving ? '⏳ Đang lưu...' : '💾 Lưu Cấu Hình Giao Diện & Màu Sắc'}
+                        </button>
+                      </div>
+                    </div>
+
                   </form>
                 </div>
               </div>

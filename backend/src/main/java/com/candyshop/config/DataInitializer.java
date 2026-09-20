@@ -259,7 +259,11 @@ public class DataInitializer implements CommandLineRunner {
         saveSettingIfAbsent("FOOTER_BADGE_1", "Sản phẩm chính hãng", "Huy hiệu cam kết 1 ở footer");
         saveSettingIfAbsent("FOOTER_BADGE_2", "Giao hàng tận nơi", "Huy hiệu cam kết 2 ở footer");
         saveSettingIfAbsent("ACTIVE_SEASONAL_EFFECT", "NONE", "Hiệu ứng giao diện theo mùa");
-        log.info("Initialized default shop settings (Shipping, Branding, Header, Footer & Visual Effects)");
+        saveSettingIfAbsent("PRIMARY_COLOR", "#0f766e", "Màu sắc chủ đạo của toàn bộ hệ thống shop");
+        saveSettingIfAbsent("SHOP_BACKGROUND_PATTERN", "DEFAULT", "Họa tiết nền của shop (DEFAULT, CANDY_DOODLE, STARRY_CELESTIAL, WARM_GEOMETRIC, CHEVRON_WAVE, NONE, CUSTOM_IMAGE)");
+        saveSettingIfAbsent("SHOP_BACKGROUND_IMAGE_URL", "", "Đường dẫn hình nền tùy chỉnh của shop");
+        saveSettingIfAbsent("SHOP_BACKGROUND_OPACITY", "15", "Độ mờ / trong suốt của hình nền shop (5 - 50)");
+        log.info("Initialized default shop settings (Shipping, Branding, Header, Footer, Visual Effects & Appearance)");
     }
 
 

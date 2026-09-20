@@ -32,6 +32,17 @@ const settingService = {
     const response = await axiosClient.put('/api/admin/settings/general', data);
     return response.data;
   },
+
+  uploadBackgroundImage: async (file) => {
+    const formData = new FormData();
+    formData.append('image', file);
+    const response = await axiosClient.post('/api/admin/settings/upload-background', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  },
 };
 
 export default settingService;
