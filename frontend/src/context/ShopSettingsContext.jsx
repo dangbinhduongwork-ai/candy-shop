@@ -18,6 +18,7 @@ const DEFAULT_SETTINGS = {
   footerBadge2: 'Giao hàng tận nơi',
   activeEffect: 'NONE',
   primaryColor: '#0f766e',
+  footerBgColor: 'THEME_MATCH',
   shopBackgroundPattern: 'DEFAULT',
   shopBackgroundImageUrl: '',
   shopBackgroundOpacity: 15,
@@ -43,21 +44,32 @@ export const hexToRgb = (hex) => {
 };
 
 /**
- * Adjust brightness of a hex color by a percentage (-100 to +100)
+ * Adjust brightness of a hex color by a percentage (-100 to +100).
+ * Scales RGB values proportionally to preserve hue and avoid crushing to pure black.
  */
 export const adjustBrightness = (hex, percent) => {
   const { r, g, b } = hexToRgb(hex);
-  const amt = Math.round(2.55 * percent);
-  const R = Math.min(255, Math.max(0, r + amt));
-  const G = Math.min(255, Math.max(0, g + amt));
-  const B = Math.min(255, Math.max(0, b + amt));
-  return `#${(0x1000000 + R * 0x10000 + G * 0x100 + B).toString(16).slice(1)}`;
+  if (percent < 0) {
+    // Proportional scaling towards black to preserve color tone
+    const factor = Math.max(0, 1 + percent / 100);
+    const R = Math.round(r * factor);
+    const G = Math.round(g * factor);
+    const B = Math.round(b * factor);
+    return `#${(0x1000000 + R * 0x10000 + G * 0x100 + B).toString(16).slice(1)}`;
+  } else {
+    // Proportional scaling towards white
+    const factor = Math.min(100, percent) / 100;
+    const R = Math.round(r + (255 - r) * factor);
+    const G = Math.round(g + (255 - g) * factor);
+    const B = Math.round(b + (255 - b) * factor);
+    return `#${(0x1000000 + R * 0x10000 + G * 0x100 + B).toString(16).slice(1)}`;
+  }
 };
 
 /**
- * Apply dynamic primary theme color CSS variables directly to document element
+ * Apply dynamic primary theme color and footer color CSS variables directly to document element
  */
-export const applyThemeCssVariables = (hexColor) => {
+export const applyThemeCssVariables = (hexColor, footerBgChoice) => {
   if (typeof document === 'undefined') return;
   const validHex = (hexColor && /^#([0-9A-Fa-f]{3}){1,2}$/.test(hexColor.trim()))
     ? hexColor.trim()
@@ -65,17 +77,42 @@ export const applyThemeCssVariables = (hexColor) => {
 
   const { r, g, b } = hexToRgb(validHex);
   const hoverColor = adjustBrightness(validHex, -12);
-  const darkColor = adjustBrightness(validHex, -24);
-  const lightColor = `rgba(${r}, ${g}, ${b}, 0.08)`;
-  const glowColor = `rgba(${r}, ${g}, ${b}, 0.16)`;
+  const darkColor = adjustBrightness(validHex, -28);
+  const darkerColor = adjustBrightness(validHex, -50);
+  const lightColor = `rgba(${r}, ${g}, ${b}, 0.12)`;
+  const glowColor = `rgba(${r}, ${g}, ${b}, 0.26)`;
+  const accentTextColor = adjustBrightness(validHex, 42);
+
+  // Compute footer background
+  let computedFooterBg = '#042f2e';
+  const cleanFooterChoice = (footerBgChoice || 'THEME_MATCH').trim();
+  if (cleanFooterChoice === 'DARK_SLATE') {
+    computedFooterBg = '#0f172a';
+  } else if (cleanFooterChoice === 'DEEP_TEAL') {
+    computedFooterBg = '#042f2e';
+  } else if (cleanFooterChoice === 'DARK_ZINC') {
+    computedFooterBg = '#18181b';
+  } else if (cleanFooterChoice === 'DARK_COFFEE') {
+    computedFooterBg = '#1c100c';
+  } else if (cleanFooterChoice === 'DARK_PURPLE') {
+    computedFooterBg = '#1e1035';
+  } else if (/^#([0-9A-Fa-f]{3}){1,2}$/.test(cleanFooterChoice)) {
+    computedFooterBg = cleanFooterChoice;
+  } else {
+    // Default / THEME_MATCH: Deep, rich shade derived from primary color (~30% brightness)
+    computedFooterBg = adjustBrightness(validHex, -70);
+  }
 
   const root = document.documentElement;
   root.style.setProperty('--primary', validHex);
   root.style.setProperty('--primary-hover', hoverColor);
   root.style.setProperty('--primary-dark', darkColor);
+  root.style.setProperty('--primary-darker', darkerColor);
   root.style.setProperty('--primary-light', lightColor);
   root.style.setProperty('--primary-glow', glowColor);
+  root.style.setProperty('--primary-accent-text', accentTextColor);
   root.style.setProperty('--border-focus', validHex);
+  root.style.setProperty('--footer-bg', computedFooterBg);
 };
 
 const ShopSettingsContext = createContext({
@@ -85,6 +122,8 @@ const ShopSettingsContext = createContext({
   setPreviewEffect: () => {},
   previewColor: null,
   setPreviewColor: () => {},
+  previewFooterColor: null,
+  setPreviewFooterColor: () => {},
   previewBackground: null,
   setPreviewBackground: () => {},
   refreshSettings: async () => {},
@@ -96,6 +135,7 @@ export const ShopSettingsProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [previewEffect, setPreviewEffect] = useState(null);
   const [previewColor, setPreviewColor] = useState(null);
+  const [previewFooterColor, setPreviewFooterColor] = useState(null);
   const [previewBackground, setPreviewBackground] = useState(null);
 
   const fetchSettings = useCallback(async () => {
@@ -118,11 +158,12 @@ export const ShopSettingsProvider = ({ children }) => {
     fetchSettings();
   }, [fetchSettings]);
 
-  // Synchronize dynamic primary color CSS variables
+  // Synchronize dynamic primary and footer color CSS variables
   useEffect(() => {
     const activeColor = previewColor || settings.primaryColor || '#0f766e';
-    applyThemeCssVariables(activeColor);
-  }, [previewColor, settings.primaryColor]);
+    const activeFooterColor = previewFooterColor || settings.footerBgColor || 'THEME_MATCH';
+    applyThemeCssVariables(activeColor, activeFooterColor);
+  }, [previewColor, settings.primaryColor, previewFooterColor, settings.footerBgColor]);
 
   // Dynamically synchronize browser window title
   useEffect(() => {
@@ -148,6 +189,8 @@ export const ShopSettingsProvider = ({ children }) => {
         setPreviewEffect,
         previewColor,
         setPreviewColor,
+        previewFooterColor,
+        setPreviewFooterColor,
         previewBackground,
         setPreviewBackground,
         refreshSettings: fetchSettings,

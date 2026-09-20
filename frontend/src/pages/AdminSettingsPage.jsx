@@ -17,6 +17,51 @@ const THEME_PALETTES = [
   { id: 'midnight-slate', name: 'Đá Phiến Đêm (Midnight)', hex: '#334155', desc: 'Tối giản, trang nhã & thanh lịch', badge: 'Minimal' },
 ];
 
+const FOOTER_COLOR_PRESETS = [
+  {
+    id: 'THEME_MATCH',
+    name: 'Đồng bộ màu chủ đạo',
+    value: 'THEME_MATCH',
+    badge: 'Khuyên Dùng ⭐',
+    desc: 'Tự động tính toán tông màu footer đậm, ăn khớp 100% với màu chủ đạo của shop',
+  },
+  {
+    id: 'DARK_SLATE',
+    name: 'Đen Đá Obsidian',
+    value: '#0f172a',
+    badge: 'Sang Trọng',
+    desc: 'Tông đen xám than sâu thẳm, tiêu chuẩn thương mại điện tử hiện đại',
+  },
+  {
+    id: 'DEEP_TEAL',
+    name: 'Xanh Rừng Rậm',
+    value: '#042f2e',
+    badge: 'Nguyên Bản',
+    desc: 'Màu xanh ngọc lục bảo sẫm cổ điển, gần gũi thiên nhiên & nông sản',
+  },
+  {
+    id: 'DARK_ZINC',
+    name: 'Xám Than Zinc',
+    value: '#18181b',
+    badge: 'Tối Giản',
+    desc: 'Sắc xám trung tính tinh tế, tạo tương phản ấn tượng với sản phẩm',
+  },
+  {
+    id: 'DARK_COFFEE',
+    name: 'Nâu Cà Phê Đậm',
+    value: '#1c100c',
+    badge: 'Ấm Cúng',
+    desc: 'Tông màu cacao & sô-cô-la ngọt ngào cho gian hàng bánh kẹo cao cấp',
+  },
+  {
+    id: 'DARK_PURPLE',
+    name: 'Tím Đậm Hoàng Gia',
+    value: '#1e1035',
+    badge: 'Huyền Bí',
+    desc: 'Sắc tím mận thâm trầm quý phái, lộng lẫy và độc đáo',
+  },
+];
+
 const SEASONAL_EFFECTS = [
   {
     id: 'NONE',
@@ -70,6 +115,7 @@ const AdminSettingsPage = () => {
     setPreviewEffect,
     previewEffect,
     setPreviewColor,
+    setPreviewFooterColor,
     setPreviewBackground,
   } = useShopSettings();
 
@@ -108,6 +154,7 @@ const AdminSettingsPage = () => {
     footerBadge2: '',
     activeEffect: 'NONE',
     primaryColor: '#0f766e',
+    footerBgColor: 'THEME_MATCH',
     shopBackgroundPattern: 'DEFAULT',
     shopBackgroundImageUrl: '',
     shopBackgroundOpacity: 15,
@@ -118,6 +165,7 @@ const AdminSettingsPage = () => {
     return () => {
       if (setPreviewEffect) setPreviewEffect(null);
       if (setPreviewColor) setPreviewColor(null);
+      if (setPreviewFooterColor) setPreviewFooterColor(null);
       if (setPreviewBackground) setPreviewBackground(null);
     };
   }, []);
@@ -155,6 +203,7 @@ const AdminSettingsPage = () => {
           footerBadge2: generalData.footerBadge2 || 'Giao hàng tận nơi',
           activeEffect: generalData.activeEffect || 'NONE',
           primaryColor: generalData.primaryColor || '#0f766e',
+          footerBgColor: generalData.footerBgColor || 'THEME_MATCH',
           shopBackgroundPattern: generalData.shopBackgroundPattern || 'DEFAULT',
           shopBackgroundImageUrl: generalData.shopBackgroundImageUrl || '',
           shopBackgroundOpacity: generalData.shopBackgroundOpacity !== undefined ? Number(generalData.shopBackgroundOpacity) : 15,
@@ -516,6 +565,39 @@ const AdminSettingsPage = () => {
                   </div>
 
                   <form onSubmit={(e) => handleSaveGeneral(e, 'Footer & Liên Hệ')} className="setting-form">
+                    {/* Quick Footer Color Info Box */}
+                    <div style={{ background: '#f8fafc', padding: '1rem 1.25rem', borderRadius: '10px', border: '1px solid #e2e8f0', marginBottom: '1.25rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <div
+                          style={{
+                            width: '28px',
+                            height: '28px',
+                            borderRadius: '8px',
+                            background: generalForm.footerBgColor === 'THEME_MATCH' || !generalForm.footerBgColor
+                              ? adjustBrightness(generalForm.primaryColor || '#0f766e', -70)
+                              : generalForm.footerBgColor,
+                            border: '2px solid rgba(0,0,0,0.1)',
+                          }}
+                        />
+                        <div>
+                          <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#1e293b' }}>
+                            Màu Nền Footer: {generalForm.footerBgColor === 'THEME_MATCH' || !generalForm.footerBgColor ? 'Đồng bộ màu chủ đạo (Tự động)' : generalForm.footerBgColor}
+                          </div>
+                          <div style={{ fontSize: '0.75rem', color: '#64748b' }}>
+                            Bạn có thể chọn màu nền riêng hoặc để tự động ăn theo tông màu chủ đạo
+                          </div>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        className="btn-outline-sweet"
+                        style={{ fontSize: '0.8rem', padding: '5px 12px' }}
+                        onClick={() => setActiveTab('appearance')}
+                      >
+                        🎨 Đổi Màu Footer →
+                      </button>
+                    </div>
+
                     <div className="form-group">
                       <label className="form-label" htmlFor="footerDescription">
                         Đoạn Giới Thiệu Ngắn (Footer Bio)
@@ -1106,10 +1188,113 @@ const AdminSettingsPage = () => {
                       </div>
                     </div>
 
-                    {/* SECTION 2: SHOP BACKGROUND PATTERN & IMAGE */}
+                    {/* SECTION 2: FOOTER BACKGROUND COLOR */}
                     <div className="appearance-section-box">
                       <div className="appearance-section-header">
                         <div className="section-step-badge">2</div>
+                        <div>
+                          <h4 className="appearance-section-title">Màu Sắc Chân Trang (Footer Background Color)</h4>
+                          <p className="appearance-section-desc">
+                            Tùy biến màu nền và viền của toàn bộ Footer ở cuối website. Bạn có thể chọn tự động đồng bộ theo màu chủ đạo của shop hoặc chọn tông màu riêng biệt.
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Footer Presets Grid */}
+                      <div className="theme-palette-grid">
+                        {FOOTER_COLOR_PRESETS.map((pal) => {
+                          const isSelected = (generalForm.footerBgColor || 'THEME_MATCH').toUpperCase() === pal.value.toUpperCase();
+                          const previewBg = pal.value === 'THEME_MATCH'
+                            ? adjustBrightness(generalForm.primaryColor || '#0f766e', -70)
+                            : pal.value;
+
+                          return (
+                            <div
+                              key={pal.id}
+                              className={`theme-palette-card ${isSelected ? 'selected' : ''}`}
+                              onClick={() => {
+                                setGeneralForm((prev) => ({ ...prev, footerBgColor: pal.value }));
+                                if (liveStorePreview && setPreviewFooterColor) setPreviewFooterColor(pal.value);
+                              }}
+                            >
+                              <div className="palette-color-preview" style={{ background: previewBg, border: `2px solid ${isSelected ? 'var(--primary)' : 'rgba(255,255,255,0.2)'}` }}>
+                                {isSelected && <span className="palette-check-mark">✓</span>}
+                              </div>
+                              <div className="palette-info">
+                                <div className="palette-header-line">
+                                  <span className="palette-name">{pal.name}</span>
+                                  <span className="palette-badge">{pal.badge}</span>
+                                </div>
+                                <span className="palette-hex-code">
+                                  {pal.value === 'THEME_MATCH' ? `TỰ ĐỘNG (${previewBg.toUpperCase()})` : pal.value.toUpperCase()}
+                                </span>
+                                <span className="palette-desc">{pal.desc}</span>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      {/* Custom Footer Color Picker & Hex Input */}
+                      <div className="custom-color-row">
+                        <div className="custom-picker-group">
+                          <label className="form-label" htmlFor="customFooterColorPicker">
+                            Hoặc tùy chọn mã màu chân trang tùy ý:
+                          </label>
+                          <div className="custom-picker-inputs">
+                            <input
+                              id="customFooterColorPicker"
+                              type="color"
+                              className="custom-color-circle"
+                              value={
+                                generalForm.footerBgColor && /^#([0-9A-Fa-f]{3}){1,2}$/.test(generalForm.footerBgColor)
+                                  ? generalForm.footerBgColor
+                                  : adjustBrightness(generalForm.primaryColor || '#0f766e', -70)
+                              }
+                              onChange={(e) => {
+                                const newHex = e.target.value;
+                                setGeneralForm((prev) => ({ ...prev, footerBgColor: newHex }));
+                                if (liveStorePreview && setPreviewFooterColor) setPreviewFooterColor(newHex);
+                              }}
+                            />
+                            <div className="hex-input-wrapper">
+                              <span className="hex-prefix">HEX</span>
+                              <input
+                                type="text"
+                                className="form-input hex-text-input"
+                                value={generalForm.footerBgColor || 'THEME_MATCH'}
+                                placeholder="#042f2e"
+                                maxLength={11}
+                                onChange={(e) => {
+                                  const val = e.target.value;
+                                  setGeneralForm((prev) => ({ ...prev, footerBgColor: val }));
+                                  if (/^#([0-9A-Fa-f]{3}){1,2}$/.test(val) && liveStorePreview && setPreviewFooterColor) {
+                                    setPreviewFooterColor(val);
+                                  } else if (val.toUpperCase() === 'THEME_MATCH' && liveStorePreview && setPreviewFooterColor) {
+                                    setPreviewFooterColor('THEME_MATCH');
+                                  }
+                                }}
+                              />
+                            </div>
+                            <button
+                              type="button"
+                              className="btn-reset-color"
+                              onClick={() => {
+                                setGeneralForm((prev) => ({ ...prev, footerBgColor: 'THEME_MATCH' }));
+                                if (liveStorePreview && setPreviewFooterColor) setPreviewFooterColor('THEME_MATCH');
+                              }}
+                            >
+                              Đồng bộ theo màu chủ đạo (THEME_MATCH)
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* SECTION 3: SHOP BACKGROUND PATTERN & IMAGE */}
+                    <div className="appearance-section-box">
+                      <div className="appearance-section-header">
+                        <div className="section-step-badge">3</div>
                         <div>
                           <h4 className="appearance-section-title">Hình Nền & Họa Tiết Shop (Shop Background)</h4>
                           <p className="appearance-section-desc">
@@ -1308,10 +1493,10 @@ const AdminSettingsPage = () => {
                       )}
                     </div>
 
-                    {/* SECTION 3: INTERACTIVE LIVE PREVIEW MOCKUP */}
+                    {/* SECTION 4: INTERACTIVE LIVE PREVIEW MOCKUP */}
                     <div className="appearance-section-box">
                       <div className="appearance-section-header">
-                        <div className="section-step-badge">3</div>
+                        <div className="section-step-badge">4</div>
                         <div style={{ flex: 1 }}>
                           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
                             <h4 className="appearance-section-title">Mô Phỏng Thực Tế (Interactive Preview)</h4>
@@ -1326,6 +1511,7 @@ const AdminSettingsPage = () => {
                                   setLiveStorePreview(checked);
                                   if (checked) {
                                     if (setPreviewColor) setPreviewColor(generalForm.primaryColor);
+                                    if (setPreviewFooterColor) setPreviewFooterColor(generalForm.footerBgColor || 'THEME_MATCH');
                                     if (setPreviewBackground) {
                                       setPreviewBackground({
                                         pattern: generalForm.shopBackgroundPattern,
@@ -1336,6 +1522,7 @@ const AdminSettingsPage = () => {
                                     if (showToast) showToast('Đang bật chế độ xem thử trực tiếp trên toàn website! 👀', 'info');
                                   } else {
                                     if (setPreviewColor) setPreviewColor(null);
+                                    if (setPreviewFooterColor) setPreviewFooterColor(null);
                                     if (setPreviewBackground) setPreviewBackground(null);
                                   }
                                 }}
@@ -1344,7 +1531,7 @@ const AdminSettingsPage = () => {
                             </label>
                           </div>
                           <p className="appearance-section-desc">
-                            Xem trước hiệu ứng tương tác của màu chủ đạo và họa tiết nền trên các thành phần cốt lõi của website:
+                            Xem trước hiệu ứng tương tác của màu chủ đạo, màu chân trang và họa tiết nền trên các thành phần cốt lõi của website:
                           </p>
                         </div>
                       </div>
@@ -1453,6 +1640,44 @@ const AdminSettingsPage = () => {
                             </div>
                           </div>
                         </div>
+
+                        {/* Simulated Mockup Footer */}
+                        <div
+                          className="mockup-footer-bar"
+                          style={{
+                            background: generalForm.footerBgColor === 'THEME_MATCH' || !generalForm.footerBgColor
+                              ? adjustBrightness(generalForm.primaryColor || '#0f766e', -70)
+                              : generalForm.footerBgColor,
+                            color: '#e2e8f0',
+                            padding: '1.25rem 1.5rem 1rem',
+                            marginTop: '1.5rem',
+                            borderTop: `2px solid ${generalForm.primaryColor || '#0f766e'}`,
+                            borderRadius: '0 0 10px 10px',
+                          }}
+                        >
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '0.75rem' }}>
+                            <div>
+                              <div style={{ fontWeight: 800, fontSize: '0.95rem', color: '#ffffff' }}>
+                                🍬 {generalForm.shopName || 'Nguyen Huong Grocery Store'}
+                              </div>
+                              <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: '2px' }}>
+                                {generalForm.shopSlogan || 'Grocery Store • Since 2026'}
+                              </div>
+                            </div>
+                            <div style={{ display: 'flex', gap: '6px' }}>
+                              <span style={{ fontSize: '0.7rem', padding: '3px 8px', borderRadius: '999px', background: 'rgba(255,255,255,0.1)', color: '#f1f5f9' }}>
+                                ✓ Hàng Chính Hãng
+                              </span>
+                              <span style={{ fontSize: '0.7rem', padding: '3px 8px', borderRadius: '999px', background: 'rgba(255,255,255,0.1)', color: '#f1f5f9' }}>
+                                🚚 Giao Tận Nơi
+                              </span>
+                            </div>
+                          </div>
+                          <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '0.65rem', display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: '#94a3b8' }}>
+                            <span>Hotline: {generalForm.footerHotline || '0969 315 603'}</span>
+                            <span>{generalForm.footerCopyright || `© 2026 ${generalForm.shopName || 'Nguyen Huong'}`}</span>
+                          </div>
+                        </div>
                       </div>
                     </div>
 
@@ -1464,6 +1689,7 @@ const AdminSettingsPage = () => {
                         onClick={() => {
                           const defaultApp = {
                             primaryColor: '#0f766e',
+                            footerBgColor: 'THEME_MATCH',
                             shopBackgroundPattern: 'DEFAULT',
                             shopBackgroundImageUrl: '',
                             shopBackgroundOpacity: 15,
@@ -1471,6 +1697,7 @@ const AdminSettingsPage = () => {
                           setGeneralForm((prev) => ({ ...prev, ...defaultApp }));
                           if (liveStorePreview) {
                             if (setPreviewColor) setPreviewColor(defaultApp.primaryColor);
+                            if (setPreviewFooterColor) setPreviewFooterColor(defaultApp.footerBgColor);
                             if (setPreviewBackground) {
                               setPreviewBackground({
                                 pattern: defaultApp.shopBackgroundPattern,

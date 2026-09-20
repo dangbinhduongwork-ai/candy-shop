@@ -33,6 +33,7 @@ public class ShopGeneralSettingDTO implements Serializable {
     private String shopBackgroundPattern;
     private String shopBackgroundImageUrl;
     private Integer shopBackgroundOpacity;
+    private String footerBgColor;
 
     public ShopGeneralSettingDTO() {
     }
@@ -46,7 +47,7 @@ public class ShopGeneralSettingDTO implements Serializable {
         this(shopName, shopTitle, shopSlogan, headerAnnouncement, headerHotline,
              footerDescription, footerAddress, footerMapsUrl, footerHotline, footerWorkingHours,
              footerEmail, footerCopyright, footerBadge1, footerBadge2, activeEffect,
-             "#0f766e", "DEFAULT", "", 15);
+             "#0f766e", "DEFAULT", "", 15, "THEME_MATCH");
     }
 
     public ShopGeneralSettingDTO(String shopName, String shopTitle, String shopSlogan,
@@ -57,6 +58,21 @@ public class ShopGeneralSettingDTO implements Serializable {
                                  String activeEffect,
                                  String primaryColor, String shopBackgroundPattern,
                                  String shopBackgroundImageUrl, Integer shopBackgroundOpacity) {
+        this(shopName, shopTitle, shopSlogan, headerAnnouncement, headerHotline,
+             footerDescription, footerAddress, footerMapsUrl, footerHotline, footerWorkingHours,
+             footerEmail, footerCopyright, footerBadge1, footerBadge2, activeEffect,
+             primaryColor, shopBackgroundPattern, shopBackgroundImageUrl, shopBackgroundOpacity, "THEME_MATCH");
+    }
+
+    public ShopGeneralSettingDTO(String shopName, String shopTitle, String shopSlogan,
+                                 String headerAnnouncement, String headerHotline,
+                                 String footerDescription, String footerAddress, String footerMapsUrl,
+                                 String footerHotline, String footerWorkingHours, String footerEmail,
+                                 String footerCopyright, String footerBadge1, String footerBadge2,
+                                 String activeEffect,
+                                 String primaryColor, String shopBackgroundPattern,
+                                 String shopBackgroundImageUrl, Integer shopBackgroundOpacity,
+                                 String footerBgColor) {
         this.shopName = shopName;
         this.shopTitle = shopTitle;
         this.shopSlogan = shopSlogan;
@@ -229,6 +245,14 @@ public class ShopGeneralSettingDTO implements Serializable {
 
     public void setShopBackgroundOpacity(Integer shopBackgroundOpacity) {
         this.shopBackgroundOpacity = shopBackgroundOpacity;
+    }
+
+    public String getFooterBgColor() {
+        return footerBgColor;
+    }
+
+    public void setFooterBgColor(String footerBgColor) {
+        this.footerBgColor = footerBgColor;
     }
 }
 

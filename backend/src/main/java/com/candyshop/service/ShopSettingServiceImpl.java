@@ -42,6 +42,7 @@ public class ShopSettingServiceImpl implements ShopSettingService {
     public static final String KEY_SHOP_BACKGROUND_PATTERN = "SHOP_BACKGROUND_PATTERN";
     public static final String KEY_SHOP_BACKGROUND_IMAGE_URL = "SHOP_BACKGROUND_IMAGE_URL";
     public static final String KEY_SHOP_BACKGROUND_OPACITY = "SHOP_BACKGROUND_OPACITY";
+    public static final String KEY_FOOTER_BG_COLOR = "FOOTER_BG_COLOR";
 
     public static final String FALLBACK_SHOP_NAME = "Nguyen Huong Grocery Store";
     public static final String FALLBACK_SHOP_TITLE = "Nguyen Huong Grocery Store - Bánh kẹo & Tạp hóa chính hãng";
@@ -63,6 +64,7 @@ public class ShopSettingServiceImpl implements ShopSettingService {
     public static final String FALLBACK_SHOP_BACKGROUND_PATTERN = "DEFAULT";
     public static final String FALLBACK_SHOP_BACKGROUND_IMAGE_URL = "";
     public static final Integer FALLBACK_SHOP_BACKGROUND_OPACITY = 15;
+    public static final String FALLBACK_FOOTER_BG_COLOR = "THEME_MATCH";
 
 
     private final ShopSettingRepository settingRepository;
@@ -133,7 +135,8 @@ public class ShopSettingServiceImpl implements ShopSettingService {
                 getStringValue(KEY_PRIMARY_COLOR, FALLBACK_PRIMARY_COLOR),
                 getStringValue(KEY_SHOP_BACKGROUND_PATTERN, FALLBACK_SHOP_BACKGROUND_PATTERN),
                 getStringValue(KEY_SHOP_BACKGROUND_IMAGE_URL, FALLBACK_SHOP_BACKGROUND_IMAGE_URL),
-                getIntValue(KEY_SHOP_BACKGROUND_OPACITY, FALLBACK_SHOP_BACKGROUND_OPACITY)
+                getIntValue(KEY_SHOP_BACKGROUND_OPACITY, FALLBACK_SHOP_BACKGROUND_OPACITY),
+                getStringValue(KEY_FOOTER_BG_COLOR, FALLBACK_FOOTER_BG_COLOR)
         );
     }
 
@@ -198,6 +201,9 @@ public class ShopSettingServiceImpl implements ShopSettingService {
         if (dto.getShopBackgroundOpacity() != null) {
             int opacity = Math.max(5, Math.min(50, dto.getShopBackgroundOpacity()));
             saveOrUpdateSetting(KEY_SHOP_BACKGROUND_OPACITY, String.valueOf(opacity), "Độ mờ / trong suốt của hình nền shop (5 - 50)");
+        }
+        if (dto.getFooterBgColor() != null) {
+            saveOrUpdateSetting(KEY_FOOTER_BG_COLOR, dto.getFooterBgColor().trim(), "Màu sắc chân trang footer (THEME_MATCH, DARK_OBSIDIAN, hoặc mã Hex)");
         }
 
         return getGeneralSetting();
