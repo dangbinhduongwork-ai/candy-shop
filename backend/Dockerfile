@@ -15,7 +15,7 @@ COPY --from=builder /app/target/*.jar app.jar
 RUN mkdir -p /app/uploads && chown -R appuser:appgroup /app
 USER appuser
 
-ENV JAVA_OPTS="-XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+ParallelRefProcEnabled -XX:+ExplicitGCInvokesConcurrent -Xms512m -Xmx1024m -XX:+UseStringDeduplication"
+ENV JAVA_OPTS="-Xms128m -Xmx384m -XX:+UseSerialGC -XX:MaxMetaspaceSize=128m -XX:+OptimizeStringConcat -Djava.security.egd=file:/dev/./urandom"
 ENV SPRING_PROFILES_ACTIVE="mysql"
 
 EXPOSE 8080

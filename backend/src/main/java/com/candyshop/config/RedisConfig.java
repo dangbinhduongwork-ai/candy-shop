@@ -87,8 +87,11 @@ public class RedisConfig {
 
     /**
      * StringRedisTemplate for atomic sequence counters and distributed locks.
+     * Only created when Redis cache is actually enabled (spring.cache.type=redis).
+     * When deploying without Redis (cache.type=simple), this bean is skipped entirely.
      */
     @Bean
+    @ConditionalOnProperty(name = "spring.cache.type", havingValue = "redis")
     public StringRedisTemplate stringRedisTemplate(RedisConnectionFactory connectionFactory) {
         return new StringRedisTemplate(connectionFactory);
     }
