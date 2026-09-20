@@ -27,9 +27,26 @@ public class JwtTokenProvider {
     @Value("${app.jwt.expiration-ms}")
     private long jwtExpirationMs;
 
-    /** Build the signing key from the Base64-encoded secret */
+    /** Build the signing key safely from secret (supporting plain text, Base64, and Base64URL) */
     private SecretKey getSigningKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(jwtSecret);
+        byte[] keyBytes;
+        try {
+            keyBytes = Decoders.BASE64.decode(jwtSecret);
+        } catch (Exception e1) {
+            try {
+                keyBytes = Decoders.BASE64URL.decode(jwtSecret);
+            } catch (Exception e2) {
+                keyBytes = jwtSecret.getBytes(java.nio.charset.StandardCharsets.UTF_8);
+            }
+        }
+
+        // Đảm bảo đủ độ dài tối thiểu 256 bits (32 bytes) cho HMAC-SHA256
+        if (keyBytes.length < 32) {
+            try {
+                keyBytes = java.security.MessageDigest.getInstance("SHA-256").digest(keyBytes);
+            } catch (java.security.NoSuchAlgorithmException ignored) {}
+        }
+
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
