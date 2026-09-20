@@ -119,6 +119,13 @@
             <artifactId>flyway-mysql</artifactId>
         </dependency>
 
+        <!-- Cloud Storage Provider (Cloudinary) -->
+        <dependency>
+            <groupId>com.cloudinary</groupId>
+            <artifactId>cloudinary-http44</artifactId>
+            <version>1.39.0</version>
+        </dependency>
+
         <!-- Spring Boot Test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

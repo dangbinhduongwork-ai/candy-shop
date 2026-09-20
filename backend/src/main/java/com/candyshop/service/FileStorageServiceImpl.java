@@ -19,6 +19,12 @@ public class FileStorageServiceImpl implements FileStorageService {
     @Value("${app.storage.provider:local}")
     private String activeProviderName;
 
+    @Value("${CLOUDINARY_URL:${app.storage.cloudinary.url:}}")
+    private String cloudinaryUrl;
+
+    @Value("${CLOUDINARY_CLOUD_NAME:${app.storage.cloudinary.cloud-name:}}")
+    private String cloudinaryCloudName;
+
     private static final List<String> ALLOWED_EXTENSIONS = Arrays.asList(".jpg", ".jpeg", ".png", ".gif", ".webp");
 
     public FileStorageServiceImpl(List<FileStorageProvider> providers) {
@@ -26,6 +32,19 @@ public class FileStorageServiceImpl implements FileStorageService {
     }
 
     private FileStorageProvider getActiveProvider() {
+        boolean hasCloudinary = (cloudinaryUrl != null && !cloudinaryUrl.isBlank())
+                || (cloudinaryCloudName != null && !cloudinaryCloudName.isBlank())
+                || "cloudinary".equalsIgnoreCase(activeProviderName);
+
+        if (hasCloudinary) {
+            var cloudinaryProvider = providers.stream()
+                    .filter(p -> "cloudinary".equalsIgnoreCase(p.getProviderName()))
+                    .findFirst();
+            if (cloudinaryProvider.isPresent()) {
+                return cloudinaryProvider.get();
+            }
+        }
+
         return providers.stream()
                 .filter(p -> p.getProviderName().equalsIgnoreCase(activeProviderName))
                 .findFirst()

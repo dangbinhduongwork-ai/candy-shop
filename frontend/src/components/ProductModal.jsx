@@ -101,7 +101,10 @@ const ProductModal = ({ isOpen, onClose, onSave, product, categories }) => {
     try {
       const response = await uploadProductImage(file);
       // Server returns relative path e.g. /uploads/uuid.jpg
-      const serverImageUrl = `http://localhost:8080${response.imageUrl}`;
+      const rawUrl = response.imageUrl || response.url || response.fileUrl || '';
+      const serverImageUrl = rawUrl.startsWith('http')
+        ? rawUrl
+        : `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'}${rawUrl}`;
       setFormData((prev) => ({ ...prev, imageUrl: serverImageUrl }));
       setImagePreview(serverImageUrl);
     } catch (err) {
