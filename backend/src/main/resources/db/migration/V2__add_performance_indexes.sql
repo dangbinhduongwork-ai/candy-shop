@@ -7,7 +7,8 @@ CREATE INDEX idx_products_category ON products(category_id);
 CREATE INDEX idx_products_price ON products(price);
 CREATE INDEX idx_products_created_at ON products(created_at DESC);
 CREATE INDEX idx_products_cat_price ON products(category_id, price);
-CREATE FULLTEXT INDEX idx_products_fulltext ON products(name, description);
+CREATE FULLTEXT INDEX idx_products_fulltext_name ON products(name);
+CREATE FULLTEXT INDEX idx_products_fulltext_desc ON products(description);
 
 -- Orders indexes
 CREATE INDEX idx_orders_user_status ON orders(user_id, status);
