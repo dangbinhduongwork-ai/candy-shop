@@ -586,70 +586,46 @@ const CheckoutPage = () => {
       {showAvailableModal && (
         <div className="modal-overlay" onClick={() => setShowAvailableModal(false)}>
           <div
-            className="modal-container"
-            style={{ maxWidth: '520px', borderRadius: '16px', overflow: 'hidden' }}
+            className="modal-container voucher-select-modal"
             onClick={(e) => e.stopPropagation()}
           >
-            <div
-              className="modal-header"
-              style={{ backgroundColor: '#fdf2f8', borderBottom: '1px solid #fbcfe8' }}
-            >
-              <h3 className="modal-title" style={{ color: '#831843' }}>
+            <div className="modal-header voucher-modal-header">
+              <h3 className="modal-title voucher-modal-title">
                 🎟️ Danh Sách Mã Giảm Giá Có Sẵn
               </h3>
               <button className="modal-close-btn" onClick={() => setShowAvailableModal(false)}>
                 &times;
               </button>
             </div>
-            <div className="modal-body" style={{ maxHeight: '60vh', overflowY: 'auto', padding: '1rem' }}>
+            <div className="modal-body voucher-modal-body">
               {availableVouchers.length === 0 ? (
-                <p style={{ textAlign: 'center', color: '#64748b', padding: '1rem' }}>
+                <p className="voucher-empty-notice">
                   Hiện chưa có mã giảm giá công khai nào.
                 </p>
               ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                <div className="voucher-list-wrap">
                   {availableVouchers.map((v) => {
                     const isMinMet = subtotal >= (v.minOrderAmount || 0);
                     return (
                       <div
                         key={v.id}
-                        style={{
-                          border: isMinMet ? '1px solid #f472b6' : '1px dashed #cbd5e1',
-                          backgroundColor: isMinMet ? '#fff' : '#f8fafc',
-                          borderRadius: '10px',
-                          padding: '0.85rem',
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          alignItems: 'center',
-                          gap: '0.75rem',
-                          opacity: isMinMet ? 1 : 0.75,
-                        }}
+                        className={`voucher-card-item ${isMinMet ? 'voucher-eligible' : 'voucher-ineligible'}`}
                       >
-                        <div>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.2rem' }}>
-                            <span
-                              style={{
-                                backgroundColor: isMinMet ? '#fce7f3' : '#e2e8f0',
-                                color: isMinMet ? '#be185d' : '#475569',
-                                fontWeight: 800,
-                                fontFamily: 'monospace',
-                                fontSize: '0.95rem',
-                                padding: '0.2rem 0.5rem',
-                                borderRadius: '4px',
-                              }}
-                            >
+                        <div className="voucher-card-info">
+                          <div className="voucher-code-header">
+                            <span className={`voucher-code-pill ${isMinMet ? 'pill-eligible' : 'pill-ineligible'}`}>
                               {v.code}
                             </span>
-                            <span style={{ fontWeight: 700, fontSize: '0.9rem', color: '#0f172a' }}>
+                            <span className="voucher-discount-text">
                               {v.discountType === 'PERCENTAGE'
                                 ? `Giảm ${v.discountValue}% (Tối đa ${formatCurrency(v.maxDiscountAmount || 0)})`
                                 : `Giảm ${formatCurrency(v.discountValue)}`}
                             </span>
                           </div>
-                          <div style={{ fontSize: '0.8rem', color: '#64748b' }}>
+                          <div className="voucher-name-text">
                             {v.name}
                           </div>
-                          <div style={{ fontSize: '0.75rem', color: isMinMet ? '#15803d' : '#d97706', marginTop: '0.2rem' }}>
+                          <div className={`voucher-min-spend-text ${isMinMet ? 'min-met' : 'min-unmet'}`}>
                             Đơn tối thiểu: {formatCurrency(v.minOrderAmount || 0)}
                             {!isMinMet && ` (Mua thêm ${formatCurrency((v.minOrderAmount || 0) - subtotal)})`}
                           </div>
@@ -659,14 +635,7 @@ const CheckoutPage = () => {
                           type="button"
                           disabled={!isMinMet || voucherLoading}
                           onClick={() => handleApplyVoucher(v.code)}
-                          className={`btn ${isMinMet ? 'btn-primary' : 'btn-secondary'}`}
-                          style={{
-                            padding: '0.4rem 0.85rem',
-                            fontSize: '0.82rem',
-                            fontWeight: 700,
-                            borderRadius: '6px',
-                            whiteSpace: 'nowrap',
-                          }}
+                          className={`btn voucher-apply-btn ${isMinMet ? 'btn-primary' : 'btn-secondary'}`}
                         >
                           {isMinMet ? 'Dùng mã' : 'Chưa đủ điều kiện'}
                         </button>
@@ -676,12 +645,11 @@ const CheckoutPage = () => {
                 </div>
               )}
             </div>
-            <div className="modal-actions" style={{ padding: '0.75rem 1rem', borderTop: '1px solid #f1f5f9' }}>
+            <div className="modal-actions voucher-modal-footer">
               <button
                 type="button"
-                className="btn btn-secondary"
+                className="btn btn-secondary voucher-close-btn"
                 onClick={() => setShowAvailableModal(false)}
-                style={{ width: '100%', borderRadius: '8px' }}
               >
                 Đóng
               </button>

@@ -10279,4 +10279,824 @@ body,
   border-radius: 999px;
 }
 
+/* =============================================
+   VOUCHER SELECTION MODAL (BASE STYLES)
+   ============================================= */
+.voucher-select-modal {
+  max-width: 540px !important;
+  border-radius: 18px !important;
+  overflow: hidden !important;
+}
+
+.voucher-modal-header {
+  background: linear-gradient(135deg, #f0fdfa, #ccfbf1);
+  border-bottom: 1px solid rgba(20, 184, 166, 0.2);
+  padding: 1.25rem 1.5rem;
+}
+
+.voucher-modal-title {
+  color: #0f766e;
+  font-weight: 800;
+  font-size: 1.15rem;
+  margin: 0;
+}
+
+.voucher-modal-body {
+  max-height: 60vh;
+  overflow-y: auto;
+  padding: 1.25rem;
+}
+
+.voucher-empty-notice {
+  text-align: center;
+  color: var(--text-light);
+  padding: 2.5rem 1rem;
+  font-size: 0.95rem;
+}
+
+.voucher-list-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.voucher-card-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.9rem 1.1rem;
+  border-radius: 12px;
+  border: 1.5px solid var(--border);
+  background: white;
+  transition: all 0.2s ease;
+}
+
+.voucher-card-item.voucher-eligible {
+  border-color: rgba(20, 184, 166, 0.4);
+  box-shadow: 0 2px 8px rgba(15, 118, 110, 0.05);
+}
+
+.voucher-card-item.voucher-ineligible {
+  opacity: 0.7;
+  background: #f8fafc;
+  border-style: dashed;
+}
+
+.voucher-card-info {
+  flex: 1;
+}
+
+.voucher-code-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.voucher-code-pill {
+  font-family: monospace;
+  font-weight: 800;
+  font-size: 0.92rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+  letter-spacing: 0.5px;
+}
+
+.voucher-code-pill.pill-eligible {
+  background: #ccfbf1;
+  color: #0f766e;
+  border: 1px solid rgba(20, 184, 166, 0.3);
+}
+
+.voucher-code-pill.pill-ineligible {
+  background: #e2e8f0;
+  color: #64748b;
+}
+
+.voucher-discount-text {
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: var(--text-dark);
+}
+
+.voucher-name-text {
+  font-size: 0.82rem;
+  color: var(--text-light);
+  margin-bottom: 0.2rem;
+}
+
+.voucher-min-spend-text {
+  font-size: 0.76rem;
+}
+
+.voucher-min-spend-text.min-met {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.voucher-min-spend-text.min-unmet {
+  color: #d97706;
+}
+
+.voucher-apply-btn {
+  padding: 0.45rem 0.9rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+
+.voucher-modal-footer {
+  padding: 0.85rem 1.25rem;
+  border-top: 1px solid var(--border);
+}
+
+.voucher-close-btn {
+  width: 100%;
+  border-radius: 8px;
+}
+
+/* =============================================
+   ADMIN SETTINGS SUBTABS (BASE STYLES)
+   ============================================= */
+.settings-subtabs {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 0.5rem;
+  overflow-x: auto;
+}
+
+.subtab-btn {
+  padding: 0.65rem 1.25rem;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: #f1f5f9;
+  color: #475569;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.subtab-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.subtab-btn.active {
+  background: #0f766e;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(15, 118, 110, 0.2);
+}
+
+/* ==========================================================================
+   COMPREHENSIVE DARK MODE REFINEMENTS (AUDIT COMPLETION)
+   ========================================================================== */
+
+/* 1. Order History Page */
+[data-theme="dark"] .order-card-row {
+  background: #111827 !important;
+  border-color: #1f293d !important;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45) !important;
+}
+
+[data-theme="dark"] .order-card-row:hover {
+  border-color: #14b8a6 !important;
+  box-shadow: 0 8px 24px rgba(20, 184, 166, 0.15) !important;
+}
+
+[data-theme="dark"] .order-card-code {
+  color: #2dd4bf !important;
+  background: rgba(20, 184, 166, 0.12) !important;
+  border: 1px solid rgba(20, 184, 166, 0.3) !important;
+}
+
+[data-theme="dark"] .order-card-date {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .order-thumb-wrapper {
+  background: #162036 !important;
+  border-color: #1f293d !important;
+}
+
+[data-theme="dark"] .order-thumb-more {
+  background: #1f293d !important;
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .order-first-item-name {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .order-first-item-name strong {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .order-items-count-tag {
+  background: #162036 !important;
+  color: #5eead4 !important;
+  border: 1px solid #1f293d !important;
+}
+
+[data-theme="dark"] .order-receiver-meta {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .order-addr-meta {
+  color: #64748b !important;
+}
+
+[data-theme="dark"] .order-total-price {
+  color: #2dd4bf !important;
+}
+
+/* 2. Order Detail Page */
+[data-theme="dark"] .order-section-card {
+  background: #111827 !important;
+  border-color: #1f293d !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45) !important;
+}
+
+[data-theme="dark"] .section-sub-title {
+  color: #f8fafc !important;
+  border-bottom-color: #1f293d !important;
+}
+
+[data-theme="dark"] .info-label {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .info-value {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .payment-tag {
+  background: rgba(16, 185, 129, 0.15) !important;
+  color: #34d399 !important;
+  border: 1px solid rgba(16, 185, 129, 0.3) !important;
+}
+
+[data-theme="dark"] .status-timeline::before {
+  background: #1f293d !important;
+}
+
+[data-theme="dark"] .timeline-dot {
+  background: #162036 !important;
+  color: #94a3b8 !important;
+  border: 2px solid #1f293d !important;
+}
+
+[data-theme="dark"] .timeline-step.active .timeline-dot {
+  background: #14b8a6 !important;
+  color: #ffffff !important;
+  border-color: #2dd4bf !important;
+  box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.25) !important;
+}
+
+[data-theme="dark"] .timeline-content strong {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .timeline-content p {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .ordered-item-row {
+  border-bottom-color: #1f293d !important;
+}
+
+[data-theme="dark"] .ordered-thumb-box {
+  background: #162036 !important;
+  border-color: #1f293d !important;
+}
+
+[data-theme="dark"] .ordered-item-name {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .ordered-unit-price {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .ordered-unit-price strong {
+  color: #2dd4bf !important;
+}
+
+[data-theme="dark"] .ordered-qty-tag {
+  background: #162036 !important;
+  color: #cbd5e1 !important;
+  border: 1px solid #1f293d !important;
+}
+
+[data-theme="dark"] .ordered-item-subtotal {
+  color: #2dd4bf !important;
+}
+
+[data-theme="dark"] .order-cost-breakdown {
+  background: #162036 !important;
+  border-color: #1f293d !important;
+}
+
+[data-theme="dark"] .cost-row {
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .cost-divider {
+  border-top-color: #1f293d !important;
+}
+
+[data-theme="dark"] .grand-total-row .grand-label {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .grand-price {
+  color: #2dd4bf !important;
+}
+
+[data-theme="dark"] .order-detail-header-card {
+  background: #111827 !important;
+  border-color: #1f293d !important;
+}
+
+[data-theme="dark"] .order-code-badge-lg {
+  background: rgba(20, 184, 166, 0.15) !important;
+  color: #5eead4 !important;
+  border-color: rgba(20, 184, 166, 0.35) !important;
+}
+
+[data-theme="dark"] .order-date-text {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .order-date-text strong {
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .detail-error-card {
+  background: #111827 !important;
+  border-color: #1f293d !important;
+  color: #f8fafc !important;
+}
+
+/* 3. Order Success Page */
+[data-theme="dark"] .order-success-card {
+  background: #111827 !important;
+  border-color: #1f293d !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6) !important;
+}
+
+[data-theme="dark"] .success-tag {
+  background: rgba(16, 185, 129, 0.18) !important;
+  color: #34d399 !important;
+  border: 1px solid rgba(16, 185, 129, 0.35) !important;
+}
+
+[data-theme="dark"] .success-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .success-subtitle {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .order-meta-receipt {
+  background: #162036 !important;
+  border-color: #1f293d !important;
+}
+
+[data-theme="dark"] .receipt-label {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .receipt-val {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .receipt-total {
+  color: #2dd4bf !important;
+}
+
+[data-theme="dark"] .success-delivery-hint {
+  background: rgba(20, 184, 166, 0.12) !important;
+  color: #5eead4 !important;
+  border-color: rgba(20, 184, 166, 0.25) !important;
+}
+
+/* 4. Admin Order Detail Modal */
+[data-theme="dark"] .modal-admin-order {
+  background: #111827 !important;
+  border-color: #1f293d !important;
+}
+
+[data-theme="dark"] .admin-info-card {
+  background: #162036 !important;
+  border-color: #1f293d !important;
+}
+
+[data-theme="dark"] .info-card-heading {
+  color: #f8fafc !important;
+  border-bottom-color: #1f293d !important;
+}
+
+[data-theme="dark"] .admin-items-table th {
+  background: #162036 !important;
+  color: #94a3b8 !important;
+  border-bottom-color: #1f293d !important;
+}
+
+[data-theme="dark"] .admin-items-table td {
+  border-bottom-color: #1f293d !important;
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .item-cell-thumb {
+  background: #111827 !important;
+  border-color: #1f293d !important;
+}
+
+[data-theme="dark"] .item-product-name {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .category-tag-sm {
+  background: #1f293d !important;
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .item-qty-badge {
+  background: rgba(20, 184, 166, 0.15) !important;
+  color: #2dd4bf !important;
+  border: 1px solid rgba(20, 184, 166, 0.3) !important;
+}
+
+[data-theme="dark"] .admin-order-summary-box {
+  background: #162036 !important;
+  border-color: #1f293d !important;
+}
+
+[data-theme="dark"] .admin-order-summary-box .summary-line {
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .summary-line-total {
+  border-top-color: #1f293d !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .total-grand-price {
+  color: #2dd4bf !important;
+}
+
+[data-theme="dark"] .admin-order-status-management {
+  background: linear-gradient(135deg, #162036 0%, #111827 100%) !important;
+  border-color: #1f293d !important;
+}
+
+[data-theme="dark"] .status-select-label {
+  color: #5eead4 !important;
+}
+
+[data-theme="dark"] .status-select-dropdown {
+  background: #111827 !important;
+  border-color: #14b8a6 !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .status-terminal-notice.notice-completed {
+  background: rgba(16, 185, 129, 0.15) !important;
+  color: #34d399 !important;
+  border-color: rgba(16, 185, 129, 0.3) !important;
+}
+
+[data-theme="dark"] .status-terminal-notice.notice-cancelled {
+  background: rgba(239, 68, 68, 0.15) !important;
+  color: #f87171 !important;
+  border-color: rgba(239, 68, 68, 0.3) !important;
+}
+
+[data-theme="dark"] .confirm-modal-box {
+  background: #111827 !important;
+  border-color: #1f293d !important;
+  color: #f8fafc !important;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.75) !important;
+}
+
+[data-theme="dark"] .confirm-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .confirm-status-flow {
+  background: #162036 !important;
+  border: 1px solid #1f293d !important;
+  border-radius: 10px !important;
+  padding: 0.75rem !important;
+}
+
+/* 5. Order Review Modal */
+[data-theme="dark"] .modal-review-box {
+  background: #111827 !important;
+  border-color: #1f293d !important;
+}
+
+[data-theme="dark"] .review-modal-product-summary {
+  background: #162036 !important;
+  border-color: #1f293d !important;
+}
+
+[data-theme="dark"] .review-modal-thumb {
+  background: #111827 !important;
+  border-color: #1f293d !important;
+}
+
+[data-theme="dark"] .review-modal-prod-name {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .review-modal-prod-price {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .order-item-category-pill {
+  background: rgba(20, 184, 166, 0.15) !important;
+  color: #5eead4 !important;
+  border: 1px solid rgba(20, 184, 166, 0.3) !important;
+}
+
+[data-theme="dark"] .existing-review-view-card {
+  background: #162036 !important;
+  border-color: #1f293d !important;
+}
+
+[data-theme="dark"] .existing-review-comment-box {
+  background: #111827 !important;
+  border: 1px solid #1f293d !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .modal-footer-link {
+  background: #162036 !important;
+  border-top-color: #1f293d !important;
+}
+
+/* 6. Voucher Selection Modal (Cart & Checkout) */
+[data-theme="dark"] .voucher-select-modal {
+  background: #111827 !important;
+  border-color: #1f293d !important;
+}
+
+[data-theme="dark"] .voucher-modal-header {
+  background: linear-gradient(135deg, #042f2e 0%, #115e59 100%) !important;
+  border-bottom-color: rgba(20, 184, 166, 0.3) !important;
+}
+
+[data-theme="dark"] .voucher-modal-title {
+  color: #5eead4 !important;
+}
+
+[data-theme="dark"] .voucher-card-item {
+  background: #162036 !important;
+  border-color: #1f293d !important;
+}
+
+[data-theme="dark"] .voucher-card-item.voucher-eligible {
+  border-color: #14b8a6 !important;
+  box-shadow: 0 4px 14px rgba(20, 184, 166, 0.15) !important;
+}
+
+[data-theme="dark"] .voucher-card-item.voucher-ineligible {
+  background: #0f172a !important;
+  border-color: #1e293b !important;
+  opacity: 0.6 !important;
+}
+
+[data-theme="dark"] .voucher-code-pill.pill-eligible {
+  background: rgba(20, 184, 166, 0.2) !important;
+  color: #5eead4 !important;
+  border-color: rgba(94, 234, 212, 0.35) !important;
+}
+
+[data-theme="dark"] .voucher-code-pill.pill-ineligible {
+  background: #1e293b !important;
+  color: #64748b !important;
+}
+
+[data-theme="dark"] .voucher-discount-text {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .voucher-name-text {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .voucher-modal-footer {
+  border-top-color: #1f293d !important;
+}
+
+/* 7. Product Modal & Image Upload */
+[data-theme="dark"] .image-upload-wrapper {
+  background: #162036 !important;
+  border-color: #14b8a6 !important;
+}
+
+[data-theme="dark"] .upload-divider {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .image-url-input {
+  background: #111827 !important;
+  border-color: #1f293d !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .image-preview-card {
+  border-color: #1f293d !important;
+}
+
+/* 8. Admin Settings Page */
+[data-theme="dark"] .settings-subtabs {
+  border-bottom-color: #1f293d !important;
+}
+
+[data-theme="dark"] .subtab-btn {
+  background: #162036 !important;
+  color: #94a3b8 !important;
+  border-color: #1f293d !important;
+}
+
+[data-theme="dark"] .subtab-btn:hover {
+  background: #1f2d47 !important;
+  color: #f8fafc !important;
+  border-color: #14b8a6 !important;
+}
+
+[data-theme="dark"] .subtab-btn.active {
+  background: #14b8a6 !important;
+  color: #ffffff !important;
+  border-color: #14b8a6 !important;
+  box-shadow: 0 2px 10px rgba(20, 184, 166, 0.3) !important;
+}
+
+[data-theme="dark"] .setting-card-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .setting-card-desc {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .form-hint {
+  color: #64748b !important;
+}
+
+/* 9. Admin Customers Page */
+[data-theme="dark"] .customer-profile-card {
+  background: #162036 !important;
+  border-color: #1f293d !important;
+}
+
+[data-theme="dark"] .profile-name {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .profile-meta-grid {
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .profile-meta-grid strong {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .spending-metric-box {
+  background: #162036 !important;
+  border-color: #1f293d !important;
+}
+
+[data-theme="dark"] .spending-metric-box.metric-accent {
+  background: linear-gradient(135deg, rgba(20, 184, 166, 0.15) 0%, #162036 100%) !important;
+  border-color: #14b8a6 !important;
+}
+
+[data-theme="dark"] .spending-metric-title {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .spending-metric-value {
+  color: #2dd4bf !important;
+}
+
+/* 10. General Modal Forms & Controls */
+[data-theme="dark"] .form-control,
+[data-theme="dark"] .modal-container input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+[data-theme="dark"] .modal-container select,
+[data-theme="dark"] .modal-container textarea {
+  background: #162036 !important;
+  border-color: #1f293d !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .form-control:focus,
+[data-theme="dark"] .modal-container input:focus,
+[data-theme="dark"] .modal-container select:focus,
+[data-theme="dark"] .modal-container textarea:focus {
+  border-color: #14b8a6 !important;
+  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.25) !important;
+  outline: none !important;
+}
+
+[data-theme="dark"] .form-control::placeholder,
+[data-theme="dark"] .modal-container input::placeholder,
+[data-theme="dark"] .modal-container textarea::placeholder {
+  color: #64748b !important;
+}
+
+[data-theme="dark"] .input-label,
+[data-theme="dark"] .modal-form label {
+  color: #e2e8f0 !important;
+}
+
+/* 11. Auth Pages & Reset Password */
+[data-theme="dark"] .auth-page {
+  background: radial-gradient(circle at 20% 20%, rgba(17, 94, 89, 0.25) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(30, 27, 75, 0.35) 0%, transparent 50%),
+    #090d16 !important;
+}
+
+[data-theme="dark"] .auth-header h1 {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .auth-header p {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .auth-footer {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .reset-success-box,
+[data-theme="dark"] .reset-invalid-box {
+  background: #162036 !important;
+  border: 1px solid #1f293d !important;
+  border-radius: 12px !important;
+  padding: 1.5rem !important;
+  text-align: center !important;
+}
+
+[data-theme="dark"] .reset-success-desc,
+[data-theme="dark"] .reset-invalid-desc {
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .reset-instruction-tips {
+  background: #111827 !important;
+  border: 1px solid #1f293d !important;
+  border-radius: 8px !important;
+  padding: 1rem !important;
+  color: #94a3b8 !important;
+  text-align: left !important;
+}
+
+[data-theme="dark"] .reset-instruction-tips strong {
+  color: #f8fafc !important;
+}
+
+/* 12. Floating Contact Popup Refinement */
+[data-theme="dark"] .floating-contact-popup {
+  background: #111827 !important;
+  border-color: #1f293d !important;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6) !important;
+}
+
+[data-theme="dark"] .contact-popup-header {
+  border-bottom-color: #1f293d !important;
+}
+
+[data-theme="dark"] .popup-title {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .popup-close-btn:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .popup-phone-display {
+  background: #162036 !important;
+  border-color: #1f293d !important;
+}
+
+[data-theme="dark"] .phone-number-bold {
+  color: #2dd4bf !important;
+}
+
+
 

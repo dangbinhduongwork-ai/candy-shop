@@ -927,12 +927,12 @@ const AdminVouchersPage = () => {
             onClick={(e) => e.stopPropagation()}
           >
             <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>🗑️</div>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: '800', color: '#0f172a', margin: '0 0 0.5rem' }}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: '800', color: 'var(--text-dark)', margin: '0 0 0.5rem' }}>
               Xác nhận xoá voucher?
             </h3>
-            <p style={{ color: '#64748b', fontSize: '0.9rem', lineHeight: '1.5', margin: '0 0 1.5rem' }}>
+            <p style={{ color: 'var(--text-light)', fontSize: '0.9rem', lineHeight: '1.5', margin: '0 0 1.5rem' }}>
               Bạn có chắc chắn muốn xoá voucher{' '}
-              <strong style={{ color: '#be185d', fontFamily: 'monospace' }}>
+              <strong style={{ color: '#ec4899', fontFamily: 'monospace' }}>
                 {deleteConfirm.voucher.code}
               </strong>
               ?

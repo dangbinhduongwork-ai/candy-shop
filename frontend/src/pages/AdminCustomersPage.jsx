@@ -628,7 +628,7 @@ const AdminCustomersPage = () => {
                   </h4>
 
                   {(!customerDetail.recentOrders || customerDetail.recentOrders.length === 0) ? (
-                    <div style={{ textAlign: 'center', padding: '2rem', background: '#f8fafc', borderRadius: '12px' }}>
+                    <div style={{ textAlign: 'center', padding: '2rem', background: 'var(--bg-secondary)', borderRadius: '12px', border: '1px solid var(--border)' }}>
                       <p style={{ color: 'var(--text-light)', margin: 0 }}>Khách hàng chưa có đơn hàng nào.</p>
                     </div>
                   ) : (
@@ -753,14 +753,14 @@ const AdminCustomersPage = () => {
                 &times;
               </button>
             </div>
-            <div style={{ padding: '0.5rem 0 1.25rem 0', color: '#475569', lineHeight: '1.6' }}>
+            <div style={{ padding: '0.5rem 0 1.25rem 0', color: 'var(--text-medium)', lineHeight: '1.6' }}>
               {confirmModal.targetStatus === 'LOCKED' ? (
                 <>
                   <p>
                     Bạn có chắc chắn muốn <strong>KHÓA</strong> tài khoản của khách hàng{' '}
                     <strong>"{confirmModal.customer?.fullName}"</strong> ({confirmModal.customer?.email})?
                   </p>
-                  <p style={{ fontSize: '0.85rem', color: '#dc2626', background: '#fef2f2', padding: '0.75rem', borderRadius: '8px' }}>
+                  <p className="alert alert-error" style={{ fontSize: '0.85rem', marginTop: '0.75rem', padding: '0.75rem 1rem' }}>
                     ⚠️ Khách hàng sẽ bị từ chối truy cập ngay lập tức và không thể đăng nhập cho đến khi được mở khóa lại.
                   </p>
                 </>

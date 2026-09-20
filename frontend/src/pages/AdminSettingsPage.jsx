@@ -258,25 +258,11 @@ const AdminSettingsPage = () => {
         ) : (
           <div>
             {/* Setting Sub-Tabs */}
-            <div className="settings-subtabs" style={{ display: 'flex', gap: '0.75rem', marginBottom: '1.5rem', borderBottom: '2px solid #e2e8f0', paddingBottom: '0.5rem', overflowX: 'auto' }}>
+            <div className="settings-subtabs">
               <button
                 type="button"
                 className={`subtab-btn ${activeTab === 'header' ? 'active' : ''}`}
                 onClick={() => { setActiveTab('header'); setSuccessMsg(''); setErrorMsg(''); }}
-                style={{
-                  padding: '0.65rem 1.25rem',
-                  borderRadius: '10px',
-                  border: 'none',
-                  background: activeTab === 'header' ? '#0f766e' : '#f1f5f9',
-                  color: activeTab === 'header' ? '#ffffff' : '#475569',
-                  fontWeight: 700,
-                  fontSize: '0.95rem',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px'
-                }}
               >
                 🏷️ Header & Tiêu Đề Shop
               </button>
@@ -285,20 +271,6 @@ const AdminSettingsPage = () => {
                 type="button"
                 className={`subtab-btn ${activeTab === 'footer' ? 'active' : ''}`}
                 onClick={() => { setActiveTab('footer'); setSuccessMsg(''); setErrorMsg(''); }}
-                style={{
-                  padding: '0.65rem 1.25rem',
-                  borderRadius: '10px',
-                  border: 'none',
-                  background: activeTab === 'footer' ? '#0f766e' : '#f1f5f9',
-                  color: activeTab === 'footer' ? '#ffffff' : '#475569',
-                  fontWeight: 700,
-                  fontSize: '0.95rem',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px'
-                }}
               >
                 🦶 Footer & Liên Hệ
               </button>
@@ -307,20 +279,6 @@ const AdminSettingsPage = () => {
                 type="button"
                 className={`subtab-btn ${activeTab === 'shipping' ? 'active' : ''}`}
                 onClick={() => { setActiveTab('shipping'); setSuccessMsg(''); setErrorMsg(''); }}
-                style={{
-                  padding: '0.65rem 1.25rem',
-                  borderRadius: '10px',
-                  border: 'none',
-                  background: activeTab === 'shipping' ? '#0f766e' : '#f1f5f9',
-                  color: activeTab === 'shipping' ? '#ffffff' : '#475569',
-                  fontWeight: 700,
-                  fontSize: '0.95rem',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px'
-                }}
               >
                 🚚 Cấu Hình Vận Chuyển
               </button>
@@ -329,20 +287,6 @@ const AdminSettingsPage = () => {
                 type="button"
                 className={`subtab-btn ${activeTab === 'effects' ? 'active' : ''}`}
                 onClick={() => { setActiveTab('effects'); setSuccessMsg(''); setErrorMsg(''); }}
-                style={{
-                  padding: '0.65rem 1.25rem',
-                  borderRadius: '10px',
-                  border: 'none',
-                  background: activeTab === 'effects' ? '#0f766e' : '#f1f5f9',
-                  color: activeTab === 'effects' ? '#ffffff' : '#475569',
-                  fontWeight: 700,
-                  fontSize: '0.95rem',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px'
-                }}
               >
                 🎨 Hiệu Ứng Theo Mùa
               </button>
