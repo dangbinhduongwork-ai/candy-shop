@@ -40,7 +40,11 @@ public class CloudinaryStorageProvider implements FileStorageProvider {
     public void init() {
         try {
             if (cloudinaryUrl != null && !cloudinaryUrl.isBlank()) {
-                this.cloudinary = new Cloudinary(cloudinaryUrl.trim());
+                String cleanUrl = cloudinaryUrl.trim();
+                if (cleanUrl.startsWith("CLOUDINARY_URL=")) {
+                    cleanUrl = cleanUrl.substring("CLOUDINARY_URL=".length()).trim();
+                }
+                this.cloudinary = new Cloudinary(cleanUrl);
                 log.info("Initialized CloudinaryStorageProvider via CLOUDINARY_URL");
             } else if (cloudName != null && !cloudName.isBlank()
                     && apiKey != null && !apiKey.isBlank()
