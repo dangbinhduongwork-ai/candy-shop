@@ -1,6 +1,9 @@
 # 🍬 Nguyen Huong Grocery Store (E-Commerce Platform)
 
-Dự án website thương mại điện tử chuyên nghiệp dành cho cửa hàng bán lẻ thực phẩm thiết yếu, bánh kẹo cao cấp và đặc sản tuyển chọn. Hệ thống được xây dựng theo kiến trúc tách biệt hiện đại giữa **Backend (Spring Boot 3 + Spring Security + JWT)** và **Frontend (React 19 + Vite + Vanilla CSS Design System)**.
+Dự án nền tảng thương mại điện tử chuyên nghiệp dành cho cửa hàng bán lẻ thực phẩm thiết yếu, bánh kẹo cao cấp và đặc sản tuyển chọn **Nguyen Huong Store**. Hệ thống được xây dựng theo kiến trúc đa nền tảng hiện đại gồm:
+- **Backend:** Spring Boot 3.3.5 + Spring Security 6 + Stateless JWT + H2/MySQL.
+- **Web Frontend:** React 19 + Vite + Vanilla CSS Design System.
+- **Mobile Client:** Flutter 3.x cho Android & iOS (Phiên bản **v1.2.0 Production Ready**).
 
 ---
 
@@ -28,12 +31,21 @@ Dự án website thương mại điện tử chuyên nghiệp dành cho cửa h�
 - **Upload File:** Lưu trữ và quản lý ảnh tại thư mục `uploads/` trên server backend, phục vụ qua endpoint tĩnh `/uploads/**`
 - **Build Tool:** Maven (sử dụng Maven Wrapper `mvnw.cmd` / `./mvnw`)
 
-### Frontend (`/frontend`)
+### Frontend Web (`/frontend`)
 - **Framework & Build Tool:** React 19, Vite (tốc độ khởi động HMR cực nhanh)
 - **Routing:** React Router v7
 - **HTTP Client:** Axios (Interceptors tự động đính kèm JWT Bearer token và xử lý điều hướng khi hết hạn token)
 - **Styling:** Vanilla CSS thuần chất lượng cao đặt tại `index.css`, tối ưu hóa hiệu năng, thiết kế Responsive đa thiết bị, hỗ trợ Dark Mode & biến CSS (`--primary`, `--footer-bg`, `--bg`, v.v.)
 - **Icons & Effects:** SVG vector tùy biến, hiệu ứng rơi động theo mùa (Canvas / CSS animation)
+
+### Mobile Client (`/mobile`) - v1.2.0 (Production Ready)
+- **Framework:** Flutter 3.x, Dart 3.x (Hỗ trợ Android, iOS & Web Preview)
+- **Quản lý trạng thái (State Management):** Provider Pattern
+- **HTTP Client:** Dio (kèm Auth Interceptor tự động gắn Bearer Token và xử lý lỗi mạng tiếng Việt)
+- **Giao diện & Trải nghiệm:** Material 3, Dark & Light Mode, Caching ảnh mạng (`cached_network_image`), định dạng tiền tệ `intl`
+- **Bộ Quản trị viên (Admin Suite):** 7 phân hệ quản lý độc lập (Sản phẩm, Đơn hàng, Danh mục, Voucher, Banner, Khách hàng, Cài đặt)
+- **File APK cài đặt:** `mobile/build/app/outputs/flutter-apk/app-release.apk`
+- 📖 **Tài liệu chi tiết:** Xem tại [mobile/README.md](mobile/README.md)
 
 ---
 
@@ -72,6 +84,19 @@ candy-shop/
 │   ├── package.json                           # Khai báo dependencies npm
 │   └── vite.config.js                         # Cấu hình môi trường Vite dev server & build
 │
+├── mobile/                                    # Source code Mobile Client (Flutter 3.x - v1.2.0)
+│   ├── android/                               # Native Android (Gradle Kotlin DSL)
+│   ├── ios/                                   # Native iOS
+│   ├── lib/
+│   │   ├── core/                              # Mạng, màu sắc, theme Material 3, interceptor
+│   │   ├── models/                            # User, Product, Order, Admin stats,...
+│   │   ├── services/                          # API Service layer (Auth, Product, Admin,...)
+│   │   ├── providers/                         # Quản lý trạng thái (Provider pattern)
+│   │   └── screens/                           # Màn hình Storefront & 7 phân hệ Admin Suite
+│   ├── build/app/outputs/flutter-apk/         # Gói cài đặt APK Release chính thức
+│   ├── pubspec.yaml                           # Khai báo thư viện & version 1.2.0+3
+│   └── README.md                              # Hướng dẫn chi tiết dành riêng cho Mobile
+│
 └── README.md                                  # Toàn bộ tài liệu hướng dẫn sử dụng và phát triển dự án
 ```
 
@@ -83,7 +108,7 @@ Hệ thống đã tự động cài đặt sẵn (Seed) các tài khoản mặc 
 
 | Vai Trò | Email Đăng Nhập | Mật Khẩu | Quyền Hạn & Chức Năng |
 | :--- | :--- | :--- | :--- |
-| **Quản trị viên (Admin)** | `admin@candyshop.com`<br>*(hoặc `admin@gmail.com`)* | `admin123` | Toàn quyền quản trị hệ thống: Quản lý Sản phẩm, Danh mục, Đơn hàng, Banner, Voucher, Khách hàng và Cài đặt giao diện cửa hàng. |
+| **Quản trị viên (Admin)** | `admin@candyshop.com`<br>*(hoặc `admin@gmail.com`)* | `admin123` | Toàn quyền quản trị hệ thống trên cả Web và App: Quản lý Sản phẩm, Danh mục, Đơn hàng, Banner, Voucher, Khách hàng và Cài đặt cửa hàng. |
 | **Khách hàng (User)** | `user@candyshop.com`<br>*(hoặc `customer@gmail.com`)* | `user123` | Người dùng mua sắm: Xem giỏ hàng, áp mã giảm giá, đặt hàng COD, theo dõi đơn hàng, sửa hồ sơ cá nhân và đánh giá sản phẩm. |
 
 ---
@@ -93,6 +118,7 @@ Hệ thống đã tự động cài đặt sẵn (Seed) các tài khoản mặc 
 ### Yêu cầu môi trường
 - **Java:** JDK 17 trở lên
 - **Node.js:** Node.js v18 trở lên & npm
+- **Flutter:** Flutter SDK 3.x (nếu phát triển / build Mobile)
 
 ---
 
@@ -120,7 +146,7 @@ Hệ thống đã tự động cài đặt sẵn (Seed) các tài khoản mặc 
 
 ---
 
-### Bước 2: Khởi chạy Frontend (React Vite)
+### Bước 2: Khởi chạy Frontend Web (React Vite)
 
 1. Mở một cửa sổ Terminal mới tại thư mục gốc của dự án.
 2. Di chuyển vào thư mục frontend:
@@ -136,6 +162,31 @@ Hệ thống đã tự động cài đặt sẵn (Seed) các tài khoản mặc 
    npm run dev
    ```
 5. Ứng dụng Frontend sẽ khởi chạy tại: **`http://localhost:5173`**
+
+---
+
+### Bước 3: Khởi chạy Ứng dụng Di động (Flutter Mobile Client)
+
+1. Mở một cửa sổ Terminal mới tại thư mục `mobile`:
+   ```bash
+   cd mobile
+   flutter pub get
+   ```
+2. Khởi chạy ứng dụng:
+   - **Trên điện thoại Android kết nối cáp USB:**
+     ```bash
+     flutter run
+     ```
+   - **Trên trình duyệt Chrome (Web Preview):**
+     ```bash
+     flutter run -d chrome
+     ```
+3. **Cài đặt file APK Release v1.2.0 trực tiếp vào điện thoại:**
+   - File APK đã biên dịch sẵn tại: [`mobile/build/app/outputs/flutter-apk/app-release.apk`](mobile/build/app/outputs/flutter-apk/app-release.apk)
+   - Lệnh cài đặt nhanh qua USB:
+     ```bash
+     flutter install -d <device-id>
+     ```
 
 ---
 
