@@ -100,7 +100,7 @@ const BannerCarousel = () => {
                   e.stopPropagation();
                   handleBannerClick(currentBanner);
                 }}>
-                  Khám Phá Ngay ✨
+                  Khám Phá Ngay
                 </button>
               )}
             </div>

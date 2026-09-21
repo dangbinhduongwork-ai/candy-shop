@@ -201,8 +201,8 @@ const AdminCategoriesPage = () => {
       );
       showToast(
         newStatus
-          ? `Đã hiển thị danh mục "${cat.name}" ra trang chủ! 🎉`
-          : `Đã tạm ẩn danh mục "${cat.name}" khỏi trang chủ! 🙈`,
+          ? `Đã hiển thị danh mục "${cat.name}" ra trang chủ! `
+          : `Đã tạm ẩn danh mục "${cat.name}" khỏi trang chủ! `,
         newStatus ? 'success' : 'info'
       );
     } catch (err) {
@@ -777,7 +777,7 @@ const AdminCategoriesPage = () => {
                       }
                     />
                     <span className="checkbox-custom-text">
-                      ✅ Kích hoạt hiển thị ra ngoài cửa hàng
+                      Kích hoạt hiển thị ra ngoài cửa hàng
                     </span>
                   </label>
                 </div>
