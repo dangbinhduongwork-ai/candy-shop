@@ -11,9 +11,35 @@ import '../../widgets/custom_button.dart';
 import '../../widgets/custom_textfield.dart';
 import '../admin/admin_dashboard_screen.dart';
 import '../auth/login_screen.dart';
+import '../../models/setting_model.dart';
+import '../../services/setting_service.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  ShopGeneralSettingModel? _setting;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSetting();
+  }
+
+  Future<void> _loadSetting() async {
+    try {
+      final setting = await SettingService().getGeneralSetting();
+      if (mounted) {
+        setState(() {
+          _setting = setting;
+        });
+      }
+    } catch (_) {}
+  }
 
   void _showEditProfileDialog(BuildContext context) {
     final auth = context.read<AuthProvider>();
@@ -323,14 +349,16 @@ class ProfileScreen extends StatelessWidget {
                         errorBuilder: (_, __, ___) => const Icon(Icons.store_mall_directory_rounded, color: AppColors.primary),
                       ),
                     ),
-                    title: const Text('Cửa Hàng Nguyen Huong'),
-                    subtitle: const Text('Nguyen Huong Store v1.1.0 • Backend Spring Boot 3'),
+                    title: Text(_setting?.shopName ?? 'Nguyen Huong Store'),
+                    subtitle: const Text('Nguyen Huong Store v1.2.0 • Production Ready'),
                   ),
                   const Divider(height: 1),
-                  const ListTile(
-                    leading: Icon(Icons.support_agent_rounded, color: Colors.teal),
-                    title: Text('Hotline hỗ trợ'),
-                    subtitle: Text('1900 1234 (8:00 - 22:00 hàng ngày)'),
+                  ListTile(
+                    leading: const Icon(Icons.support_agent_rounded, color: Colors.teal),
+                    title: const Text('Hotline hỗ trợ'),
+                    subtitle: Text(
+                      '${_setting?.footerHotline ?? _setting?.headerHotline ?? "1900 1234"} (${_setting?.footerWorkingHours ?? "8:00 - 22:00 hàng ngày"})',
+                    ),
                   ),
                 ],
               ),

@@ -93,9 +93,37 @@ class _AdminProductFormScreenState extends State<AdminProductFormScreen> {
 
       // If a local image file was picked from gallery, upload it first
       if (_pickedImage != null) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Row(
+                children: [
+                  SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                  ),
+                  SizedBox(width: 12),
+                  Text('Đang tải ảnh sản phẩm lên máy chủ...'),
+                ],
+              ),
+              duration: Duration(seconds: 5),
+            ),
+          );
+        }
         final uploadedUrl = await adminProv.uploadImage(_pickedImage!.path);
         if (uploadedUrl != null && uploadedUrl.isNotEmpty) {
           finalImageUrl = uploadedUrl;
+        } else {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Không thể tải ảnh lên máy chủ, vui lòng thử lại'),
+                backgroundColor: Colors.redAccent,
+              ),
+            );
+          }
+          return;
         }
       }
 

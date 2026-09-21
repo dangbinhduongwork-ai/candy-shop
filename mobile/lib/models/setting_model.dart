@@ -49,6 +49,8 @@ class ShopGeneralSettingModel {
   final String? headerHotline;
   final String? footerAddress;
   final String? footerEmail;
+  final String? footerHotline;
+  final String? footerWorkingHours;
 
   ShopGeneralSettingModel({
     required this.shopName,
@@ -58,6 +60,8 @@ class ShopGeneralSettingModel {
     this.headerHotline,
     this.footerAddress,
     this.footerEmail,
+    this.footerHotline,
+    this.footerWorkingHours,
   });
 
   factory ShopGeneralSettingModel.defaultSetting() {
@@ -67,6 +71,8 @@ class ShopGeneralSettingModel {
       shopSlogan: 'Ngọt ngào từng khoảnh khắc',
       headerAnnouncement: '🍬 Chào mừng đến với Nguyen Huong Store!',
       headerHotline: '1900 1234',
+      footerHotline: '1900 1234',
+      footerWorkingHours: '8:00 - 22:00 hàng ngày',
     );
   }
 
@@ -79,6 +85,8 @@ class ShopGeneralSettingModel {
       headerHotline: json['headerHotline']?.toString(),
       footerAddress: json['footerAddress']?.toString(),
       footerEmail: json['footerEmail']?.toString(),
+      footerHotline: json['footerHotline']?.toString(),
+      footerWorkingHours: json['footerWorkingHours']?.toString(),
     );
   }
 
@@ -91,6 +99,8 @@ class ShopGeneralSettingModel {
       'headerHotline': headerHotline,
       'footerAddress': footerAddress,
       'footerEmail': footerEmail,
+      'footerHotline': footerHotline,
+      'footerWorkingHours': footerWorkingHours,
     };
   }
 }

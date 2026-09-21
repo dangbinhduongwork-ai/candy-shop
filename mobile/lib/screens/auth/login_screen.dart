@@ -26,11 +26,6 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  void _quickFill(String email, String password) {
-    _emailController.text = email;
-    _passwordController.text = password;
-  }
-
   Future<void> _handleLogin() async {
     if (!_formKey.currentState!.validate()) return;
 
@@ -60,7 +55,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final auth = context.watch<AuthProvider>();
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       appBar: AppBar(
@@ -154,41 +148,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     }
                     return null;
                   },
-                ),
-                const SizedBox(height: 20),
-
-                // Quick fill chips for easy testing
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        '⚡ Tài khoản thử nghiệm nhanh:',
-                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          ActionChip(
-                            label: const Text('Tài khoản User', style: TextStyle(fontSize: 11)),
-                            avatar: const Icon(Icons.person, size: 14),
-                            onPressed: () => _quickFill('user@candyshop.com', 'User@123'),
-                          ),
-                          const SizedBox(width: 8),
-                          ActionChip(
-                            label: const Text('Tài khoản Admin', style: TextStyle(fontSize: 11)),
-                            avatar: const Icon(Icons.admin_panel_settings, size: 14),
-                            onPressed: () => _quickFill('admin@candyshop.com', 'Admin@123'),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
                 ),
                 const SizedBox(height: 28),
 

@@ -81,7 +81,12 @@ class AdminService {
       '${ApiConstants.products}/upload-image',
       data: formData,
     );
-    return response.data['fileUrl']?.toString() ?? response.data['url']?.toString() ?? '';
+    // Read imageUrl from Backend Spring Boot FileUploadResponse
+    final String url = response.data['imageUrl']?.toString() ??
+        response.data['url']?.toString() ??
+        response.data['fileUrl']?.toString() ??
+        '';
+    return url;
   }
 
   // ==========================================

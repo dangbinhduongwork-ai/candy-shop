@@ -79,6 +79,7 @@ class AdminProvider extends ChangeNotifier {
       final newProd = await _adminService.createProduct(data);
       _products.insert(0, newProd);
       notifyListeners();
+      loadProducts();
       return true;
     } catch (e) {
       _productsError = ErrorHandler.getErrorMessage(e);
@@ -95,6 +96,7 @@ class AdminProvider extends ChangeNotifier {
         _products[idx] = updated;
         notifyListeners();
       }
+      loadProducts();
       return true;
     } catch (e) {
       _productsError = ErrorHandler.getErrorMessage(e);
