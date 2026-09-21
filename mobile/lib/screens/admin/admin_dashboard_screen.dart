@@ -99,7 +99,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                                 ),
                                 SizedBox(height: 4),
                                 Text(
-                                  'Theo dõi doanh thu, xử lý đơn hàng & quản trị toàn bộ hệ thống Candy Shop',
+                                  'Theo dõi doanh thu, xử lý đơn hàng & quản trị toàn bộ hệ thống Nguyen Huong Store',
                                   style: TextStyle(color: Colors.white70, fontSize: 12),
                                 ),
                               ],

@@ -21,7 +21,7 @@ export const SHOP_PATTERNS = {
     name: 'Thế Giới Bánh Kẹo',
     desc: 'Họa tiết kẹo mút, kẹo gói, ngôi sao ngọt ngào',
     icon: '🍭',
-    badge: 'Đặc trưng Candy Shop',
+    badge: 'Đặc trưng Nguyen Huong Store',
     // 100x100 confectionery doodles
     svg: `data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%2364748b'%3E%3C!-- Wrapped candy --%3E%3Cellipse cx='20' cy='20' rx='7' ry='5'/%3E%3Cpolygon points='13,20 7,16 7,24'/%3E%3Cpolygon points='27,20 33,16 33,24'/%3E%3C!-- Lollipop --%3E%3Ccircle cx='75' cy='25' r='7' fill='none' stroke='%2364748b' stroke-width='1.8'/%3E%3Ccircle cx='75' cy='25' r='3'/%3E%3Cpath d='M75,32 L75,44' stroke='%2364748b' stroke-width='1.8' stroke-linecap='round'/%3E%3C!-- 4-Point Star --%3E%3Cpath d='M50,15 Q50,20 55,20 Q50,20 50,25 Q50,20 45,20 Q50,20 50,15 Z'/%3E%3C!-- Gumdrop --%3E%3Cpath d='M25,75 C25,68 35,68 35,75 C35,80 25,80 25,75 Z'/%3E%3C!-- Heart --%3E%3Cpath d='M75,75 C75,72 71,70 69,73 C67,70 63,72 63,75 C63,80 69,85 69,85 C69,85 75,80 75,75 Z'/%3E%3C!-- Sparkles --%3E%3Ccircle cx='12' cy='48' r='1.5'/%3E%3Ccircle cx='88' cy='58' r='1.8'/%3E%3Ccircle cx='50' cy='85' r='1.5'/%3E%3Ccircle cx='90' cy='12' r='1.2'/%3E%3C/g%3E%3C/svg%3E`,
     size: '100px 100px',

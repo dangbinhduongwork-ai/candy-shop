@@ -88,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Text(
                               auth.isAuthenticated && auth.currentUser != null
                                   ? 'Chào bạn, ${auth.currentUser!.fullName.split(" ").last} 👋'
-                                  : 'Chào mừng đến với Candy Shop 👋',
+                                  : 'Chào mừng đến với Nguyen Huong Store 👋',
                               style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                             ),
                             const Text(

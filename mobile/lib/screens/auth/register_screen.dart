@@ -86,7 +86,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const SizedBox(height: 6),
                 const Text(
-                  'Tham gia Candy Shop để nhận ưu đãi và tích điểm thưởng!',
+                  'Tham gia Nguyen Huong Store để nhận ưu đãi và tích điểm thưởng!',
                   style: TextStyle(
                     fontSize: 14,
                     color: AppColors.textSecondaryLight,

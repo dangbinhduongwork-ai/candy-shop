@@ -112,7 +112,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             ],
           ),
           content: Text(
-            'Mã đơn hàng của bạn là: ${createdOrder.orderCode}.\nCảm ơn bạn đã lựa chọn Candy Shop!',
+            'Mã đơn hàng của bạn là: ${createdOrder.orderCode}.\nCảm ơn bạn đã lựa chọn Nguyen Huong Store!',
           ),
           actions: [
             CustomButton(

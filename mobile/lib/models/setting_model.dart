@@ -62,17 +62,17 @@ class ShopGeneralSettingModel {
 
   factory ShopGeneralSettingModel.defaultSetting() {
     return ShopGeneralSettingModel(
-      shopName: 'Candy Shop',
+      shopName: 'Nguyen Huong Store',
       shopTitle: 'Bánh Kẹo & Nhu Yếu Phẩm',
       shopSlogan: 'Ngọt ngào từng khoảnh khắc',
-      headerAnnouncement: '🍬 Chào mừng đến với Tiệm Bánh Kẹo Ngọt Ngào!',
+      headerAnnouncement: '🍬 Chào mừng đến với Nguyen Huong Store!',
       headerHotline: '1900 1234',
     );
   }
 
   factory ShopGeneralSettingModel.fromJson(Map<String, dynamic> json) {
     return ShopGeneralSettingModel(
-      shopName: json['shopName']?.toString() ?? 'Candy Shop',
+      shopName: json['shopName']?.toString() ?? 'Nguyen Huong Store',
       shopTitle: json['shopTitle']?.toString(),
       shopSlogan: json['shopSlogan']?.toString(),
       headerAnnouncement: json['headerAnnouncement']?.toString(),

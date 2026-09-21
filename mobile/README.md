@@ -1,4 +1,4 @@
-# 🍭 Candy Shop & Nhu Yếu Phẩm - Mobile Client (Flutter)
+# 🛍️ Nguyen Huong Store & Nhu Yếu Phẩm - Mobile Client (Flutter)
 
 Ứng dụng di động mua sắm bánh kẹo và nhu yếu phẩm dành cho nền tảng Android và iOS, được phát triển bằng **Flutter 3.x**, kết nối trực tiếp vào hệ thống **Spring Boot 3.3.5 REST API Backend** của dự án.
 
@@ -6,7 +6,7 @@
 
 ## 📱 Điểm nổi bật & Tính năng chính
 
-1. **Giao diện Candy Shop ngọt ngào & Hiện đại (Material 3)**:
+1. **Giao diện Nguyen Huong Store Hiện đại & Ngọt ngào (Material 3)**:
    - Tông màu Hồng kẹo (Candy Rose `#FF5376`) kết hợp Cam San hô (Peach `#FF8E53`) và Xanh Bạc hà.
    - Hỗ trợ đầy đủ **Sáng / Tối (Light & Dark Mode)** lưu trạng thái cục bộ.
    - Hiển thị tiền tệ Việt Nam đồng (`VNĐ`) chuẩn xác với `intl`.

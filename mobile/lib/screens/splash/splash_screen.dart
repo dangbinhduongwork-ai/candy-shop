@@ -114,12 +114,12 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
                 // Title
                 const Text(
-                  'Candy Shop',
+                  'Nguyen Huong Store',
                   style: TextStyle(
-                    fontSize: 32,
+                    fontSize: 30,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
-                    letterSpacing: 1,
+                    letterSpacing: 0.5,
                   ),
                 ),
                 const SizedBox(height: 8),

@@ -543,7 +543,7 @@ const AdminSettingsPage = () => {
                     <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#475569', marginBottom: '6px' }}>🌐 Tab Trình Duyệt:</div>
                     <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#ffffff', padding: '6px 12px', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '0.82rem', fontWeight: 600, color: '#1e293b' }}>
                       <span>🍬</span>
-                      <span>{generalForm.shopTitle || generalForm.shopName || 'Candy Shop'}</span>
+                      <span>{generalForm.shopTitle || generalForm.shopName || 'Nguyen Huong Store'}</span>
                     </div>
                   </div>
                 </div>

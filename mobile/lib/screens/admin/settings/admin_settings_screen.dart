@@ -213,7 +213,7 @@ class _AdminSettingsScreenState extends State<AdminSettingsScreen> {
                           CustomTextField(
                             controller: _shopNameController,
                             label: 'Tên thương hiệu cửa hàng',
-                            hint: 'Candy Shop',
+                            hint: 'Nguyen Huong Store',
                             prefixIcon: Icons.store_rounded,
                           ),
                           const SizedBox(height: 12),

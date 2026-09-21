@@ -245,7 +245,7 @@ class ProfileScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 14),
                       const Text(
-                        'Chào mừng bạn đến với Candy Shop!',
+                        'Chào mừng bạn đến với Nguyen Huong Store!',
                         style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 6),
@@ -324,7 +324,7 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ),
                     title: const Text('Cửa Hàng Nguyen Huong'),
-                    subtitle: const Text('Candy Shop v1.1.0 • Backend Spring Boot 3'),
+                    subtitle: const Text('Nguyen Huong Store v1.1.0 • Backend Spring Boot 3'),
                   ),
                   const Divider(height: 1),
                   const ListTile(
