@@ -58,3 +58,6 @@ Thumbs.db
 scratch/
 **/scratch/
 backend/test_*.ps1
+*.apk
+*.aab
+url_crop.png

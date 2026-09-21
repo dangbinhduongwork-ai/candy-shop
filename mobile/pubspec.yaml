@@ -1,0 +1,39 @@
+name: candy_shop_mobile
+description: "Candy Shop & Daily Essentials Mobile Client for Android & iOS"
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.10.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.6
+
+  # State Management
+  provider: ^6.1.2
+
+  # Networking & REST API
+  dio: ^5.4.3+1
+
+  # Local Persistence
+  shared_preferences: ^2.2.3
+
+  # Image Caching & Rendering
+  cached_network_image: ^3.3.1
+  flutter_svg: ^2.0.10+1
+
+  # Utility & Formatting
+  intl: ^0.19.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
