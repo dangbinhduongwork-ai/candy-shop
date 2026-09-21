@@ -309,16 +309,25 @@ class ProfileScreen extends StatelessWidget {
             const SizedBox(height: 16),
 
             // Help & About
-            const Card(
+            Card(
               child: Column(
                 children: [
                   ListTile(
-                    leading: Icon(Icons.info_outline, color: Colors.blueAccent),
-                    title: Text('Thông tin ứng dụng'),
-                    subtitle: Text('Candy Shop v1.0.0 (Spring Boot 3.3.5 Backend)'),
+                    leading: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.asset(
+                        'assets/images/app_logo.png',
+                        width: 32,
+                        height: 32,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => const Icon(Icons.store_mall_directory_rounded, color: AppColors.primary),
+                      ),
+                    ),
+                    title: const Text('Cửa Hàng Nguyen Huong'),
+                    subtitle: const Text('Candy Shop v1.1.0 • Backend Spring Boot 3'),
                   ),
-                  Divider(height: 1),
-                  ListTile(
+                  const Divider(height: 1),
+                  const ListTile(
                     leading: Icon(Icons.support_agent_rounded, color: Colors.teal),
                     title: Text('Hotline hỗ trợ'),
                     subtitle: Text('1900 1234 (8:00 - 22:00 hàng ngày)'),

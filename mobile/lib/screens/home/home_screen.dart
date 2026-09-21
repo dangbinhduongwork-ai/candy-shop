@@ -63,13 +63,22 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
                   child: Row(
                     children: [
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: const BoxDecoration(
-                          gradient: AppColors.candyGradient,
-                          shape: BoxShape.circle,
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.asset(
+                          'assets/images/app_logo.png',
+                          width: 40,
+                          height: 40,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) => Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: const BoxDecoration(
+                              gradient: AppColors.candyGradient,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(Icons.cake_rounded, color: Colors.white, size: 22),
+                          ),
                         ),
-                        child: const Icon(Icons.cake_rounded, color: Colors.white, size: 22),
                       ),
                       const SizedBox(width: 10),
                       Expanded(

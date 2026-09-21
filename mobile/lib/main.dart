@@ -43,7 +43,7 @@ class CandyShopApp extends StatelessWidget {
     final themeProvider = context.watch<ThemeProvider>();
 
     return MaterialApp(
-      title: 'Candy Shop',
+      title: 'Nguyen Huong Store',
       debugShowCheckedModeBanner: false,
       theme: AppThemes.lightTheme,
       darkTheme: AppThemes.darkTheme,
