@@ -310,7 +310,7 @@ const ProfilePage = () => {
               {/* Avatar Save / Cancel buttons when previewing */}
               {selectedAvatarFile && (
                 <div className="avatar-action-bar">
-                  <span className="avatar-preview-tag">✨ Đã chọn ảnh mới</span>
+                  <span className="avatar-preview-tag"> Đã chọn ảnh mới</span>
                   <button
                     type="button"
                     className="btn btn-save-avatar"
@@ -339,7 +339,7 @@ const ProfilePage = () => {
               className={`profile-tab-btn ${activeTab === 'profile' ? 'active' : ''}`}
               onClick={() => setActiveTab('profile')}
             >
-              <span className="tab-btn-icon">👤</span>
+              <span className="tab-btn-icon"> </span>
               <span>Thông Tin Cá Nhân</span>
             </button>
             <button
@@ -347,7 +347,7 @@ const ProfilePage = () => {
               className={`profile-tab-btn ${activeTab === 'password' ? 'active' : ''}`}
               onClick={() => setActiveTab('password')}
             >
-              <span className="tab-btn-icon">🔒</span>
+              <span className="tab-btn-icon"> </span>
               <span>Đổi Mật Khẩu</span>
             </button>
           </div>
@@ -358,7 +358,7 @@ const ProfilePage = () => {
           <div className="profile-content-card">
             <div className="card-header-group">
               <h2 className="card-section-title">
-                <span>📝</span> Cập Nhật Thông Tin Cá Nhân
+                <span> </span> Cập Nhật Thông Tin Cá Nhân
               </h2>
               <p className="card-section-subtitle">
                 Quản lý họ tên, số điện thoại liên hệ và địa chỉ nhận hàng giao tận nơi.
@@ -405,7 +405,7 @@ const ProfilePage = () => {
                     />
                   </div>
                   <span className="field-hint-msg">
-                    ℹ️ Email dùng làm tên đăng nhập tài khoản, để bảo mật không cho phép sửa trực tiếp.
+                    ! Email dùng làm tên đăng nhập tài khoản, để bảo mật không cho phép sửa trực tiếp.
                   </span>
                 </div>
 
@@ -415,7 +415,7 @@ const ProfilePage = () => {
                     Số Điện Thoại
                   </label>
                   <div className="input-with-icon">
-                    <span className="input-field-icon">📞</span>
+                    <span className="input-field-icon"> </span>
                     <input
                       id="phone"
                       type="tel"
@@ -452,7 +452,7 @@ const ProfilePage = () => {
                   id="address"
                   rows={3}
                   className={`form-textarea-custom ${profileErrors.address ? 'input-error' : ''}`}
-                  placeholder="VD: Số 509 thôn 9, Xã Suối Hai, Huyện Ba Vì, Hà Nội..."
+                  placeholder="VD: Thôn 9, Xã Suối Hai, Huyện Ba Vì, Hà Nội..."
                   value={profileForm.address}
                   onChange={(e) => setProfileForm({ ...profileForm, address: e.target.value })}
                 />
@@ -477,7 +477,7 @@ const ProfilePage = () => {
                       <span className="btn-spinner"></span> Đang lưu thay đổi...
                     </>
                   ) : (
-                    '💾 Lưu Thay Đổi Thông Tin'
+                    '  Lưu Thay Đổi Thông Tin'
                   )}
                 </button>
               </div>
@@ -490,7 +490,7 @@ const ProfilePage = () => {
           <div className="profile-content-card">
             <div className="card-header-group">
               <h2 className="card-section-title">
-                <span>🔐</span> Đổi Mật Khẩu Tài Khoản
+                <span> </span> Đổi Mật Khẩu Tài Khoản
               </h2>
               <p className="card-section-subtitle">
                 Để bảo vệ an toàn cho tài khoản của bạn, vui lòng nhập mật khẩu cũ để xác thực trước khi thiết lập mật khẩu mới.
@@ -504,7 +504,7 @@ const ProfilePage = () => {
                   Mật Khẩu Hiện Tại <span className="text-danger">*</span>
                 </label>
                 <div className="input-with-icon">
-                  <span className="input-field-icon">🔑</span>
+                  <span className="input-field-icon"> </span>
                   <input
                     id="oldPassword"
                     type={showOldPass ? 'text' : 'password'}
@@ -533,7 +533,7 @@ const ProfilePage = () => {
                   Mật Khẩu Mới <span className="text-danger">*</span>
                 </label>
                 <div className="input-with-icon">
-                  <span className="input-field-icon">✨</span>
+                  <span className="input-field-icon"> </span>
                   <input
                     id="newPassword"
                     type={showNewPass ? 'text' : 'password'}
@@ -566,7 +566,7 @@ const ProfilePage = () => {
                   Xác Nhận Mật Khẩu Mới <span className="text-danger">*</span>
                 </label>
                 <div className="input-with-icon">
-                  <span className="input-field-icon">🛡️</span>
+                  <span className="input-field-icon"> </span>
                   <input
                     id="confirmPassword"
                     type={showConfirmPass ? 'text' : 'password'}
