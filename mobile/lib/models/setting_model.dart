@@ -45,6 +45,7 @@ class ShopGeneralSettingModel {
   final String shopName;
   final String? shopTitle;
   final String? shopSlogan;
+  final String? headerAnnouncement;
   final String? headerHotline;
   final String? footerAddress;
   final String? footerEmail;
@@ -53,6 +54,7 @@ class ShopGeneralSettingModel {
     required this.shopName,
     this.shopTitle,
     this.shopSlogan,
+    this.headerAnnouncement,
     this.headerHotline,
     this.footerAddress,
     this.footerEmail,
@@ -63,6 +65,7 @@ class ShopGeneralSettingModel {
       shopName: 'Candy Shop',
       shopTitle: 'Bánh Kẹo & Nhu Yếu Phẩm',
       shopSlogan: 'Ngọt ngào từng khoảnh khắc',
+      headerAnnouncement: '🍬 Chào mừng đến với Tiệm Bánh Kẹo Ngọt Ngào!',
       headerHotline: '1900 1234',
     );
   }
@@ -72,9 +75,22 @@ class ShopGeneralSettingModel {
       shopName: json['shopName']?.toString() ?? 'Candy Shop',
       shopTitle: json['shopTitle']?.toString(),
       shopSlogan: json['shopSlogan']?.toString(),
+      headerAnnouncement: json['headerAnnouncement']?.toString(),
       headerHotline: json['headerHotline']?.toString(),
       footerAddress: json['footerAddress']?.toString(),
       footerEmail: json['footerEmail']?.toString(),
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'shopName': shopName,
+      'shopTitle': shopTitle,
+      'shopSlogan': shopSlogan,
+      'headerAnnouncement': headerAnnouncement,
+      'headerHotline': headerHotline,
+      'footerAddress': footerAddress,
+      'footerEmail': footerEmail,
+    };
   }
 }

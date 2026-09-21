@@ -19,6 +19,8 @@ class UserModel {
     this.createdAt,
   });
 
+  bool get isAdmin => role == 'ROLE_ADMIN' || role == 'ADMIN';
+
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       id: json['id'] is int ? json['id'] : int.tryParse(json['id']?.toString() ?? '0') ?? 0,

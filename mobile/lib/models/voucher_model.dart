@@ -10,6 +10,9 @@ class VoucherModel {
   final String? startDate;
   final String? endDate;
   final String? status;
+  final int maxUsageCount;
+  final int maxUsagePerUser;
+  final int usageCount;
   final bool isExpired;
   final bool isAvailable;
 
@@ -25,6 +28,9 @@ class VoucherModel {
     this.startDate,
     this.endDate,
     this.status,
+    this.maxUsageCount = 100,
+    this.maxUsagePerUser = 1,
+    this.usageCount = 0,
     this.isExpired = false,
     this.isAvailable = true,
   });
@@ -50,6 +56,9 @@ class VoucherModel {
       startDate: json['startDate']?.toString(),
       endDate: json['endDate']?.toString(),
       status: json['status']?.toString(),
+      maxUsageCount: int.tryParse(json['maxUsageCount']?.toString() ?? '100') ?? 100,
+      maxUsagePerUser: int.tryParse(json['maxUsagePerUser']?.toString() ?? '1') ?? 1,
+      usageCount: int.tryParse(json['usageCount']?.toString() ?? '0') ?? 0,
       isExpired: json['isExpired'] is bool ? json['isExpired'] : false,
       isAvailable: json['isAvailable'] is bool ? json['isAvailable'] : true,
     );
@@ -68,6 +77,9 @@ class VoucherModel {
       'startDate': startDate,
       'endDate': endDate,
       'status': status,
+      'maxUsageCount': maxUsageCount,
+      'maxUsagePerUser': maxUsagePerUser,
+      'usageCount': usageCount,
       'isExpired': isExpired,
       'isAvailable': isAvailable,
     };

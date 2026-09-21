@@ -19,6 +19,7 @@ class AuthProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
   bool get isAuthenticated => _token != null && _token!.isNotEmpty;
+  bool get isAdmin => currentUser?.isAdmin ?? false;
 
   AuthProvider() {
     // Register global 401 callback from Dio AuthInterceptor

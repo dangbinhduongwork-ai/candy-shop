@@ -5,6 +5,8 @@ class BannerModel {
   final String? targetUrl;
   final int displayOrder;
   final bool active;
+  final String? startDate;
+  final String? endDate;
 
   BannerModel({
     required this.id,
@@ -13,6 +15,8 @@ class BannerModel {
     this.targetUrl,
     this.displayOrder = 0,
     this.active = true,
+    this.startDate,
+    this.endDate,
   });
 
   factory BannerModel.fromJson(Map<String, dynamic> json) {
@@ -25,6 +29,8 @@ class BannerModel {
           ? json['displayOrder']
           : int.tryParse(json['displayOrder']?.toString() ?? '0') ?? 0,
       active: json['active'] is bool ? json['active'] : true,
+      startDate: json['startDate']?.toString(),
+      endDate: json['endDate']?.toString(),
     );
   }
 
@@ -36,6 +42,8 @@ class BannerModel {
       'targetUrl': targetUrl,
       'displayOrder': displayOrder,
       'active': active,
+      'startDate': startDate,
+      'endDate': endDate,
     };
   }
 }

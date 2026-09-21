@@ -19,6 +19,9 @@ class OrderItemModel {
     required this.subtotal,
   });
 
+  String? get imageUrl => productImageUrl;
+  double get unitPrice => priceAtOrder;
+
   factory OrderItemModel.fromJson(Map<String, dynamic> json) {
     return OrderItemModel(
       id: json['id'] is int ? json['id'] : int.tryParse(json['id']?.toString() ?? '0') ?? 0,
@@ -94,6 +97,50 @@ class OrderModel {
   });
 
   bool get canCancel => status == 'PENDING';
+  String get recipientName => receiverName;
+  String get phone => receiverPhone;
+  double get finalAmount => totalAmount;
+  double get subtotal => items.fold(0.0, (sum, item) => sum + item.subtotal);
+
+  OrderModel copyWith({
+    int? id,
+    String? orderCode,
+    int? userId,
+    String? userEmail,
+    String? receiverName,
+    String? receiverPhone,
+    String? shippingAddress,
+    String? note,
+    double? totalAmount,
+    String? paymentMethod,
+    String? status,
+    String? voucherCode,
+    double? discountAmount,
+    double? shippingFee,
+    List<OrderItemModel>? items,
+    String? createdAt,
+    String? updatedAt,
+  }) {
+    return OrderModel(
+      id: id ?? this.id,
+      orderCode: orderCode ?? this.orderCode,
+      userId: userId ?? this.userId,
+      userEmail: userEmail ?? this.userEmail,
+      receiverName: receiverName ?? this.receiverName,
+      receiverPhone: receiverPhone ?? this.receiverPhone,
+      shippingAddress: shippingAddress ?? this.shippingAddress,
+      note: note ?? this.note,
+      totalAmount: totalAmount ?? this.totalAmount,
+      paymentMethod: paymentMethod ?? this.paymentMethod,
+      status: status ?? this.status,
+      voucherCode: voucherCode ?? this.voucherCode,
+      discountAmount: discountAmount ?? this.discountAmount,
+      shippingFee: shippingFee ?? this.shippingFee,
+      items: items ?? this.items,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
 
   factory OrderModel.fromJson(Map<String, dynamic> json) {
     final rawItems = json['items'] as List<dynamic>? ?? [];
